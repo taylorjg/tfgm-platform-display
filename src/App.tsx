@@ -1,5 +1,10 @@
-import { Hello } from "@app/components";
+import { Hello, Version } from "@app/components";
 
 export const App = () => {
-  return <Hello />;
+  return (
+    <>
+      <Hello />
+      <Version />
+    </>
+  );
 };
