@@ -44,13 +44,13 @@ export const SidePanel = ({ open, onClose }: SidePanelProps) => {
         >
           <Tab
             label="Configuration"
-            id="side-panel-tab-0"
-            aria-controls="side-panel-tabpanel-0"
+            id="configuration-tab"
+            aria-controls="configuration-tabpanel"
           />
           <Tab
             label="Options"
-            id="side-panel-tab-1"
-            aria-controls="side-panel-tabpanel-1"
+            id="options-tab"
+            aria-controls="options-tabpanel"
           />
         </Tabs>
 

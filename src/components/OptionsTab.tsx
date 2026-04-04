@@ -13,8 +13,8 @@ export const OptionsTab = ({ hidden }: OptionsTabProps) => {
     <Box
       role="tabpanel"
       hidden={hidden}
-      id="side-panel-tabpanel-1"
-      aria-labelledby="side-panel-tab-1"
+      id="options-tabpanel"
+      aria-labelledby="options-tab"
     >
       <FormControlLabel
         control={

@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   Alert,
   Box,
+  Button,
   Checkbox,
   CircularProgress,
   FormControl,
@@ -9,7 +10,10 @@ import {
   FormGroup,
   InputLabel,
   MenuItem,
+  Radio,
+  RadioGroup,
   Select,
+  Stack,
   type SelectChangeEvent,
   Typography,
 } from "@mui/material";
@@ -21,25 +25,32 @@ export type ConfigurationTabProps = {
   hidden: boolean;
 };
 
+const makeStartLocationsDirectionLabel = (selectedServices: TramService[]) => {
+  return selectedServices
+    .map((service) => extractServiceLocations(service).startLocation)
+    .join(", ");
+};
+
+const makeEndLocationsDirectionLabel = (selectedServices: TramService[]) => {
+  return selectedServices
+    .map((service) => extractServiceLocations(service).endLocation)
+    .join(", ");
+};
+
 export const ConfigurationTab = ({ hidden }: ConfigurationTabProps) => {
   const { data, isPending, isError, error } = useTramStops();
   const [selectedTramStop, setSelectedTramStop] = useState<TramStop | null>(
     null,
   );
   const [selectedServices, setSelectedServices] = useState<TramService[]>([]);
-
-  console.log({
-    selectedTramStop,
-    selectedServices,
-    colors: selectedServices.map(extractServiceColor),
-    locations: selectedServices.map(extractServiceLocations),
-  });
+  const [towards, setTowards] = useState<"start" | "end" | null>(null);
 
   const handleTramStopChange = (event: SelectChangeEvent<string>) => {
     const atcoCode = event.target.value;
     const stop = data?.find((s) => s.atcoCode === atcoCode) ?? null;
     setSelectedTramStop(stop);
     setSelectedServices([]);
+    setTowards(null);
   };
 
   const handleServiceToggle = (service: TramService) => {
@@ -78,26 +89,30 @@ export const ConfigurationTab = ({ hidden }: ConfigurationTabProps) => {
     );
   }
 
+  const canSave =
+    selectedTramStop && selectedServices.length > 0 && towards !== null;
+
   return (
-    <Box
+    <Stack
       role="tabpanel"
       hidden={hidden}
-      id="side-panel-tabpanel-0"
-      aria-labelledby="side-panel-tab-0"
-      sx={{ minHeight: 0 }}
+      id="configuration-tabpanel"
+      aria-labelledby="configuration-tab"
+      useFlexGap
+      spacing={2}
     >
-      <FormControl fullWidth size="small">
-        <InputLabel id="tram-stop-select-label" shrink>
-          Tram stop
-        </InputLabel>
+      <FormControl fullWidth>
+        <InputLabel id="tram-stop-select-label">Tram stop</InputLabel>
         <Select
           labelId="tram-stop-select-label"
           id="tram-stop-select"
           label="Tram stop"
           value={selectedTramStop?.atcoCode ?? ""}
           onChange={handleTramStopChange}
-          displayEmpty
         >
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
           {data.map((stop) => (
             <MenuItem key={stop.atcoCode} value={stop.atcoCode}>
               {stop.name}
@@ -106,8 +121,8 @@ export const ConfigurationTab = ({ hidden }: ConfigurationTabProps) => {
         </Select>
       </FormControl>
 
-      {selectedTramStop && selectedTramStop.services.length > 0 ? (
-        <Box sx={{ mt: 2 }}>
+      {selectedTramStop && (
+        <Box>
           <Typography variant="subtitle2" component="p" sx={{ mb: 1 }}>
             Services
           </Typography>
@@ -117,14 +132,17 @@ export const ConfigurationTab = ({ hidden }: ConfigurationTabProps) => {
                 key={service.id}
                 control={
                   <Checkbox
-                    size="small"
                     checked={selectedServices.some((s) => s.id === service.id)}
                     onChange={() => handleServiceToggle(service)}
                   />
                 }
                 label={
                   <div
-                    style={{ display: "flex", alignItems: "center", gap: 4 }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 4,
+                    }}
                   >
                     <div
                       style={{
@@ -141,7 +159,41 @@ export const ConfigurationTab = ({ hidden }: ConfigurationTabProps) => {
             ))}
           </FormGroup>
         </Box>
-      ) : null}
-    </Box>
+      )}
+
+      {selectedServices.length > 0 && (
+        <Box>
+          <Typography
+            id="towards-label"
+            variant="subtitle2"
+            component="p"
+            sx={{ mb: 1 }}
+          >
+            Towards
+          </Typography>
+          <RadioGroup
+            aria-labelledby="towards-label"
+            name="towards"
+            value={towards}
+            onChange={(e) => setTowards(e.target.value as "start" | "end")}
+          >
+            <FormControlLabel
+              value="start"
+              control={<Radio size="small" />}
+              label={makeStartLocationsDirectionLabel(selectedServices)}
+            />
+            <FormControlLabel
+              value="end"
+              control={<Radio size="small" />}
+              label={makeEndLocationsDirectionLabel(selectedServices)}
+            />
+          </RadioGroup>
+        </Box>
+      )}
+
+      <Box style={{ display: "flex", justifyContent: "flex-end" }}>
+        <Button disabled={!canSave}>Save</Button>
+      </Box>
+    </Stack>
   );
 };
