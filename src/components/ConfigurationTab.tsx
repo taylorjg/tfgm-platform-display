@@ -122,7 +122,21 @@ export const ConfigurationTab = ({ hidden }: ConfigurationTabProps) => {
                     onChange={() => handleServiceToggle(service)}
                   />
                 }
-                label={<div>{service.name}</div>}
+                label={
+                  <div
+                    style={{ display: "flex", alignItems: "center", gap: 4 }}
+                  >
+                    <div
+                      style={{
+                        backgroundColor: extractServiceColor(service),
+                        width: 40,
+                        height: 8,
+                      }}
+                    />
+                    &nbsp;
+                    {service.name}
+                  </div>
+                }
               />
             ))}
           </FormGroup>
