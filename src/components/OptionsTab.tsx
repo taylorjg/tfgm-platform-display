@@ -1,12 +1,12 @@
 import { Box, FormControlLabel, Switch } from "@mui/material";
 
-import { useColorMode } from "@app/colorMode/useColorMode.ts";
+import { useColorMode } from "@app/colorMode";
 
-export type OptionsProps = {
+export type OptionsTabProps = {
   hidden: boolean;
 };
 
-export const Options = function ({ hidden }: OptionsProps) {
+export const OptionsTab = ({ hidden }: OptionsTabProps) => {
   const { mode, setMode } = useColorMode();
 
   return (
@@ -21,7 +21,7 @@ export const Options = function ({ hidden }: OptionsProps) {
           <Switch
             checked={mode === "dark"}
             onChange={(_, checked) => setMode(checked ? "dark" : "light")}
-            inputProps={{ "aria-label": "Use dark theme" }}
+            slotProps={{ input: { "aria-label": "Use dark theme" } }}
           />
         }
         label="Dark mode"

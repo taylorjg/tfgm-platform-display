@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import { APP_VERSION } from "@app/version.ts";
 
-export const Version = function () {
+export const Version = () => {
   return (
     <Typography
       component="div"

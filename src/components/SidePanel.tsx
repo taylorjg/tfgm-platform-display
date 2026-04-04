@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { Box, Drawer, Tab, Tabs } from "@mui/material";
 
-import { Configuration } from "./Configuration.tsx";
-import { Options } from "./Options.tsx";
+import { ConfigurationTab } from "./ConfigurationTab.tsx";
+import { OptionsTab } from "./OptionsTab.tsx";
 
 export type SidePanelProps = {
   open: boolean;
   onClose: () => void;
 };
 
-export const SidePanel = function ({ open, onClose }: SidePanelProps) {
+export const SidePanel = ({ open, onClose }: SidePanelProps) => {
   const [tab, setTab] = useState(0);
 
   return (
@@ -55,8 +55,8 @@ export const SidePanel = function ({ open, onClose }: SidePanelProps) {
         </Tabs>
 
         <Box sx={{ flex: 1, minHeight: 0, p: 2, overflow: "auto" }}>
-          <Configuration hidden={tab !== 0} />
-          <Options hidden={tab !== 1} />
+          <ConfigurationTab hidden={tab !== 0} />
+          <OptionsTab hidden={tab !== 1} />
         </Box>
       </Box>
     </Drawer>

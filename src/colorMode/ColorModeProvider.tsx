@@ -1,10 +1,13 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 
-import { ColorModeContext } from "@app/colorMode/ColorModeContext.ts";
-import type { ColorMode } from "@app/colorMode/ColorModeContext.ts";
+import { ColorModeContext, type ColorMode } from "./ColorModeContext.ts";
 
-export function ColorModeProvider({ children }: { children: ReactNode }) {
+export type ColorModeProviderProps = {
+  children: ReactNode;
+};
+
+export const ColorModeProvider = ({ children }: ColorModeProviderProps) => {
   const [mode, setMode] = useState<ColorMode>("dark");
   const theme = useMemo(() => createTheme({ palette: { mode } }), [mode]);
 
@@ -16,4 +19,4 @@ export function ColorModeProvider({ children }: { children: ReactNode }) {
       </ThemeProvider>
     </ColorModeContext.Provider>
   );
-}
+};

@@ -5,7 +5,7 @@ export type SettingsGearProps = {
   onClick?: () => void;
 };
 
-export const SettingsGear = function ({ onClick }: SettingsGearProps) {
+export const SettingsGear = ({ onClick }: SettingsGearProps) => {
   return (
     <IconButton
       type="button"
