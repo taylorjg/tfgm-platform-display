@@ -1,20 +1,18 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 
+import { ColorModeProvider } from "@app/colorMode/ColorModeProvider.tsx";
 import { App } from "@app/App.tsx";
 
 const queryClient = new QueryClient();
-const theme = createTheme();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
+      <ColorModeProvider>
         <App />
-      </ThemeProvider>
+      </ColorModeProvider>
     </QueryClientProvider>
   </StrictMode>,
 );
