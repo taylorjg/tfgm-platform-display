@@ -30,6 +30,5 @@ export const useTramStops = () => {
     queryKey: ["search-locations"],
     queryFn: fetchTramStops,
     staleTime: Infinity,
-    gcTime: Infinity,
   });
 };

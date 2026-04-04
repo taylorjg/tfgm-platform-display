@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Alert,
   Box,
@@ -18,6 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 
+import type { Configuration } from "@app/contexts";
 import { useConfiguration } from "@app/contexts";
 import { useTramStops, type TramService, type TramStop } from "@app/hooks";
 import { extractServiceColor, extractServiceLocations } from "@app/helpers";
@@ -36,33 +37,56 @@ const makeEndLocationsDirectionLabel = (selectedServices: TramService[]) => {
     .join(", ");
 };
 
-export const ConfigurationTab = () => {
-  const { configuration, setConfiguration } = useConfiguration();
-  const { data, isPending, isError, error } = useTramStops();
-  const [selectedTramStop, setSelectedTramStop] = useState<TramStop | null>(
-    null,
-  );
-  const [selectedServices, setSelectedServices] = useState<TramService[]>([]);
-  const [towards, setTowards] = useState<"starts" | "ends" | null>(null);
+const nullFormState = {
+  selectedTramStop: null as TramStop | null,
+  selectedServices: [] as TramService[],
+  towards: null as "starts" | "ends" | null,
+};
 
-  useEffect(() => {
-    if (data && configuration) {
-      const stop =
-        data.find((s) => s.atcoCode === configuration.tramStopAtcoCode) ?? null;
-      if (stop) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setSelectedTramStop(stop);
-        setSelectedServices(
-          stop.services.filter((s) => configuration.serviceIds.includes(s.id)),
-        );
-        setTowards(configuration.towards);
-      }
-    }
-  }, [configuration, data]);
+const getInitialFormState = (
+  tramsStops: TramStop[],
+  configuration: Configuration | null,
+) => {
+  if (!configuration) return nullFormState;
+
+  const tramStop =
+    tramsStops.find((s) => s.atcoCode === configuration.tramStopAtcoCode) ??
+    null;
+
+  if (!tramStop) return nullFormState;
+
+  return {
+    selectedTramStop: tramStop,
+    selectedServices: tramStop.services.filter((s) =>
+      configuration.serviceIds.includes(s.id),
+    ),
+    towards: configuration.towards,
+  };
+};
+
+type ConfigurationFormProps = {
+  tramStops: TramStop[];
+  configuration: Configuration | null;
+  setConfiguration: (configuration: Configuration) => void;
+};
+
+const ConfigurationForm = ({
+  tramStops,
+  configuration,
+  setConfiguration,
+}: ConfigurationFormProps) => {
+  const initialFormState = getInitialFormState(tramStops, configuration);
+  const [selectedTramStop, setSelectedTramStop] = useState(
+    initialFormState.selectedTramStop,
+  );
+  const [selectedServices, setSelectedServices] = useState(
+    initialFormState.selectedServices,
+  );
+  const [towards, setTowards] = useState(initialFormState.towards);
 
   const handleTramStopChange = (event: SelectChangeEvent<string>) => {
     const atcoCode = event.target.value;
-    const stop = data?.find((s) => s.atcoCode === atcoCode) ?? null;
+    const stop = tramStops.find((s) => s.atcoCode === atcoCode) ?? null;
     setSelectedTramStop(stop);
     setSelectedServices([]);
     setTowards(null);
@@ -70,12 +94,9 @@ export const ConfigurationTab = () => {
 
   const handleServiceToggle = (service: TramService) => {
     setSelectedServices((prev) => {
-      // Are we removing this service ?
       if (prev.some((s) => s.id === service.id)) {
         return prev.filter((s) => s.id !== service.id);
       }
-
-      // No so we must be adding this service
       return [...prev, service];
     });
   };
@@ -88,32 +109,10 @@ export const ConfigurationTab = () => {
     });
   };
 
-  if (isPending) {
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
-        <CircularProgress size={24} aria-label="Loading tram stops" />
-      </Box>
-    );
-  }
-
-  if (isError) {
-    return (
-      <Alert severity="error">
-        {error instanceof Error ? error.message : "Failed to load tram stops"}
-      </Alert>
-    );
-  }
-
-  if (data.length === 0) {
-    return (
-      <Typography variant="body2" color="text.secondary">
-        No tram stops found.
-      </Typography>
-    );
-  }
-
   const canSave =
-    selectedTramStop && selectedServices.length > 0 && towards !== null;
+    Boolean(selectedTramStop) &&
+    selectedServices.length > 0 &&
+    towards !== null;
 
   return (
     <Stack
@@ -135,9 +134,9 @@ export const ConfigurationTab = () => {
           <MenuItem value="">
             <em>None</em>
           </MenuItem>
-          {data.map((stop) => (
-            <MenuItem key={stop.atcoCode} value={stop.atcoCode}>
-              {stop.name}
+          {tramStops.map((s) => (
+            <MenuItem key={s.atcoCode} value={s.atcoCode}>
+              {s.name}
             </MenuItem>
           ))}
         </Select>
@@ -219,5 +218,45 @@ export const ConfigurationTab = () => {
         </Button>
       </Box>
     </Stack>
+  );
+};
+
+export const ConfigurationTab = () => {
+  const { configuration, setConfiguration } = useConfiguration();
+  const { data: tramStops, isPending, isError, error } = useTramStops();
+
+  if (isPending) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
+        <CircularProgress size={24} aria-label="Loading tram stops" />
+      </Box>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Alert severity="error">
+        {error instanceof Error ? error.message : "Failed to load tram stops"}
+      </Alert>
+    );
+  }
+
+  if (tramStops.length === 0) {
+    return (
+      <Typography variant="body2" color="text.secondary">
+        No tram stops found.
+      </Typography>
+    );
+  }
+
+  const formKey = JSON.stringify(configuration ?? "none");
+
+  return (
+    <ConfigurationForm
+      key={formKey}
+      tramStops={tramStops}
+      configuration={configuration}
+      setConfiguration={setConfiguration}
+    />
   );
 };
