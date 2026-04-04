@@ -23,8 +23,6 @@ import { useConfiguration } from "@app/contexts";
 import { useTramStops, type TramService, type TramStop } from "@app/hooks";
 import { extractServiceColor, extractServiceLocations } from "@app/helpers";
 
-export type ConfigurationTabProps = object;
-
 const makeStartLocationsDirectionLabel = (selectedServices: TramService[]) => {
   return selectedServices
     .map((service) => extractServiceLocations(service).startLocation)
@@ -68,12 +66,14 @@ type ConfigurationFormProps = {
   tramStops: TramStop[];
   configuration: Configuration | null;
   setConfiguration: (configuration: Configuration) => void;
+  onClose: () => void;
 };
 
 const ConfigurationForm = ({
   tramStops,
   configuration,
   setConfiguration,
+  onClose,
 }: ConfigurationFormProps) => {
   const initialFormState = getInitialFormState(tramStops, configuration);
   const [selectedTramStop, setSelectedTramStop] = useState(
@@ -107,6 +107,7 @@ const ConfigurationForm = ({
       serviceIds: selectedServices.map((s) => s.id),
       towards: towards!,
     });
+    onClose();
   };
 
   const canSave =
@@ -123,20 +124,19 @@ const ConfigurationForm = ({
       useFlexGap
     >
       <FormControl fullWidth>
-        <InputLabel id="tram-stop-select-label">Tram stop</InputLabel>
+        <InputLabel id="tram-stop-select-label">Tram Stop</InputLabel>
         <Select
           labelId="tram-stop-select-label"
           id="tram-stop-select"
-          label="Tram stop"
+          label="Tram Stop"
           value={selectedTramStop?.atcoCode ?? ""}
           onChange={handleTramStopChange}
+          // https://github.com/mui/material-ui/issues/34656
+          MenuProps={{ PaperProps: { sx: { maxHeight: 350 } } }}
         >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          {tramStops.map((s) => (
-            <MenuItem key={s.atcoCode} value={s.atcoCode}>
-              {s.name}
+          {tramStops.map(({ atcoCode, name }) => (
+            <MenuItem key={atcoCode} value={atcoCode}>
+              {name}
             </MenuItem>
           ))}
         </Select>
@@ -221,7 +221,11 @@ const ConfigurationForm = ({
   );
 };
 
-export const ConfigurationTab = () => {
+export type ConfigurationTabProps = {
+  onClose: () => void;
+};
+
+export const ConfigurationTab = ({ onClose }: ConfigurationTabProps) => {
   const { configuration, setConfiguration } = useConfiguration();
   const { data: tramStops, isPending, isError, error } = useTramStops();
 
@@ -257,6 +261,7 @@ export const ConfigurationTab = () => {
       tramStops={tramStops}
       configuration={configuration}
       setConfiguration={setConfiguration}
+      onClose={onClose}
     />
   );
 };
