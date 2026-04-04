@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 
 import { useTramStops, type TramService, type TramStop } from "@app/hooks";
+import { extractServiceColor, extractServiceLocations } from "@app/helpers";
 
 export type ConfigurationTabProps = {
   hidden: boolean;
@@ -27,7 +28,12 @@ export const ConfigurationTab = ({ hidden }: ConfigurationTabProps) => {
   );
   const [selectedServices, setSelectedServices] = useState<TramService[]>([]);
 
-  console.log({ selectedTramStop, selectedServices });
+  console.log({
+    selectedTramStop,
+    selectedServices,
+    colors: selectedServices.map(extractServiceColor),
+    locations: selectedServices.map(extractServiceLocations),
+  });
 
   const handleTramStopChange = (event: SelectChangeEvent<string>) => {
     const atcoCode = event.target.value;
@@ -116,7 +122,7 @@ export const ConfigurationTab = ({ hidden }: ConfigurationTabProps) => {
                     onChange={() => handleServiceToggle(service)}
                   />
                 }
-                label={service.name}
+                label={<div>{service.name}</div>}
               />
             ))}
           </FormGroup>
