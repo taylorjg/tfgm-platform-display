@@ -55,8 +55,8 @@ export const SidePanel = ({ open, onClose }: SidePanelProps) => {
         </Tabs>
 
         <Box sx={{ flex: 1, minHeight: 0, p: 2, overflow: "auto" }}>
-          <ConfigurationTab hidden={tab !== 0} />
-          <OptionsTab hidden={tab !== 1} />
+          {tab === 0 && <ConfigurationTab />}
+          {tab === 1 && <OptionsTab />}
         </Box>
       </Box>
     </Drawer>

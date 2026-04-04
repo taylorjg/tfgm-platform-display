@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Box,
@@ -18,12 +18,11 @@ import {
   Typography,
 } from "@mui/material";
 
+import { useConfiguration } from "@app/contexts";
 import { useTramStops, type TramService, type TramStop } from "@app/hooks";
 import { extractServiceColor, extractServiceLocations } from "@app/helpers";
 
-export type ConfigurationTabProps = {
-  hidden: boolean;
-};
+export type ConfigurationTabProps = object;
 
 const makeStartLocationsDirectionLabel = (selectedServices: TramService[]) => {
   return selectedServices
@@ -37,13 +36,29 @@ const makeEndLocationsDirectionLabel = (selectedServices: TramService[]) => {
     .join(", ");
 };
 
-export const ConfigurationTab = ({ hidden }: ConfigurationTabProps) => {
+export const ConfigurationTab = () => {
+  const { configuration, setConfiguration } = useConfiguration();
   const { data, isPending, isError, error } = useTramStops();
   const [selectedTramStop, setSelectedTramStop] = useState<TramStop | null>(
     null,
   );
   const [selectedServices, setSelectedServices] = useState<TramService[]>([]);
-  const [towards, setTowards] = useState<"start" | "end" | null>(null);
+  const [towards, setTowards] = useState<"starts" | "ends" | null>(null);
+
+  useEffect(() => {
+    if (data && configuration) {
+      const stop =
+        data.find((s) => s.atcoCode === configuration.tramStopAtcoCode) ?? null;
+      if (stop) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setSelectedTramStop(stop);
+        setSelectedServices(
+          stop.services.filter((s) => configuration.serviceIds.includes(s.id)),
+        );
+        setTowards(configuration.towards);
+      }
+    }
+  }, [configuration, data]);
 
   const handleTramStopChange = (event: SelectChangeEvent<string>) => {
     const atcoCode = event.target.value;
@@ -62,6 +77,14 @@ export const ConfigurationTab = ({ hidden }: ConfigurationTabProps) => {
 
       // No so we must be adding this service
       return [...prev, service];
+    });
+  };
+
+  const onSave = () => {
+    setConfiguration({
+      tramStopAtcoCode: selectedTramStop?.atcoCode ?? "",
+      serviceIds: selectedServices.map((s) => s.id),
+      towards: towards!,
     });
   };
 
@@ -95,11 +118,10 @@ export const ConfigurationTab = ({ hidden }: ConfigurationTabProps) => {
   return (
     <Stack
       role="tabpanel"
-      hidden={hidden}
       id="configuration-tabpanel"
       aria-labelledby="configuration-tab"
-      useFlexGap
       spacing={2}
+      useFlexGap
     >
       <FormControl fullWidth>
         <InputLabel id="tram-stop-select-label">Tram stop</InputLabel>
@@ -175,15 +197,15 @@ export const ConfigurationTab = ({ hidden }: ConfigurationTabProps) => {
             aria-labelledby="towards-label"
             name="towards"
             value={towards}
-            onChange={(e) => setTowards(e.target.value as "start" | "end")}
+            onChange={(e) => setTowards(e.target.value as "starts" | "ends")}
           >
             <FormControlLabel
-              value="start"
+              value="starts"
               control={<Radio size="small" />}
               label={makeStartLocationsDirectionLabel(selectedServices)}
             />
             <FormControlLabel
-              value="end"
+              value="ends"
               control={<Radio size="small" />}
               label={makeEndLocationsDirectionLabel(selectedServices)}
             />
@@ -192,7 +214,9 @@ export const ConfigurationTab = ({ hidden }: ConfigurationTabProps) => {
       )}
 
       <Box style={{ display: "flex", justifyContent: "flex-end" }}>
-        <Button disabled={!canSave}>Save</Button>
+        <Button disabled={!canSave} onClick={onSave}>
+          Save
+        </Button>
       </Box>
     </Stack>
   );
