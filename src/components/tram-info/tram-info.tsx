@@ -34,33 +34,43 @@ export const TramInfo = ({ configuration }: TramInfoProps) => {
                 No trams due at this stop.
               </Typography>
             ) : (
-              data.map((tram, index) => (
-                <Box
-                  component="li"
-                  key={`${tram.destinationDisplay}-${tram.due}-${index}`}
-                  sx={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    alignItems: "baseline",
-                    justifyContent: "space-between",
-                    gap: 1,
-                    py: 0.5,
-                    borderBottom: 1,
-                    borderColor: "divider",
-                  }}
-                >
-                  <Typography variant="subtitle1" component="span">
-                    {tram.destinationDisplay}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    component="span"
+              data.map((tram, index) => {
+                const leftText = tram.destinationDisplay;
+                const dbl = tram.carriages === "Double" ? "dbl" : "";
+                const due = tram.due > 0 ? `${tram.due} min` : "";
+                const rightText =
+                  tram.status !== "Due"
+                    ? tram.status
+                    : [dbl, due].filter(Boolean).join(" ");
+
+                return (
+                  <Box
+                    component="li"
+                    key={`${tram.destinationDisplay}-${tram.due}-${index}`}
+                    sx={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      alignItems: "baseline",
+                      justifyContent: "space-between",
+                      gap: 1,
+                      py: 0.5,
+                      borderBottom: 1,
+                      borderColor: "divider",
+                    }}
                   >
-                    {tram.status} · {tram.carriages} · {tram.due} min
-                  </Typography>
-                </Box>
-              ))
+                    <Typography variant="subtitle1" component="span">
+                      {leftText}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      component="span"
+                    >
+                      {rightText}
+                    </Typography>
+                  </Box>
+                );
+              })
             )}
           </Box>
         ) : null}

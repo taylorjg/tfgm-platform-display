@@ -12,7 +12,7 @@ export const StyledTramInfoOuter = styled.div`
 `;
 
 export const StyledTramInfoInner = styled.div`
-  width: 50rem;
+  width: 30rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
