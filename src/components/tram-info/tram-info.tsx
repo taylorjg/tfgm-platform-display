@@ -1,9 +1,10 @@
 import { Box, Typography } from "@mui/material";
 
 import { useGetTrams } from "@app/hooks";
+import { type Configuration } from "@app/contexts";
+import { Progress } from "@app/components/progress";
 
 import { StyledTramInfoInner, StyledTramInfoOuter } from "./styles";
-import type { Configuration } from "@app/contexts";
 
 type TramInfoProps = {
   configuration: Configuration;
@@ -23,12 +24,12 @@ export const TramInfo = ({ configuration }: TramInfoProps) => {
               p: 0,
               m: 0,
               width: "100%",
-              maxWidth: 520,
               display: "flex",
               flexDirection: "column",
               gap: 1,
             }}
           >
+            <Progress />
             {data.length === 0 ? (
               <Typography variant="body2" color="text.secondary">
                 No trams due at this stop.
