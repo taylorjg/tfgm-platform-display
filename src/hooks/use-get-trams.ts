@@ -39,6 +39,6 @@ export const useGetTrams = (configuration: Configuration | null) => {
     queryKey: ["get-trams", atcoCode, serviceIds, towards],
     queryFn: () => fetchTrams(atcoCode, serviceIds, towards),
     enabled: Boolean(atcoCode),
-    refetchInterval: 30_000,
+    refetchInterval: 10_000,
   });
 };

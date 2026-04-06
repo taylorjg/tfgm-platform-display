@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 
 import { useGetTrams } from "@app/hooks";
@@ -6,12 +7,25 @@ import { Progress } from "@app/components/progress";
 
 import { StyledTramInfoInner, StyledTramInfoOuter } from "./styles";
 
+const formatTimeHms = (d: Date) => {
+  const hh = String(d.getHours()).padStart(2, "0");
+  const mm = String(d.getMinutes()).padStart(2, "0");
+  const ss = String(d.getSeconds()).padStart(2, "0");
+  return `${hh}:${mm}:${ss}`;
+};
+
 type TramInfoProps = {
   configuration: Configuration;
 };
 
 export const TramInfo = ({ configuration }: TramInfoProps) => {
+  const [now, setNow] = useState(() => new Date());
   const { data } = useGetTrams(configuration);
+
+  useEffect(() => {
+    const id = window.setInterval(() => setNow(new Date()), 1000);
+    return () => window.clearInterval(id);
+  }, []);
 
   return (
     <StyledTramInfoOuter>
@@ -73,6 +87,9 @@ export const TramInfo = ({ configuration }: TramInfoProps) => {
                 );
               })
             )}
+            <Typography variant="subtitle1" component="p" align="center">
+              {formatTimeHms(now)}
+            </Typography>
           </Box>
         ) : null}
       </StyledTramInfoInner>
