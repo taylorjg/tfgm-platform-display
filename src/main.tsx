@@ -14,9 +14,9 @@ const queryClient = new QueryClient();
 
 // TODO: read initialConfiguration from local storage
 const initialConfiguration: Configuration = {
-  tramStopAtcoCode: "9400ZZMASTW",
-  serviceIds: ["Navy_Line"],
-  towards: "starts",
+  atcoCode: "9400ZZMASTW",
+  serviceIds: ["Pink_Line", "Navy_Line"],
+  towards: "ends",
 };
 
 // TODO: read initialOptions from local storage

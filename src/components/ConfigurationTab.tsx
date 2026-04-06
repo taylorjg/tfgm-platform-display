@@ -48,8 +48,7 @@ const getInitialFormState = (
   if (!configuration) return nullFormState;
 
   const tramStop =
-    tramsStops.find((s) => s.atcoCode === configuration.tramStopAtcoCode) ??
-    null;
+    tramsStops.find((s) => s.atcoCode === configuration.atcoCode) ?? null;
 
   if (!tramStop) return nullFormState;
 
@@ -103,7 +102,7 @@ const ConfigurationForm = ({
 
   const onSave = () => {
     setConfiguration({
-      tramStopAtcoCode: selectedTramStop?.atcoCode ?? "",
+      atcoCode: selectedTramStop?.atcoCode ?? "",
       serviceIds: selectedServices.map((s) => s.id),
       towards: towards!,
     });

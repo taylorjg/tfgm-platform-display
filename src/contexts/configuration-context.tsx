@@ -2,7 +2,7 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
 
 export type Configuration = {
-  tramStopAtcoCode: string;
+  atcoCode: string;
   serviceIds: string[];
   towards: "starts" | "ends";
 };
