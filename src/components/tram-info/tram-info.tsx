@@ -1,7 +1,8 @@
 import { Box, Typography } from "@mui/material";
 
-import { useCurrentTime, useGetTrams } from "@app/hooks";
 import { type Configuration } from "@app/contexts";
+import { useCurrentTime, useGetTrams } from "@app/hooks";
+import { LedMatrixTest } from "@app/components/led-matrix-test";
 import { Progress } from "@app/components/progress";
 
 import { StyledTramInfoInner, StyledTramInfoOuter } from "./styles";
@@ -14,6 +15,7 @@ type TramInfoProps = {
 export const TramInfo = ({ configuration }: TramInfoProps) => {
   const { data } = useGetTrams(configuration);
   const currentTime = useCurrentTime();
+  const currentTimeFormatted = formatTime(currentTime);
 
   return (
     <StyledTramInfoOuter>
@@ -75,9 +77,9 @@ export const TramInfo = ({ configuration }: TramInfoProps) => {
                 );
               })
             )}
-            <Typography variant="subtitle1" component="p" align="center">
-              {formatTime(currentTime)}
-            </Typography>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <LedMatrixTest message={currentTimeFormatted} />
+            </div>
           </Box>
         ) : null}
       </StyledTramInfoInner>
