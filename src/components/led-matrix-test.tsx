@@ -1,10 +1,30 @@
 import { useEffect, useRef } from "react";
 
 import { initialiseGame } from "@app/phaser";
+import type { Font } from "@app/fonts";
+import type { LedMatrixSceneData } from "@app/phaser/scene";
 
-export const LedMatrixTest = ({ message }: { message: string }) => {
+export type LedMatrixTestProps = {
+  message: string;
+  font: Font;
+  width: string;
+  height: string;
+  numCols: number;
+};
+
+export const LedMatrixTest = ({
+  message,
+  font,
+  width,
+  height,
+  numCols,
+}: LedMatrixTestProps) => {
   const parentRef = useRef<HTMLDivElement | null>(null);
-  const initialValuesRef = useRef({ message });
+  const initialValuesRef = useRef<LedMatrixSceneData>({
+    message,
+    font,
+    numCols,
+  });
   const gameActionsRef = useRef<{
     setMessage: (message: string) => void;
     destroy: () => void;
@@ -23,5 +43,5 @@ export const LedMatrixTest = ({ message }: { message: string }) => {
     gameActionsRef.current?.setMessage(message);
   }, [message]);
 
-  return <div ref={parentRef} style={{ width: "220px", height: "30px" }} />;
+  return <div ref={parentRef} style={{ width, height }} />;
 };

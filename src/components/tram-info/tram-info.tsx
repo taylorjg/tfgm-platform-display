@@ -7,6 +7,7 @@ import { Progress } from "@app/components/progress";
 
 import { StyledTramInfoInner, StyledTramInfoOuter } from "./styles";
 import { formatTime } from "@app/helpers";
+import { fonts } from "@app/fonts";
 
 type TramInfoProps = {
   configuration: Configuration;
@@ -30,7 +31,7 @@ export const TramInfo = ({ configuration }: TramInfoProps) => {
               width: "100%",
               display: "flex",
               flexDirection: "column",
-              gap: 1,
+              gap: 0.5,
             }}
           >
             <Progress />
@@ -78,7 +79,40 @@ export const TramInfo = ({ configuration }: TramInfoProps) => {
               })
             )}
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <LedMatrixTest message={currentTimeFormatted} />
+              <LedMatrixTest
+                message="East Didsbury dbl 5 min"
+                font={fonts[0]}
+                width="600px"
+                height="20px"
+                numCols={185}
+              />
+            </div>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <LedMatrixTest
+                message="Manchester Airport 8 min"
+                font={fonts[0]}
+                width="600px"
+                height="20px"
+                numCols={185}
+              />
+            </div>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <LedMatrixTest
+                message="Welcome to Metrolink. Ticket checks are taking place across the network today. For travel information visit www.TfGM.com."
+                font={fonts[0]}
+                width="600px"
+                height="20px"
+                numCols={185}
+              />
+            </div>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <LedMatrixTest
+                message={currentTimeFormatted}
+                font={fonts[1]}
+                width="200px"
+                height="20px"
+                numCols={61}
+              />
             </div>
           </Box>
         ) : null}

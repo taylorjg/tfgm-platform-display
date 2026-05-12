@@ -1,11 +1,13 @@
 import Phaser from "phaser";
 
-import { fonts, type Font } from "@app/fonts";
+import { type Font } from "@app/fonts";
 import { makeMessageMatrix } from "@app/helpers";
 import { first, range } from "@app/utils";
 
 export type LedMatrixSceneData = {
   message: string;
+  font: Font;
+  numCols: number;
 };
 
 type Dimensions = {
@@ -24,7 +26,7 @@ const OFF_COLOUR = 0x303030;
 
 export class LedMatrixScene extends Phaser.Scene {
   private _dimensions!: Dimensions;
-  private _font: Font = fonts[1];
+  private _font!: Font;
   private _messageMatrix!: string[];
   private _dots!: Phaser.GameObjects.Arc[][];
 
@@ -36,12 +38,13 @@ export class LedMatrixScene extends Phaser.Scene {
   create(data: LedMatrixSceneData) {
     console.log("[LedMatrixScene#create]", data);
 
+    this._font = data.font;
     this._messageMatrix = makeMessageMatrix(this._font, data.message);
     this._dots = [];
 
     this.game.events.on("setMessage", this._onSetMessage, this);
 
-    this._onResize();
+    this._onResize(data.numCols);
   }
 
   _onSetMessage = (message: string) => {
@@ -53,7 +56,7 @@ export class LedMatrixScene extends Phaser.Scene {
     this._updateDots();
   };
 
-  _onResize = () => {
+  _onResize = (numCols: number) => {
     console.log("[LedMatrixScene#_onResize]");
 
     for (const dot of this._dots.flat()) {
@@ -61,14 +64,20 @@ export class LedMatrixScene extends Phaser.Scene {
     }
 
     const { width, height } = this.scale.displaySize;
-    const numVerticalDots = this._font.numVerticalDots;
-    const numerator = 10 * height;
-    const denominator = 11 * numVerticalDots - 1;
-    const diameter = Math.floor(numerator / denominator);
+    const numRows = this._font.numVerticalDots;
+
+    const numeratorH = 10 * height;
+    const denominatorH = 11 * numRows - 1;
+    const diameterH = Math.floor(numeratorH / denominatorH);
+
+    const numeratorW = 10 * width;
+    const denominatorW = 11 * numCols - 1;
+    const diameterW = Math.floor(numeratorW / denominatorW);
+
+    const diameter = Math.min(diameterH, diameterW);
     const radius = diameter / 2;
     const gap = diameter / 10;
-    const numRows = numVerticalDots;
-    const numCols = Math.floor(width / (diameter + gap));
+
     const marginX = (width - (numCols * (diameter + gap) - gap)) / 2;
     const marginY = (height - (numRows * (diameter + gap) - gap)) / 2;
     const firstLine = first(this._messageMatrix) ?? "";
