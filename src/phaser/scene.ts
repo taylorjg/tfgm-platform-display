@@ -39,7 +39,11 @@ export class LedMatrixScene extends Phaser.Scene {
     console.log("[LedMatrixScene#create]", data);
 
     this._font = data.font;
-    this._messageMatrix = makeMessageMatrix(this._font, data.message);
+    this._messageMatrix = makeMessageMatrix(
+      this._font,
+      data.numCols,
+      data.message,
+    );
     this._dots = [];
 
     this.game.events.on("setMessage", this._onSetMessage, this);
@@ -49,7 +53,11 @@ export class LedMatrixScene extends Phaser.Scene {
 
   _onSetMessage = (message: string) => {
     console.log("[LedMatrixScene#_onSetMessage]", message);
-    this._messageMatrix = makeMessageMatrix(this._font, message);
+    this._messageMatrix = makeMessageMatrix(
+      this._font,
+      this._dimensions.numCols,
+      message,
+    );
     const firstLine = first(this._messageMatrix) ?? "";
     const { numCols } = this._dimensions;
     this._dimensions.wrapAtCol = firstLine.length + numCols;
