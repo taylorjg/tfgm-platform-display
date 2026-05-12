@@ -80,7 +80,7 @@ export const TramInfo = ({ configuration }: TramInfoProps) => {
             )}
             <div style={{ display: "flex", justifyContent: "center" }}>
               <LedMatrixTest
-                message="East Didsbury dbl 5 min"
+                message="East Didsbury dbl 4 min"
                 font={fonts[0]}
                 width="600px"
                 height="20px"
@@ -89,7 +89,7 @@ export const TramInfo = ({ configuration }: TramInfoProps) => {
             </div>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <LedMatrixTest
-                message="Manchester Airport 8 min"
+                message="Manchester Airport 12 min"
                 font={fonts[0]}
                 width="600px"
                 height="20px"
