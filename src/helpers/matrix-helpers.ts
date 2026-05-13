@@ -1,22 +1,48 @@
 import type { Font } from "@app/fonts";
-import { range } from "@app/utils";
+import { first, range } from "@app/utils";
 
-const appendCharacterToMatrix = (font: Font, matrix: string[], ch: string) => {
-  const value = font.fontMap.get(ch);
+const lookupCharacter =
+  (font: Font) =>
+  (ch: string): string[] => {
+    const value = font.fontMap.get(ch);
 
-  if (!value) {
-    console.warn(
-      `Character "${ch}" not found in fontMap for font "${font.name}".`,
-    );
-    return;
-  }
+    if (!value) {
+      console.warn(
+        `Character "${ch}" not found in fontMap for font "${font.name}".`,
+      );
+      return Array(font.numVerticalDots).fill("");
+    }
 
-  matrix.forEach((matrixLine, index) => {
-    const characterDotLine = value.dotLines[index] ?? "";
-    const gap = matrixLine ? " " : "";
-    const newMatrixLine = matrixLine + gap + characterDotLine;
-    matrix[index] = newMatrixLine;
-  });
+    return value.dotLines;
+  };
+
+const GAP = " ";
+
+const makeMessageMatrixSimple = (font: Font, message: string): string[] => {
+  const chs = Array.from(message);
+  const dotLinesPerCharacter = chs.map(lookupCharacter(font));
+  return range(font.numVerticalDots).map((index) =>
+    dotLinesPerCharacter.map((v) => v[index]).join(GAP),
+  );
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const makeMessageMatrixCentred = (
+  font: Font,
+  numCols: number,
+  message: string,
+): string[] => {
+  const matrix = makeMessageMatrixSimple(font, message);
+  const matrixCols = first(matrix).length;
+  const remainingCols = numCols - matrixCols;
+  console.assert(remainingCols >= 0);
+  const numLeftPaddingCols = Math.floor(remainingCols / 2);
+  const numRightPaddingCols = remainingCols - numLeftPaddingCols;
+  const leftPadding = " ".repeat(numLeftPaddingCols);
+  const rightPadding = " ".repeat(numRightPaddingCols);
+  return range(font.numVerticalDots).map(
+    (index) => leftPadding + matrix[index] + rightPadding,
+  );
 };
 
 const makeMessageMatrixSpaceBetween = (
@@ -25,10 +51,10 @@ const makeMessageMatrixSpaceBetween = (
   leftText: string,
   rightText: string,
 ): string[] => {
-  const leftMatrix = makeMessageMatrix(font, numCols, leftText);
-  const rightMatrix = makeMessageMatrix(font, numCols, rightText);
-  const leftMatrixCols = leftMatrix[0].length;
-  const rightMatrixCols = rightMatrix[0].length;
+  const leftMatrix = makeMessageMatrixSimple(font, leftText);
+  const rightMatrix = makeMessageMatrixSimple(font, rightText);
+  const leftMatrixCols = first(leftMatrix).length;
+  const rightMatrixCols = first(rightMatrix).length;
   const spaceBetweenCols = numCols - leftMatrixCols - rightMatrixCols;
 
   console.assert(spaceBetweenCols >= 0);
@@ -54,12 +80,5 @@ export const makeMessageMatrix = (
     return makeMessageMatrixSpaceBetween(font, numCols, leftText, rightText);
   }
 
-  const matrix = Array(font.numVerticalDots).fill("");
-
-  const chs = Array.from(message);
-  for (const ch of chs) {
-    appendCharacterToMatrix(font, matrix, ch);
-  }
-
-  return matrix;
+  return makeMessageMatrixSimple(font, message);
 };
