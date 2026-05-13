@@ -12,11 +12,11 @@ export const fonts: Font[] = [
   {
     name: "Font 1",
     fontMap: fontMap1,
-    numVerticalDots: fontMap1.values().next().value?.lines.length ?? 0,
+    numVerticalDots: fontMap1.values().next().value?.dotLines.length ?? 0,
   },
   {
     name: "Font 2",
     fontMap: fontMap2,
-    numVerticalDots: fontMap2.values().next().value?.lines.length ?? 0,
+    numVerticalDots: fontMap2.values().next().value?.dotLines.length ?? 0,
   },
 ];

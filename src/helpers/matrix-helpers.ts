@@ -11,20 +11,15 @@ const appendCharacterToMatrix = (font: Font, matrix: string[], ch: string) => {
     return;
   }
 
-  const { start, length } = value;
-
   matrix.forEach((matrixLine, index) => {
-    const characterLine = (value.lines[index] ?? "").slice(
-      start,
-      start + length,
-    );
+    const characterDotLine = value.dotLines[index] ?? "";
     const gap = matrixLine ? " " : "";
-    const newMatrixLine = matrixLine + gap + characterLine;
+    const newMatrixLine = matrixLine + gap + characterDotLine;
     matrix[index] = newMatrixLine;
   });
 };
 
-const makeMessageMatrixTwoParts = (
+const makeMessageMatrixSpaceBetween = (
   font: Font,
   numCols: number,
   leftText: string,
@@ -56,7 +51,7 @@ export const makeMessageMatrix = (
 
   if (parts.length === 2) {
     const [leftText, rightText] = parts;
-    return makeMessageMatrixTwoParts(font, numCols, leftText, rightText);
+    return makeMessageMatrixSpaceBetween(font, numCols, leftText, rightText);
   }
 
   const matrix = Array(font.numVerticalDots).fill("");

@@ -1,14 +1,14 @@
 import { first, last, range } from "@app/utils";
 
-const findStarts = (lines: string[]): number[] => {
+const BREAK = "|";
+
+const findBreaks = (lastDotLine: string): number[] => {
   const breaks = [0];
+  const numDots = lastDotLine.length;
 
-  const lastLine = last(lines);
-  const lineLength = lastLine.length;
-
-  for (const index of range(lineLength)) {
-    if (lastLine[index] === "|") {
-      breaks.push(index + 1);
+  for (const dotIndex of range(numDots)) {
+    if (lastDotLine[dotIndex] === BREAK) {
+      breaks.push(dotIndex + 1);
     }
   }
 
@@ -16,32 +16,31 @@ const findStarts = (lines: string[]): number[] => {
 };
 
 export type CharacterDescriptor = {
-  lines: string[];
-  start: number;
-  length: number;
+  dotLines: string[];
 };
 
 export type FontMapKvp = [string, CharacterDescriptor];
 
 export const makeFontMapKvps = (
   characters: string,
-  line: string,
+  dotData: string,
 ): FontMapKvp[] => {
-  const lines = line.split("\n").filter(Boolean);
-  const firstLine = first(lines);
-  const lineLength = firstLine.length;
+  const dotLines = dotData.split("\n").filter(Boolean);
+  const firstDotLine = first(dotLines);
+  const numDots = firstDotLine.length;
 
-  console.assert(lines.every((line) => line.length === lineLength));
+  console.assert(dotLines.every((dotLine) => dotLine.length === numDots));
 
   const chs = Array.from(characters);
-  const starts = findStarts(lines);
-
-  console.assert(starts.length === chs.length);
+  const breaks = findBreaks(last(dotLines));
+  console.assert(breaks.length === chs.length);
 
   return chs.map((ch, index) => {
-    const start = starts[index];
-    const end = starts[index + 1] ?? lineLength + 1;
-    const length = end - start - 1;
-    return [ch, { lines, start, length }];
+    const startIndex = breaks[index];
+    const endIndex = breaks[index + 1] ?? numDots + 1;
+    const characterDotLines = dotLines.map((dotLine) =>
+      dotLine.slice(startIndex, endIndex - 1),
+    );
+    return [ch, { dotLines: characterDotLines }];
   });
 };
