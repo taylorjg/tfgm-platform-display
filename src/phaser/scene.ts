@@ -5,8 +5,8 @@ import { makeMessageMatrix } from "@app/helpers";
 import { first, range } from "@app/utils";
 
 export type LedMatrixSceneData = {
-  message: string;
   font: Font;
+  message: string;
   numCols: number;
 };
 
@@ -35,8 +35,8 @@ export class LedMatrixScene extends Phaser.Scene {
   private _enableScrolling: boolean = false;
 
   constructor() {
-    super("LedMatrixScene");
     console.log("[LedMatrixScene#constructor]");
+    super("LedMatrixScene");
   }
 
   create(data: LedMatrixSceneData) {
@@ -44,7 +44,7 @@ export class LedMatrixScene extends Phaser.Scene {
 
     this._font = data.font;
     this._messageMatrix = makeMessageMatrix(
-      this._font,
+      data.font,
       data.numCols,
       data.message,
     );

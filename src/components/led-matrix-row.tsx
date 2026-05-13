@@ -4,25 +4,25 @@ import { initialiseGame } from "@app/phaser";
 import type { Font } from "@app/fonts";
 import type { LedMatrixSceneData } from "@app/phaser/scene";
 
-export type LedMatrixTestProps = {
-  message: string;
+export type LedMatrixRowProps = {
   font: Font;
+  message: string;
   width: string;
   height: string;
   numCols: number;
 };
 
-export const LedMatrixTest = ({
-  message,
+export const LedMatrixRow = ({
   font,
+  message,
   width,
   height,
   numCols,
-}: LedMatrixTestProps) => {
+}: LedMatrixRowProps) => {
   const parentRef = useRef<HTMLDivElement | null>(null);
   const initialValuesRef = useRef<LedMatrixSceneData>({
-    message,
     font,
+    message,
     numCols,
   });
   const gameActionsRef = useRef<{

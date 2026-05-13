@@ -1,19 +1,17 @@
 import { Box, Typography } from "@mui/material";
 
 import { type Configuration } from "@app/contexts";
-import { useCurrentTime, useGetTrams, type LiveTram } from "@app/hooks";
-import { LedMatrixTest } from "@app/components/led-matrix-test";
 import { Progress } from "@app/components/progress";
 
 import { StyledTramInfoInner, StyledTramInfoOuter } from "./styles";
-import { formatTime } from "@app/helpers";
-import { fonts } from "@app/fonts";
+import { LedMatrixRows } from "../led-matrix-rows";
+import { useGetTrams, type LiveTram } from "@app/hooks";
 
 type TramInfoProps = {
   configuration: Configuration;
 };
 
-const HARDCODED_ALERT =
+const ALERT =
   "Welcome to Metrolink. Ticket checks are taking place across the network today. For travel information visit www.TfGM.com.";
 
 const makeLeftRightText = (tram: LiveTram | undefined) => {
@@ -31,8 +29,6 @@ const makeLeftRightText = (tram: LiveTram | undefined) => {
 
 export const TramInfo = ({ configuration }: TramInfoProps) => {
   const { data } = useGetTrams(configuration);
-  const currentTime = useCurrentTime();
-  const currentTimeFormatted = formatTime(currentTime);
 
   const firstTram = data?.[0];
   const secondTram = data?.[1];
@@ -99,46 +95,11 @@ export const TramInfo = ({ configuration }: TramInfoProps) => {
         </StyledTramInfoInner>
       </StyledTramInfoOuter>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "4px",
-          border: "10px solid grey",
-          padding: "10px",
-          margin: "50px",
-        }}
-      >
-        <LedMatrixTest
-          message={firstLeftRightText.message}
-          font={fonts[0]}
-          width="1110px"
-          height="52px"
-          numCols={185}
-        />
-        <LedMatrixTest
-          message={secondLeftRightText.message}
-          font={fonts[0]}
-          width="1110px"
-          height="52px"
-          numCols={185}
-        />
-        <LedMatrixTest
-          message={HARDCODED_ALERT}
-          font={fonts[0]}
-          width="1110px"
-          height="52px"
-          numCols={185}
-        />
-        <LedMatrixTest
-          message={currentTimeFormatted}
-          font={fonts[1]}
-          width="366px"
-          height="52px"
-          numCols={61}
-        />
-      </div>
+      <LedMatrixRows
+        firstTram={firstLeftRightText.message}
+        secondTram={secondLeftRightText.message}
+        alert={ALERT}
+      />
     </>
   );
 };
