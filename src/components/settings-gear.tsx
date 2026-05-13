@@ -2,7 +2,7 @@ import { IconButton } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 
 export type SettingsGearProps = {
-  onClick?: () => void;
+  onClick: () => void;
 };
 
 export const SettingsGear = ({ onClick }: SettingsGearProps) => {

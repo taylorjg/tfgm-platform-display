@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Box, Drawer, Tab, Tabs } from "@mui/material";
 
-import { ConfigurationTab } from "./ConfigurationTab.tsx";
-import { OptionsTab } from "./OptionsTab.tsx";
+import { ConfigurationTab } from "./configuration-tab.tsx";
+import { OptionsTab } from "./options-tab.tsx";
 
 export type SidePanelProps = {
   open: boolean;
