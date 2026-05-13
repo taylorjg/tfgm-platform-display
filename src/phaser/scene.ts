@@ -24,11 +24,15 @@ type Dimensions = {
 const ON_COLOUR = 0xffff00;
 const OFF_COLOUR = 0x303030;
 
+const DOTS_PER_SECOND = 50;
+
 export class LedMatrixScene extends Phaser.Scene {
   private _dimensions!: Dimensions;
   private _font!: Font;
   private _messageMatrix!: string[];
   private _dots!: Phaser.GameObjects.Arc[][];
+  private _offset: number = 0;
+  private _enableScrolling: boolean = false;
 
   constructor() {
     super("LedMatrixScene");
@@ -49,6 +53,17 @@ export class LedMatrixScene extends Phaser.Scene {
     this.game.events.on("setMessage", this._onSetMessage, this);
 
     this._onResize(data.numCols);
+
+    if (this._messageMatrix[0].length > data.numCols) {
+      this._enableScrolling = true;
+    }
+  }
+
+  update(_time: number, delta: number) {
+    if (this._enableScrolling) {
+      this._offset += Math.round((delta / 1000) * DOTS_PER_SECOND);
+      this._updateDots();
+    }
   }
 
   _onSetMessage = (message: string) => {
@@ -131,7 +146,7 @@ export class LedMatrixScene extends Phaser.Scene {
 
   _updateDots = () => {
     const { numRows, numCols } = this._dimensions;
-    const offset = 0;
+    const offset = this._offset;
 
     const updateRow = (row: number) => {
       for (const col of range(numCols)) {
