@@ -14,15 +14,15 @@ x  x xxx   xx  xxx  xxxx x     xx  x  x xxx  xx  x  x xxxx x   x x  x  xx  x    
     |    |    |    |    |    |    |    |   |    |    |    |     |    |    |    |     |    |    |     |    |     |     |     |     |    `;
 
 const lowercaseLetters = `
-     x            x        x       x    x   x x    x                                      x                                    
-     x            x       x x      x          x    x                                      x                                    
- xx  xxx   xxx  xxx  xx   x    xxx xxx  x   x x  x x xx x  xxx   xx  xxx   xxx x x   xxx xxx  x  x x   x x   x x   x x  x xxxxx
-   x x  x x    x  x x  x xxx  x  x x  x x   x x x  x x x x x  x x  x x  x x  x xx x x     x   x  x x   x x   x  x x  x  x    x 
- xxx x  x x    x  x xxxx  x   x  x x  x x   x xx   x x x x x  x x  x x  x x  x x     xx   x   x  x x   x x x x   x   x  x   x  
-x  x x  x x    x  x x     x   x  x x  x x   x x x  x x   x x  x x  x x  x x  x x       x  x   x  x  x x  xx xx  x x  x  x  x   
- xxx xxx   xxx  xxx  xxx  x    xxx x  x x   x x  x x x   x x  x  xx  xxx   xxx x    xxx    xx  xx    x   x   x x   x  xxx xxxxx
-                                 x          x                        x       x                                          x      
-    |    |    |    |    |    |xxx |    | |xx |    | |     |    |    |x   |   x|    |    |    |    |     |     |     |xxx |     `;
+      x               x         x        x      x      x    xx                                             x                                      
+      x               x        x x       x           x x     x                                             x                                      
+ xxx  xxxx   xxx   xxxx  xxx   x    xxx  xxxx  xx      x  x  x  xx x  x xx   xxx  xxxx   xxxx x xx   xxxx xxx  x   x x   x x   x x   x x   x xxxxx
+    x x   x x   x x   x x   x xxx  x   x x   x  x    x x x   x  x x x xx  x x   x x   x x   x xx  x x      x   x   x x   x x   x  x x  x   x    x 
+ xxxx x   x x     x   x xxxxx  x   x   x x   x  x    x xx    x  x x x x   x x   x x   x x   x x      xxx   x   x   x x   x x x x   x   x   x   x  
+x   x x   x x   x x   x x      x   x   x x   x  x    x x x   x  x   x x   x x   x x   x x   x x         x  x   x   x  x x  x x x  x x  x   x  x   
+ xxxx xxxx   xxx   xxxx  xxxx  x    xxxx x   x xxx   x x  x xxx x   x x   x  xxx  xxxx   xxxx x     xxxx    xx  xxx    x    x x  x   x  xxxx xxxxx
+                                       x             x                            x         x                                              x      
+     |     |     |     |     |    |xxxx |     |   |xx |    |   |     |     |     |x    |    x|     |     |    |     |     |     |     |xxxx |     `;
 
 const numbers = `
  xxx    x   xxx   xxx     x  xxxxx  xxx  xxxxx  xxx   xxx 
