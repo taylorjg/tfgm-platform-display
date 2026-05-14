@@ -1,5 +1,20 @@
 import type { Font } from "@app/fonts";
-import { first, range } from "@app/utils";
+import { first, isEven, range, sumBy } from "@app/utils";
+
+const makeChequeredPattern = (width: number, rowIndex: number): string => {
+  return range(width)
+    .map((colIndex) => (isEven(rowIndex + colIndex) ? "x" : " "))
+    .join("");
+};
+
+const makeMissingCharacterDotGrid = (font: Font): string[] => {
+  const values = Array.from(font.fontMap.values());
+  const totalWidths = sumBy(values, (value) => value.dotLines[0].length);
+  const averageWidth = Math.ceil(totalWidths / values.length);
+  return range(font.numVerticalDots).map((rowIndex) =>
+    makeChequeredPattern(averageWidth, rowIndex),
+  );
+};
 
 const lookupCharacter =
   (font: Font) =>
@@ -10,7 +25,7 @@ const lookupCharacter =
       console.warn(
         `Character "${ch}" not found in fontMap for font "${font.name}".`,
       );
-      return Array(font.numVerticalDots).fill("");
+      return makeMissingCharacterDotGrid(font);
     }
 
     return value.dotLines;
