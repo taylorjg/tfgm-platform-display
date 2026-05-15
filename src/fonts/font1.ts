@@ -6,9 +6,9 @@ const uppercaseLetters = `
  xxx  xxxx   xxx  xxxx  xxxxx xxxxx  xxx  x   x xxx  xxxx x  x x     x   x x   x  xxx  xxxx   xxx   xxxx   xxx  xxxxx x   x x   x x   x x   x x   x xxxx
 x   x x   x x   x x   x x     x     x   x x   x  x      x x  x x     xx xx xx  x x   x x   x x   x  x   x x   x   x   x   x x   x x   x x   x x   x    x
 x   x x   x x     x   x x     x     x     x   x  x      x x x  x     x x x x x x x   x x   x x   x  x   x x       x   x   x x   x x   x  x x   x x    x 
-xxxxx xxxx  x     x   x xxxx  xxxx  x  xx xxxxx  x      x xx   x     x x x x  xx x   x xxxx  x   x  xxxx   xxx    x   x   x x   x x x x   x     x    x  
-x   x x   x x     x   x x     x     x   x x   x  x      x x x  x     x   x x   x x   x x     x  xx  x  x      x   x   x   x x   x x x x  x x    x   x   
-x   x x   x x   x x   x x     x     x   x x   x  x  x   x x  x x     x   x x   x x   x x     x   x  x   x x   x   x   x   x  x x  xx xx x   x   x   x   
+xxxxx xxxx  x     x   x xxxx  xxxx  x xxx xxxxx  x      x xx   x     x   x x  xx x   x xxxx  x   x  xxxx   xxx    x   x   x x   x x x x   x     x    x  
+x   x x   x x     x   x x     x     x   x x   x  x      x x x  x     x   x x   x x   x x     x  xx  x x       x   x   x   x x   x x x x  x x    x   x   
+x   x x   x x   x x   x x     x     x   x x   x  x  x   x x  x x     x   x x   x x   x x     x   x  x  x  x   x   x   x   x  x x  xx xx x   x   x   x   
 x   x xxxx   xxx  xxxx  xxxxx x      xxx  x   x xxx  xxx  x  x xxxxx x   x x   x  xxx  x      xxx x x   x  xxx    x    xxx    x   x   x x   x   x   xxxx
                                                                                                                                                         
      |     |     |     |     |     |     |     |   |     |    |     |     |     |     |     |      |     |     |     |     |     |     |     |     |    `;
@@ -36,20 +36,20 @@ x   x   x   x    x   x    x  x   x x   x   x   x   x x   x
      |    |     |     |     |     |     |     |     |     `;
 
 const symbols = `
-                    x
-                    x
-                     
-           x         
-     xxxxx           
-           x         
-              x  x   
-                 x   
-    |     | |  |x |  
+                    x  xxx 
+                    x x   x
+                      x xxx
+           x          x x x
+     xxxxx            x xxx
+           x          x    
+              x  x     xxxx
+                 x         
+    |     | |  |x |  |     
 `;
 
 export const fontMap1 = new Map([
   ...makeFontMapKvps("ABCDEFGHIJKLMNOPQRSTUVWXYZ", uppercaseLetters),
   ...makeFontMapKvps("abcdefghijklmnopqrstuvwxyz", lowercaseLetters),
   ...makeFontMapKvps("0123456789", numbers),
-  ...makeFontMapKvps(" -:.,'", symbols),
+  ...makeFontMapKvps(" -:.,'@", symbols),
 ]);
