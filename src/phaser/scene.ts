@@ -4,13 +4,15 @@ import { type Font } from "@app/fonts";
 import { makeMessageMatrix } from "@app/helpers";
 import { first, range } from "@app/utils";
 
+import { ScrollLeft, ScrollUp, type MatrixEffect } from "./matrix-effects";
+
 export type LedMatrixSceneData = {
   font: Font;
   message: string;
   numCols: number;
 };
 
-type Dimensions = {
+export type Dimensions = {
   radius: number;
   diameter: number;
   gap: number;
@@ -24,15 +26,14 @@ type Dimensions = {
 const ON_COLOUR = 0xffff00;
 const OFF_COLOUR = 0x303030;
 
-const DOTS_PER_SECOND = 50;
-
 export class LedMatrixScene extends Phaser.Scene {
   private _dimensions!: Dimensions;
   private _font!: Font;
   private _messageMatrix!: string[];
   private _dots!: Phaser.GameObjects.Arc[][];
-  private _offset: number = 0;
-  private _enableScrolling: boolean = false;
+  private _scrollLeft!: MatrixEffect;
+  private _scrollUp!: MatrixEffect;
+  private _currentEffect: MatrixEffect | null = null;
 
   constructor() {
     console.log("[LedMatrixScene#constructor]");
@@ -54,14 +55,16 @@ export class LedMatrixScene extends Phaser.Scene {
 
     this._onResize(data.numCols);
 
-    if (this._messageMatrix[0].length > data.numCols) {
-      this._enableScrolling = true;
-    }
+    this._scrollLeft = new ScrollLeft(this._dimensions);
+    this._scrollUp = new ScrollUp(this._dimensions);
+
+    const contentCols = this._messageMatrix[0].length;
+    this._currentEffect = contentCols > data.numCols ? this._scrollLeft : null;
   }
 
-  update(_time: number, delta: number) {
-    if (this._enableScrolling) {
-      this._offset += Math.round((delta / 1000) * DOTS_PER_SECOND);
+  update(_: number, deltaMs: number) {
+    if (this._currentEffect) {
+      this._currentEffect.tick(deltaMs);
       this._updateDots();
     }
   }
@@ -121,10 +124,12 @@ export class LedMatrixScene extends Phaser.Scene {
     this._updateDots();
   };
 
-  _getDotColour = (row: number, col: number, offset = 0) => {
-    const line = this._messageMatrix[row] ?? "";
-    const { wrapAtCol } = this._dimensions;
-    const actualCol = (col + offset) % wrapAtCol;
+  _getDotColour = (row: number, col: number) => {
+    const nextRowCol = this._currentEffect
+      ? this._currentEffect.nextRowCol(row, col)
+      : { row, col };
+    const { row: actualRow, col: actualCol } = nextRowCol;
+    const line = this._messageMatrix[actualRow] ?? "";
     const ch = line.at(actualCol);
     return ch === "x" ? ON_COLOUR : OFF_COLOUR;
   };
@@ -146,11 +151,10 @@ export class LedMatrixScene extends Phaser.Scene {
 
   _updateDots = () => {
     const { numRows, numCols } = this._dimensions;
-    const offset = this._offset;
 
     const updateRow = (row: number) => {
       for (const col of range(numCols)) {
-        const colour = this._getDotColour(row, col, offset);
+        const colour = this._getDotColour(row, col);
         this._dots[row][col].fillColor = colour;
       }
     };

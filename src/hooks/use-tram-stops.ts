@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 import { TFGM_API_URL } from "@app/constants";
 
@@ -24,7 +24,7 @@ const fetchTramStops = async (): Promise<TramStop[]> => {
   return (await response.json()) as TramStop[];
 };
 
-export const useTramStops = () => {
+export const useTramStops = (): UseQueryResult<TramStop[]> => {
   return useQuery({
     queryKey: ["get-search-locations"],
     queryFn: fetchTramStops,
