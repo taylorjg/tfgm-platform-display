@@ -1,6 +1,7 @@
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
-import { TFGM_API_URL } from "@app/constants";
+// curl https://hsf41foww6.execute-api.us-east-1.amazonaws.com/search-locations -s | jq > search-locations.json
+import searchLocations from "@app/data/search-locations.json" with { type: "json" };
 
 export type TramService = {
   id: string;
@@ -14,14 +15,7 @@ export type TramStop = {
 };
 
 const fetchTramStops = async (): Promise<TramStop[]> => {
-  const url = `${TFGM_API_URL}/search-locations`;
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch tram stops: ${response.status} ${response.statusText}`,
-    );
-  }
-  return (await response.json()) as TramStop[];
+  return searchLocations as TramStop[];
 };
 
 export const useTramStops = (): UseQueryResult<TramStop[]> => {

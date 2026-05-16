@@ -1,0 +1,1212 @@
+[
+  {
+    "atcoCode": "9400ZZMAABM",
+    "name": "Abraham Moss tram stop",
+    "services": [
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Yellow_Line",
+        "name": "Bury - Piccadilly"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAALT",
+    "name": "Altrincham tram stop",
+    "services": [
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Purple_Line",
+        "name": "Altrincham - Piccadilly/Etihad Campus"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAANC",
+    "name": "Anchorage tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAAMO",
+    "name": "Ashton Moss tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAAWT",
+    "name": "Ashton West tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAAUL",
+    "name": "Ashton-under-Lyne tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAAUD",
+    "name": "Audenshaw tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMABAG",
+    "name": "Baguley tram stop",
+    "services": [
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMABAR",
+    "name": "Barlow Moor Road tram stop",
+    "services": [
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMABLL",
+    "name": "Benchill tram stop",
+    "services": [
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMABOB",
+    "name": "Besses o' th' Barn tram stop",
+    "services": [
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Yellow_Line",
+        "name": "Bury - Piccadilly"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMABOW",
+    "name": "Bowker Vale tram stop",
+    "services": [
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Yellow_Line",
+        "name": "Bury - Piccadilly"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMABWY",
+    "name": "Broadway tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMABKS",
+    "name": "Brooklands tram stop",
+    "services": [
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Purple_Line",
+        "name": "Altrincham - Piccadilly/Etihad Campus"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMABNR",
+    "name": "Burton Road tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMABUR",
+    "name": "Bury tram stop",
+    "services": [
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Yellow_Line",
+        "name": "Bury - Piccadilly"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMACEM",
+    "name": "Cemetery Road tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMACTP",
+    "name": "Central Park tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMACHO",
+    "name": "Chorlton tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      },
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMACLN",
+    "name": "Clayton Hall tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMACRN",
+    "name": "Cornbrook tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      },
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      },
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      },
+      {
+        "id": "Purple_Line",
+        "name": "Altrincham - Piccadilly/Etihad Campus"
+      },
+      {
+        "id": "Red_Line",
+        "name": "The Trafford Centre - Crumpsall"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMACSS",
+    "name": "Crossacres tram stop",
+    "services": [
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMACRU",
+    "name": "Crumpsall tram stop",
+    "services": [
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Yellow_Line",
+        "name": "Bury - Piccadilly"
+      },
+      {
+        "id": "Red_Line",
+        "name": "The Trafford Centre - Crumpsall"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMADNE",
+    "name": "Dane Road tram stop",
+    "services": [
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Purple_Line",
+        "name": "Altrincham - Piccadilly/Etihad Campus"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAGMX",
+    "name": "Deansgate-Castlefield tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      },
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      },
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      },
+      {
+        "id": "Purple_Line",
+        "name": "Altrincham - Piccadilly/Etihad Campus"
+      },
+      {
+        "id": "Red_Line",
+        "name": "The Trafford Centre - Crumpsall"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMADER",
+    "name": "Derker tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMADID",
+    "name": "Didsbury Village tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMADRO",
+    "name": "Droylsden tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAEDY",
+    "name": "East Didsbury tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAECC",
+    "name": "Eccles tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAELN",
+    "name": "Edge Lane tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAECS",
+    "name": "Etihad Campus tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAEXC",
+    "name": "Exchange Quay tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAEXS",
+    "name": "Exchange Square tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      },
+      {
+        "id": "Red_Line",
+        "name": "The Trafford Centre - Crumpsall"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAFWH",
+    "name": "Failsworth tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAFIR",
+    "name": "Firswood tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      },
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAFRE",
+    "name": "Freehold tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAHCY",
+    "name": "Harbour City tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAHEA",
+    "name": "Heaton Park tram stop",
+    "services": [
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Yellow_Line",
+        "name": "Bury - Piccadilly"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAHOL",
+    "name": "Hollinwood tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAHTN",
+    "name": "Holt Town tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAIWM",
+    "name": "Imperial War Museum tram stop",
+    "services": [
+      {
+        "id": "Red_Line",
+        "name": "The Trafford Centre - Crumpsall"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAKNY",
+    "name": "Kingsway Business Park tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMALDY",
+    "name": "Ladywell tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMALWY",
+    "name": "Langworthy tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAAIR",
+    "name": "Manchester Airport tram stop",
+    "services": [
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAMKT",
+    "name": "Market Street tram stop",
+    "services": [
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Yellow_Line",
+        "name": "Bury - Piccadilly"
+      },
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAMFT",
+    "name": "Martinscroft tram stop",
+    "services": [
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAMCU",
+    "name": "MediaCityUK tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAMIL",
+    "name": "Milnrow tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAMON",
+    "name": "Monsall tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAMRD",
+    "name": "Moor Road tram stop",
+    "services": [
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMANAV",
+    "name": "Navigation Road tram stop",
+    "services": [
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Purple_Line",
+        "name": "Altrincham - Piccadilly/Etihad Campus"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMANIS",
+    "name": "New Islington tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMANBD",
+    "name": "Newbold tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMANHY",
+    "name": "Newhey tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMANEW",
+    "name": "Newton Heath and Moston tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMANMR",
+    "name": "Northern Moor tram stop",
+    "services": [
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAOLD",
+    "name": "Old Trafford tram stop",
+    "services": [
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Purple_Line",
+        "name": "Altrincham - Piccadilly/Etihad Campus"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAOMC",
+    "name": "Oldham Central tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAOKS",
+    "name": "Oldham King Street tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAOMP",
+    "name": "Oldham Mumps tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAPAR",
+    "name": "Parkway tram stop",
+    "services": [
+      {
+        "id": "Red_Line",
+        "name": "The Trafford Centre - Crumpsall"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAPLL",
+    "name": "Peel Hall tram stop",
+    "services": [
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAPGD",
+    "name": "Piccadilly Gardens tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      },
+      {
+        "id": "Yellow_Line",
+        "name": "Bury - Piccadilly"
+      },
+      {
+        "id": "Purple_Line",
+        "name": "Altrincham - Piccadilly/Etihad Campus"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAPIC",
+    "name": "Piccadilly tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      },
+      {
+        "id": "Purple_Line",
+        "name": "Altrincham - Piccadilly/Etihad Campus"
+      },
+      {
+        "id": "Yellow_Line",
+        "name": "Bury - Piccadilly"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAPOM",
+    "name": "Pomona tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      },
+      {
+        "id": "Red_Line",
+        "name": "The Trafford Centre - Crumpsall"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAPWC",
+    "name": "Prestwich tram stop",
+    "services": [
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Yellow_Line",
+        "name": "Bury - Piccadilly"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAQRD",
+    "name": "Queens Road tram stop",
+    "services": [
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Yellow_Line",
+        "name": "Bury - Piccadilly"
+      },
+      {
+        "id": "Red_Line",
+        "name": "The Trafford Centre - Crumpsall"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMARAD",
+    "name": "Radcliffe tram stop",
+    "services": [
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Yellow_Line",
+        "name": "Bury - Piccadilly"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMARWD",
+    "name": "Robinswood Road tram stop",
+    "services": [
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMARRS",
+    "name": "Rochdale Railway Station tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMARIN",
+    "name": "Rochdale Town Centre tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMARND",
+    "name": "Roundthorn tram stop",
+    "services": [
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMASWP",
+    "name": "Sale Water Park tram stop",
+    "services": [
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMASLE",
+    "name": "Sale tram stop",
+    "services": [
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Purple_Line",
+        "name": "Altrincham - Piccadilly/Etihad Campus"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMASQY",
+    "name": "Salford Quays tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMASDW",
+    "name": "Shadowmoss tram stop",
+    "services": [
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMASHA",
+    "name": "Shaw and Crompton tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMASHU",
+    "name": "Shudehill tram stop",
+    "services": [
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Yellow_Line",
+        "name": "Bury - Piccadilly"
+      },
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMASCH",
+    "name": "South Chadderton tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMASTP",
+    "name": "St Peter's Square tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      },
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      },
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      },
+      {
+        "id": "Purple_Line",
+        "name": "Altrincham - Piccadilly/Etihad Campus"
+      },
+      {
+        "id": "Red_Line",
+        "name": "The Trafford Centre - Crumpsall"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMASTW",
+    "name": "St Werburgh's Road tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      },
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMASFD",
+    "name": "Stretford tram stop",
+    "services": [
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Purple_Line",
+        "name": "Altrincham - Piccadilly/Etihad Campus"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMATRC",
+    "name": "The Trafford Centre tram stop",
+    "services": [
+      {
+        "id": "Red_Line",
+        "name": "The Trafford Centre - Crumpsall"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMATIM",
+    "name": "Timperley tram stop",
+    "services": [
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Purple_Line",
+        "name": "Altrincham - Piccadilly/Etihad Campus"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMATRA",
+    "name": "Trafford Bar tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      },
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      },
+      {
+        "id": "Purple_Line",
+        "name": "Altrincham - Piccadilly/Etihad Campus"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAEVC",
+    "name": "Trafford Palazzo tram stop",
+    "services": [
+      {
+        "id": "Red_Line",
+        "name": "The Trafford Centre - Crumpsall"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAVPK",
+    "name": "Velopark tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAVIC",
+    "name": "Victoria tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      },
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Yellow_Line",
+        "name": "Bury - Piccadilly"
+      },
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      },
+      {
+        "id": "Red_Line",
+        "name": "The Trafford Centre - Crumpsall"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAVLG",
+    "name": "Village tram stop",
+    "services": [
+      {
+        "id": "Red_Line",
+        "name": "The Trafford Centre - Crumpsall"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAWST",
+    "name": "Weaste tram stop",
+    "services": [
+      {
+        "id": "Blue_Line",
+        "name": "Ashton-Under-Lyne - Eccles"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAWTD",
+    "name": "West Didsbury tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAWWD",
+    "name": "Westwood tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAWFS",
+    "name": "Wharfside tram stop",
+    "services": [
+      {
+        "id": "Red_Line",
+        "name": "The Trafford Centre - Crumpsall"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAWFD",
+    "name": "Whitefield tram stop",
+    "services": [
+      {
+        "id": "Green_Line",
+        "name": "Altrincham - Bury"
+      },
+      {
+        "id": "Yellow_Line",
+        "name": "Bury - Piccadilly"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAWIT",
+    "name": "Withington tram stop",
+    "services": [
+      {
+        "id": "Pink_Line",
+        "name": "East Didsbury - Rochdale Town Centre"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAWPK",
+    "name": "Wythenshawe Park tram stop",
+    "services": [
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      }
+    ]
+  },
+  {
+    "atcoCode": "9400ZZMAWYT",
+    "name": "Wythenshawe Town Centre tram stop",
+    "services": [
+      {
+        "id": "Navy_Line",
+        "name": "Manchester Airport - Victoria"
+      }
+    ]
+  }
+]
