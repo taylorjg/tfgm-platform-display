@@ -55,22 +55,37 @@ export type MessageDescriptor =
   | CyclingMessageDescriptor
   | ClockMessageDescriptor;
 
-export const makeApproachingTramAlignment = (tram: LiveTram): Alignment => {
-  if (tram.carriages === "Double") {
+// export const makeApproachingTramAlignment = (tram: LiveTram): Alignment => {
+//   if (tram.carriages === "Double") {
+//     return {
+//       type: "spaceBetween",
+//       left: tram.destinationDisplay,
+//       right: "dbl",
+//     };
+//   }
+
+//   return {
+//     type: "left",
+//     text: tram.destinationDisplay,
+//   };
+// };
+
+export const makeTramAlignment = (tram: LiveTram): Alignment => {
+  if (tram.status === "Approaching" || tram.status === "Arrived") {
+    if (tram.carriages === "Double") {
+      return {
+        type: "spaceBetween",
+        left: tram.destinationDisplay,
+        right: "dbl",
+      };
+    }
+
     return {
-      type: "spaceBetween",
-      left: tram.destinationDisplay,
-      right: "dbl",
+      type: "left",
+      text: tram.destinationDisplay,
     };
   }
 
-  return {
-    type: "left",
-    text: tram.destinationDisplay,
-  };
-};
-
-export const makeOtherTramAlignment = (tram: LiveTram): Alignment => {
   if (tram.status === "Due") {
     const carriages = tram.carriages === "Double" ? "dbl" : "";
     const due = `${tram.due} min`;
@@ -94,7 +109,7 @@ export const makeTramLayout = (tram: LiveTram): Layout => {
   if (tram.status === "Approaching") {
     return {
       type: "alternating",
-      message1: makeApproachingTramAlignment(tram),
+      message1: makeTramAlignment(tram),
       message2: {
         type: "centre",
         text: tram.status,
@@ -104,13 +119,12 @@ export const makeTramLayout = (tram: LiveTram): Layout => {
 
   return {
     type: "simple",
-    message: makeOtherTramAlignment(tram),
+    message: makeTramAlignment(tram),
   };
 };
 
 export const makeMessageDescriptors = (
   trams: LiveTram[],
-  alert: string,
 ): MessageDescriptor[] => {
   const messageDescriptors: MessageDescriptor[] = [];
 
@@ -146,21 +160,6 @@ export const makeMessageDescriptors = (
       layouts: otherTrams.map(makeTramLayout),
     });
   }
-
-  messageDescriptors.push({
-    mode: "single",
-    layout: {
-      type: "simple",
-      message: {
-        type: "left",
-        text: alert,
-      },
-    },
-  });
-
-  messageDescriptors.push({
-    mode: "clock",
-  });
 
   return messageDescriptors;
 };

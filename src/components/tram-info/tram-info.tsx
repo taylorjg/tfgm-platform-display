@@ -29,13 +29,12 @@ const makeLeftRightText = (tram: LiveTram | undefined) => {
 };
 
 export const TramInfo = ({ configuration }: TramInfoProps) => {
-  const { data } = useGetTrams(configuration);
+  const { data: trams = [] } = useGetTrams(configuration);
 
-  const messageDescriptors = makeMessageDescriptors(data ?? [], ALERT);
+  const messageDescriptors = makeMessageDescriptors(trams);
   console.log({ messageDescriptors });
 
-  const firstTram = data?.[0];
-  const secondTram = data?.[1];
+  const [firstTram, secondTram] = trams;
   const firstLeftRightText = makeLeftRightText(firstTram);
   const secondLeftRightText = makeLeftRightText(secondTram);
 
@@ -43,7 +42,7 @@ export const TramInfo = ({ configuration }: TramInfoProps) => {
     <>
       <StyledTramInfoOuter>
         <StyledTramInfoInner>
-          {data ? (
+          {trams ? (
             <Box
               component="ul"
               sx={{
@@ -57,12 +56,12 @@ export const TramInfo = ({ configuration }: TramInfoProps) => {
               }}
             >
               <Progress />
-              {data.length === 0 ? (
+              {trams.length === 0 ? (
                 <Typography variant="body2" color="text.secondary">
                   No trams due at this stop.
                 </Typography>
               ) : (
-                data.map((tram, index) => {
+                trams.map((tram, index) => {
                   const { leftText, rightText } = makeLeftRightText(tram);
 
                   return (
@@ -102,6 +101,7 @@ export const TramInfo = ({ configuration }: TramInfoProps) => {
       <LedMatrixRows
         firstTram={firstLeftRightText.message}
         secondTram={secondLeftRightText.message}
+        messageDescriptors={messageDescriptors}
         alert={ALERT}
       />
     </>

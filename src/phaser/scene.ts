@@ -1,13 +1,18 @@
 import Phaser from "phaser";
 
 import { type Font } from "@app/fonts";
-import { makeMessageMatrix, makeMessageMatrixCentred } from "@app/helpers";
+import {
+  makeMessageMatrix,
+  makeMatrixCentre,
+  type MessageDescriptor,
+} from "@app/helpers";
 import { first, range } from "@app/utils";
 
 import { ScrollLeft, ScrollUp, type MatrixEffect } from "./matrix-effects";
 
 export type LedMatrixSceneData = {
   font: Font;
+  messageDescriptor: MessageDescriptor;
   message: string;
   numCols: number;
   centreMessage: boolean;
@@ -30,6 +35,7 @@ const OFF_COLOUR = 0x303030;
 export class LedMatrixScene extends Phaser.Scene {
   private _dimensions!: Dimensions;
   private _font!: Font;
+  private _messageDescriptor!: MessageDescriptor;
   private _centreMessage!: boolean;
   private _messageMatrix!: string[];
   private _dots!: Phaser.GameObjects.Arc[][];
@@ -46,10 +52,12 @@ export class LedMatrixScene extends Phaser.Scene {
     console.log("[LedMatrixScene#create]", data);
 
     this._font = data.font;
+    this._messageDescriptor = data.messageDescriptor;
     this._centreMessage = data.centreMessage;
-    const makeMetrix = this._centreMessage
-      ? makeMessageMatrixCentred
-      : makeMessageMatrix;
+    const makeMetrix =
+      this._messageDescriptor.mode === "clock"
+        ? makeMatrixCentre
+        : makeMessageMatrix;
     this._messageMatrix = makeMetrix(data.font, data.numCols, data.message);
     this._dots = [];
 
@@ -73,9 +81,10 @@ export class LedMatrixScene extends Phaser.Scene {
 
   _onSetMessage = (message: string) => {
     console.log("[LedMatrixScene#_onSetMessage]", message);
-    const makeMetrix = this._centreMessage
-      ? makeMessageMatrixCentred
-      : makeMessageMatrix;
+    const makeMetrix =
+      this._messageDescriptor.mode === "clock"
+        ? makeMatrixCentre
+        : makeMessageMatrix;
     this._messageMatrix = makeMetrix(
       this._font,
       this._dimensions.numCols,

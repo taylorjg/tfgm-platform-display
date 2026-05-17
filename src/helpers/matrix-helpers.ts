@@ -1,5 +1,10 @@
 import type { Font } from "@app/fonts";
 import { first, isEven, range, sumBy } from "@app/utils";
+import type {
+  Alignment,
+  Layout,
+  MessageDescriptor,
+} from "./message-descriptor-helpers";
 
 const makeChequeredPattern = (width: number, rowIndex: number): string => {
   return range(width)
@@ -33,7 +38,11 @@ const lookupCharacter =
 
 const GAP = " ";
 
-const makeMessageMatrixSimple = (font: Font, message: string): string[] => {
+const makeMatrixBlank = (font: Font, numCols: number): string[] => {
+  return range(font.numVerticalDots).map(() => " ".repeat(numCols));
+};
+
+const makeMatrixLeft = (font: Font, message: string): string[] => {
   const chs = Array.from(message);
   const dotLinesPerCharacter = chs.map(lookupCharacter(font));
   return range(font.numVerticalDots).map((index) =>
@@ -41,12 +50,12 @@ const makeMessageMatrixSimple = (font: Font, message: string): string[] => {
   );
 };
 
-export const makeMessageMatrixCentred = (
+export const makeMatrixCentre = (
   font: Font,
   numCols: number,
   message: string,
 ): string[] => {
-  const matrix = makeMessageMatrixSimple(font, message);
+  const matrix = makeMatrixLeft(font, message);
   const matrixCols = first(matrix).length;
   const remainingCols = numCols - matrixCols;
   console.assert(remainingCols >= 0);
@@ -59,14 +68,14 @@ export const makeMessageMatrixCentred = (
   );
 };
 
-const makeMessageMatrixSpaceBetween = (
+const makeMatrixSpaceBetween = (
   font: Font,
   numCols: number,
   leftText: string,
   rightText: string,
 ): string[] => {
-  const leftMatrix = makeMessageMatrixSimple(font, leftText);
-  const rightMatrix = makeMessageMatrixSimple(font, rightText);
+  const leftMatrix = makeMatrixLeft(font, leftText);
+  const rightMatrix = makeMatrixLeft(font, rightText);
   const leftMatrixCols = first(leftMatrix).length;
   const rightMatrixCols = first(rightMatrix).length;
   const spaceBetweenCols = numCols - leftMatrixCols - rightMatrixCols;
@@ -91,8 +100,56 @@ export const makeMessageMatrix = (
 
   if (parts.length === 2) {
     const [leftText, rightText] = parts;
-    return makeMessageMatrixSpaceBetween(font, numCols, leftText, rightText);
+    return makeMatrixSpaceBetween(font, numCols, leftText, rightText);
   }
 
-  return makeMessageMatrixSimple(font, message);
+  return makeMatrixLeft(font, message);
+};
+
+const makeMatrixForAlignment = (
+  font: Font,
+  numCols: number,
+  alignment: Alignment,
+): string[] => {
+  switch (alignment.type) {
+    case "left":
+      return makeMatrixLeft(font, alignment.text);
+    case "centre":
+      return makeMatrixCentre(font, numCols, alignment.text);
+    case "spaceBetween":
+      return makeMatrixSpaceBetween(
+        font,
+        numCols,
+        alignment.left,
+        alignment.right,
+      );
+  }
+};
+
+export const makeMatrixForLayout = (
+  font: Font,
+  numCols: number,
+  layout: Layout,
+): string[] => {
+  switch (layout.type) {
+    case "simple":
+      return makeMatrixForAlignment(font, numCols, layout.message);
+    case "alternating":
+      return makeMatrixForAlignment(font, numCols, layout.message1);
+  }
+};
+
+export const makeMatrixForMessageDescriptor = (
+  font: Font,
+  numCols: number,
+  messageDescriptor: MessageDescriptor,
+): string[] => {
+  switch (messageDescriptor.mode) {
+    case "single":
+      return makeMatrixForLayout(font, numCols, messageDescriptor.layout);
+    case "cycling":
+      return makeMatrixForLayout(font, numCols, messageDescriptor.layouts[0]);
+  }
+
+  return makeMatrixBlank(font, numCols);
 };

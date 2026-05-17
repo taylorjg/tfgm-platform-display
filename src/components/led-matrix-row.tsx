@@ -3,9 +3,11 @@ import { useEffect, useRef } from "react";
 import { initialiseGame } from "@app/phaser";
 import type { Font } from "@app/fonts";
 import type { LedMatrixSceneData } from "@app/phaser/scene";
+import type { MessageDescriptor } from "@app/helpers";
 
 export type LedMatrixRowProps = {
   font: Font;
+  messageDescriptor: MessageDescriptor;
   message: string;
   width: string;
   height: string;
@@ -15,6 +17,7 @@ export type LedMatrixRowProps = {
 
 export const LedMatrixRow = ({
   font,
+  messageDescriptor,
   message,
   width,
   height,
@@ -24,6 +27,7 @@ export const LedMatrixRow = ({
   const parentRef = useRef<HTMLDivElement | null>(null);
   const initialValuesRef = useRef<LedMatrixSceneData>({
     font,
+    messageDescriptor,
     message,
     numCols,
     centreMessage,
