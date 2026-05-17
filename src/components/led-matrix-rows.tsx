@@ -55,7 +55,8 @@ export const LedMatrixRows = ({
         message={currentTimeFormatted}
         width="366px"
         height="52px"
-        numCols={61}
+        numCols={63}
+        centreMessage={true}
       />
     </div>
   );

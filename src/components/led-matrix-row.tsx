@@ -10,6 +10,7 @@ export type LedMatrixRowProps = {
   width: string;
   height: string;
   numCols: number;
+  centreMessage?: boolean;
 };
 
 export const LedMatrixRow = ({
@@ -18,12 +19,14 @@ export const LedMatrixRow = ({
   width,
   height,
   numCols,
+  centreMessage = false,
 }: LedMatrixRowProps) => {
   const parentRef = useRef<HTMLDivElement | null>(null);
   const initialValuesRef = useRef<LedMatrixSceneData>({
     font,
     message,
     numCols,
+    centreMessage,
   });
   const gameActionsRef = useRef<{
     setMessage: (message: string) => void;

@@ -41,8 +41,7 @@ const makeMessageMatrixSimple = (font: Font, message: string): string[] => {
   );
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const makeMessageMatrixCentred = (
+export const makeMessageMatrixCentred = (
   font: Font,
   numCols: number,
   message: string,
