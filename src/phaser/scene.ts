@@ -2,9 +2,11 @@ import Phaser from "phaser";
 
 import { type Font } from "@app/fonts";
 import {
+  formatTime,
   type MessageDescriptor,
   makeMatrixBlank,
   makeMatrixForMessageDescriptor,
+  makeMatrixCentre,
 } from "@app/helpers";
 import { first, range } from "@app/utils";
 
@@ -39,6 +41,7 @@ export class LedMatrixScene extends Phaser.Scene {
   private _scrollLeft!: MatrixEffect;
   private _scrollUp!: MatrixEffect;
   private _currentEffect: MatrixEffect | null = null;
+  private _includeFirstColon = false;
 
   constructor() {
     console.log("[LedMatrixScene#constructor]");
@@ -63,7 +66,16 @@ export class LedMatrixScene extends Phaser.Scene {
     this._scrollLeft = new ScrollLeft(this._dimensions);
     this._scrollUp = new ScrollUp(this._dimensions);
 
-    this._onSetMessageDescriptor(this._messageDescriptor);
+    if (this._messageDescriptor.mode === "clock") {
+      this.time.addEvent({
+        delay: 500,
+        loop: true,
+        callback: this._updateClock,
+        callbackScope: this,
+      });
+    } else {
+      this._onSetMessageDescriptor(this._messageDescriptor);
+    }
   }
 
   update(_: number, deltaMs: number) {
@@ -73,8 +85,22 @@ export class LedMatrixScene extends Phaser.Scene {
     }
   }
 
+  _updateClock = () => {
+    this._includeFirstColon = !this._includeFirstColon;
+    const now = new Date();
+    const nowFormatted = formatTime(now, this._includeFirstColon);
+    this._messageMatrix = makeMatrixCentre(
+      this._font,
+      this._dimensions.numCols,
+      nowFormatted,
+    );
+    this._updateDots();
+  };
+
   _onSetMessageDescriptor = (messageDescriptor: MessageDescriptor) => {
     console.log("[LedMatrixScene#_onSetMessageDescriptor]", messageDescriptor);
+
+    if (this._messageDescriptor.mode === "clock") return;
 
     this._messageMatrix = makeMatrixForMessageDescriptor(
       this._font,
