@@ -6,6 +6,7 @@ import { Progress } from "@app/components/progress";
 import { StyledTramInfoInner, StyledTramInfoOuter } from "./styles";
 import { LedMatrixRows } from "../led-matrix-rows";
 import { useGetTrams, type LiveTram } from "@app/hooks";
+import { makeMessageDescriptors } from "@app/helpers";
 
 type TramInfoProps = {
   configuration: Configuration;
@@ -29,6 +30,9 @@ const makeLeftRightText = (tram: LiveTram | undefined) => {
 
 export const TramInfo = ({ configuration }: TramInfoProps) => {
   const { data } = useGetTrams(configuration);
+
+  const messageDescriptors = makeMessageDescriptors(data ?? [], ALERT);
+  console.log({ messageDescriptors });
 
   const firstTram = data?.[0];
   const secondTram = data?.[1];
