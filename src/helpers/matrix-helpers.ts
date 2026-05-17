@@ -38,7 +38,7 @@ const lookupCharacter =
 
 const GAP = " ";
 
-const makeMatrixBlank = (font: Font, numCols: number): string[] => {
+export const makeMatrixBlank = (font: Font, numCols: number): string[] => {
   return range(font.numVerticalDots).map(() => " ".repeat(numCols));
 };
 
@@ -126,7 +126,7 @@ const makeMatrixForAlignment = (
   }
 };
 
-export const makeMatrixForLayout = (
+const makeMatrixForLayout = (
   font: Font,
   numCols: number,
   layout: Layout,

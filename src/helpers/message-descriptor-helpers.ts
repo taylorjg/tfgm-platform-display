@@ -55,21 +55,6 @@ export type MessageDescriptor =
   | CyclingMessageDescriptor
   | ClockMessageDescriptor;
 
-// export const makeApproachingTramAlignment = (tram: LiveTram): Alignment => {
-//   if (tram.carriages === "Double") {
-//     return {
-//       type: "spaceBetween",
-//       left: tram.destinationDisplay,
-//       right: "dbl",
-//     };
-//   }
-
-//   return {
-//     type: "left",
-//     text: tram.destinationDisplay,
-//   };
-// };
-
 export const makeTramAlignment = (tram: LiveTram): Alignment => {
   if (tram.status === "Approaching" || tram.status === "Arrived") {
     if (tram.carriages === "Double") {

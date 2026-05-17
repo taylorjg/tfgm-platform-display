@@ -7,33 +7,27 @@ import type { MessageDescriptor } from "@app/helpers";
 
 export type LedMatrixRowProps = {
   font: Font;
+  numCols: number;
   messageDescriptor: MessageDescriptor;
-  message: string;
   width: string;
   height: string;
-  numCols: number;
-  centreMessage?: boolean;
 };
 
 export const LedMatrixRow = ({
   font,
+  numCols,
   messageDescriptor,
-  message,
   width,
   height,
-  numCols,
-  centreMessage = false,
 }: LedMatrixRowProps) => {
   const parentRef = useRef<HTMLDivElement | null>(null);
   const initialValuesRef = useRef<LedMatrixSceneData>({
     font,
-    messageDescriptor,
-    message,
     numCols,
-    centreMessage,
+    messageDescriptor,
   });
   const gameActionsRef = useRef<{
-    setMessage: (message: string) => void;
+    setMessageDescriptor: (messageDescriptor: MessageDescriptor) => void;
     destroy: () => void;
   }>(null);
 
@@ -47,8 +41,8 @@ export const LedMatrixRow = ({
   }, []);
 
   useEffect(() => {
-    gameActionsRef.current?.setMessage(message);
-  }, [message]);
+    gameActionsRef.current?.setMessageDescriptor(messageDescriptor);
+  }, [messageDescriptor]);
 
   return <div ref={parentRef} style={{ width, height }} />;
 };

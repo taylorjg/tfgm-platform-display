@@ -1,24 +1,16 @@
 import { fonts } from "@app/fonts";
-import { formatTime, type MessageDescriptor } from "@app/helpers";
-import { useCurrentTime } from "@app/hooks";
+import { type MessageDescriptor } from "@app/helpers";
 import { LedMatrixRow } from "./led-matrix-row";
 
 export type LedMatrixRowsProps = {
   messageDescriptors: MessageDescriptor[];
   alert: string;
-  firstTram: string;
-  secondTram: string;
 };
 
 export const LedMatrixRows = ({
   messageDescriptors,
   alert,
-  firstTram,
-  secondTram,
 }: LedMatrixRowsProps) => {
-  const currentTime = useCurrentTime();
-  const currentTimeFormatted = formatTime(currentTime);
-
   const alertMessageDescriptor: MessageDescriptor = {
     mode: "single",
     layout: {
@@ -48,39 +40,34 @@ export const LedMatrixRows = ({
     >
       <LedMatrixRow
         font={fonts[0]}
+        numCols={185}
         messageDescriptor={messageDescriptors[0]}
-        message={firstTram}
         width="1110px"
         height="52px"
-        numCols={185}
       />
 
       <LedMatrixRow
         font={fonts[0]}
+        numCols={185}
         messageDescriptor={messageDescriptors[1]}
-        message={secondTram}
         width="1110px"
         height="52px"
-        numCols={185}
       />
 
       <LedMatrixRow
         font={fonts[0]}
+        numCols={185}
         messageDescriptor={alertMessageDescriptor}
-        message={alert}
         width="1110px"
         height="52px"
-        numCols={185}
       />
 
       <LedMatrixRow
         font={fonts[1]}
+        numCols={63}
         messageDescriptor={clockMessageDescriptor}
-        message={currentTimeFormatted}
-        centreMessage={true}
         width="366px"
         height="52px"
-        numCols={63}
       />
     </div>
   );
