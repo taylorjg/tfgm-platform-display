@@ -91,22 +91,7 @@ const makeMatrixSpaceBetween = (
   return matrix;
 };
 
-export const makeMessageMatrix = (
-  font: Font,
-  numCols: number,
-  message: string,
-): string[] => {
-  const parts = message.split("|");
-
-  if (parts.length === 2) {
-    const [leftText, rightText] = parts;
-    return makeMatrixSpaceBetween(font, numCols, leftText, rightText);
-  }
-
-  return makeMatrixLeft(font, message);
-};
-
-const makeMatrixForAlignment = (
+export const makeMatrixForAlignment = (
   font: Font,
   numCols: number,
   alignment: Alignment,

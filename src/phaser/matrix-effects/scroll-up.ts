@@ -3,7 +3,7 @@ import type { Dimensions } from "../scene";
 import type { MatrixEffect } from "./types";
 
 const DOTS_PER_SECOND = 50;
-const DOTS_PER_MS = DOTS_PER_SECOND / 1000;
+const DOTS_PER_MS = DOTS_PER_SECOND / 1_000;
 
 export class ScrollUp implements MatrixEffect {
   #dimensions: Dimensions;
