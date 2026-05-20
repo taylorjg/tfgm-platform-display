@@ -1,10 +1,6 @@
 import type { Font } from "@app/fonts";
 import { first, isEven, range, sumBy } from "@app/utils";
-import type {
-  Alignment,
-  Layout,
-  MessageDescriptor,
-} from "./message-descriptor-helpers";
+import type { Alignment, Layout } from "./message-descriptor-helpers";
 
 const makeChequeredPattern = (width: number, rowIndex: number): string => {
   return range(width)
@@ -60,11 +56,9 @@ export const makeMatrixCentre = (
   const remainingCols = numCols - matrixCols;
   console.assert(remainingCols >= 0);
   const numLeftPaddingCols = Math.floor(remainingCols / 2);
-  const numRightPaddingCols = remainingCols - numLeftPaddingCols;
   const leftPadding = " ".repeat(numLeftPaddingCols);
-  const rightPadding = " ".repeat(numRightPaddingCols);
   return range(font.numVerticalDots).map(
-    (index) => leftPadding + matrix[index] + rightPadding,
+    (index) => leftPadding + matrix[index],
   );
 };
 
@@ -111,7 +105,7 @@ export const makeMatrixForAlignment = (
   }
 };
 
-const makeMatrixForLayout = (
+export const makeMatrixForLayout = (
   font: Font,
   numCols: number,
   layout: Layout,
@@ -124,17 +118,12 @@ const makeMatrixForLayout = (
   }
 };
 
-export const makeMatrixForMessageDescriptor = (
+export const makeCycleMatrix = (
   font: Font,
   numCols: number,
-  messageDescriptor: MessageDescriptor,
+  layouts: Layout[],
 ): string[] => {
-  switch (messageDescriptor.mode) {
-    case "single":
-      return makeMatrixForLayout(font, numCols, messageDescriptor.layout);
-    case "cycling":
-      return makeMatrixForLayout(font, numCols, messageDescriptor.layouts[0]);
-  }
-
-  return makeMatrixBlank(font, numCols);
+  return layouts
+    .map((layout) => makeMatrixForLayout(font, numCols, layout))
+    .flat();
 };

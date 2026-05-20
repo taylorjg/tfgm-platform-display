@@ -40,8 +40,8 @@ export type SingleMessageDescriptor = {
   layout: Layout;
 };
 
-export type CyclingMessageDescriptor = {
-  mode: "cycling";
+export type CycleMessageDescriptor = {
+  mode: "cycle";
   layouts: Layout[];
 };
 
@@ -52,7 +52,7 @@ export type ClockMessageDescriptor = {
 export type MessageDescriptor =
   | OffMessageDescriptor
   | SingleMessageDescriptor
-  | CyclingMessageDescriptor
+  | CycleMessageDescriptor
   | ClockMessageDescriptor;
 
 export const makeTramAlignment = (tram: LiveTram): Alignment => {
@@ -141,7 +141,7 @@ export const makeMessageDescriptors = (
 
   if (otherTrams.length > 1) {
     messageDescriptors.push({
-      mode: "cycling",
+      mode: "cycle",
       layouts: otherTrams.map(makeTramLayout),
     });
   }

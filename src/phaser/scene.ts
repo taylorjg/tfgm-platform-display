@@ -5,12 +5,13 @@ import {
   formatTime,
   type MessageDescriptor,
   makeMatrixBlank,
-  makeMatrixForMessageDescriptor,
+  makeCycleMatrix,
+  makeMatrixForLayout,
   makeMatrixCentre,
 } from "@app/helpers";
 import { first, range } from "@app/utils";
 
-import { ScrollLeft, ScrollUp, type MatrixEffect } from "./matrix-effects";
+import { ScrollLeft, type MatrixEffect } from "./matrix-effects";
 
 export type LedMatrixSceneData = {
   font: Font;
@@ -39,9 +40,12 @@ export class LedMatrixScene extends Phaser.Scene {
   private _dimensions!: Dimensions;
   private _dots: Phaser.GameObjects.Arc[][] = [];
   private _scrollLeft!: MatrixEffect;
-  private _scrollUp!: MatrixEffect;
   private _currentEffect: MatrixEffect | null = null;
   private _includeFirstColon = false;
+  private _cycleTimer: Phaser.Time.TimerEvent | null = null;
+  private _scrollUpTimer: Phaser.Time.TimerEvent | null = null;
+  private _rowOffset = 0;
+  private _colOffset = 0;
 
   constructor() {
     console.log("[LedMatrixScene#constructor]");
@@ -64,7 +68,6 @@ export class LedMatrixScene extends Phaser.Scene {
     );
 
     this._scrollLeft = new ScrollLeft(this._dimensions);
-    this._scrollUp = new ScrollUp(this._dimensions);
 
     if (this._messageDescriptor.mode === "clock") {
       this.time.addEvent({
@@ -100,13 +103,31 @@ export class LedMatrixScene extends Phaser.Scene {
   _onSetMessageDescriptor = (messageDescriptor: MessageDescriptor) => {
     console.log("[LedMatrixScene#_onSetMessageDescriptor]", messageDescriptor);
 
-    if (this._messageDescriptor.mode === "clock") return;
+    if (messageDescriptor.mode === "off") {
+      this._resetDots();
+      return;
+    }
 
-    this._messageMatrix = makeMatrixForMessageDescriptor(
-      this._font,
-      this._dimensions.numCols,
-      messageDescriptor,
-    );
+    if (messageDescriptor.mode === "clock") {
+      // In clock mode, _updateClock() is invoked by update()
+      return;
+    }
+
+    if (messageDescriptor.mode === "single") {
+      this._messageMatrix = makeMatrixForLayout(
+        this._font,
+        this._dimensions.numCols,
+        messageDescriptor.layout,
+      );
+    }
+
+    if (messageDescriptor.mode === "cycle") {
+      this._messageMatrix = makeCycleMatrix(
+        this._font,
+        this._dimensions.numCols,
+        messageDescriptor.layouts,
+      );
+    }
 
     const firstLine = first(this._messageMatrix) ?? "";
     const contentCols = firstLine.length;
@@ -116,6 +137,52 @@ export class LedMatrixScene extends Phaser.Scene {
     this._dimensions.wrapAtCol = firstLine.length + numCols;
 
     this._updateDots();
+
+    if (messageDescriptor.mode === "cycle") {
+      this._rowOffset = 0;
+      this._colOffset = 0;
+
+      if (this._cycleTimer) {
+        this._cycleTimer.destroy();
+        this._cycleTimer = null;
+      }
+
+      if (this._scrollUpTimer) {
+        this._scrollUpTimer.destroy();
+        this._scrollUpTimer = null;
+      }
+
+      const numCycleRows = this._messageMatrix.length;
+
+      this._cycleTimer = this.time.addEvent({
+        delay: 4_000,
+        loop: true,
+        callback: () => {
+          this._scrollUpTimer = this.time.addEvent({
+            delay: 50,
+            repeat: this._dimensions.numRows - 1,
+            callback: () => {
+              const { numRows, numCols } = this._dimensions;
+
+              const updateRow = (row: number) => {
+                const rowToUse = (row + this._rowOffset + 1) % numCycleRows;
+
+                for (const col of range(numCols)) {
+                  const colour = this._getDotColour(rowToUse, col);
+                  this._dots[row][col].fillColor = colour;
+                }
+              };
+
+              for (const row of range(numRows)) {
+                updateRow(row);
+              }
+
+              this._rowOffset++;
+            },
+          });
+        },
+      });
+    }
   };
 
   _onResize = (numCols: number) => {
@@ -198,15 +265,20 @@ export class LedMatrixScene extends Phaser.Scene {
   _updateDots = () => {
     const { numRows, numCols } = this._dimensions;
 
-    const updateRow = (row: number) => {
+    for (const row of range(numRows)) {
       for (const col of range(numCols)) {
-        const colour = this._getDotColour(row, col);
-        this._dots[row][col].fillColor = colour;
+        this._dots[row][col].fillColor = this._getDotColour(row, col);
       }
-    };
+    }
+  };
+
+  _resetDots = () => {
+    const { numRows, numCols } = this._dimensions;
 
     for (const row of range(numRows)) {
-      updateRow(row);
+      for (const col of range(numCols)) {
+        this._dots[row][col].fillColor = OFF_COLOUR;
+      }
     }
   };
 
