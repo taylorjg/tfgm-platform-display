@@ -46,6 +46,8 @@ export class LedMatrixScene extends Phaser.Scene {
   private _scrollUpTimer: Phaser.Time.TimerEvent | null = null;
   private _rowOffset = 0;
   private _colOffset = 0;
+  private _useFirstMessage = true;
+  private _alternatingTimer: Phaser.Time.TimerEvent | null = null;
 
   constructor() {
     console.log("[LedMatrixScene#constructor]");
@@ -103,6 +105,25 @@ export class LedMatrixScene extends Phaser.Scene {
   _onSetMessageDescriptor = (messageDescriptor: MessageDescriptor) => {
     console.log("[LedMatrixScene#_onSetMessageDescriptor]", messageDescriptor);
 
+    this._rowOffset = 0;
+    this._colOffset = 0;
+    this._useFirstMessage = true;
+
+    if (this._cycleTimer) {
+      this._cycleTimer.destroy();
+      this._cycleTimer = null;
+    }
+
+    if (this._scrollUpTimer) {
+      this._scrollUpTimer.destroy();
+      this._scrollUpTimer = null;
+    }
+
+    if (this._alternatingTimer) {
+      this._alternatingTimer.destroy();
+      this._alternatingTimer = null;
+    }
+
     if (messageDescriptor.mode === "off") {
       this._resetDots();
       return;
@@ -118,6 +139,7 @@ export class LedMatrixScene extends Phaser.Scene {
         this._font,
         this._dimensions.numCols,
         messageDescriptor.layout,
+        this._useFirstMessage,
       );
     }
 
@@ -126,6 +148,7 @@ export class LedMatrixScene extends Phaser.Scene {
         this._font,
         this._dimensions.numCols,
         messageDescriptor.layouts,
+        this._useFirstMessage,
       );
     }
 
@@ -138,20 +161,54 @@ export class LedMatrixScene extends Phaser.Scene {
 
     this._updateDots();
 
+    const isAlternating = (messageDescriptor: MessageDescriptor) =>
+      (messageDescriptor.mode === "single" &&
+        messageDescriptor.layout.type === "alternating") ||
+      (messageDescriptor.mode === "cycle" &&
+        messageDescriptor.layouts.some(
+          (layout) => layout.type === "alternating",
+        ));
+
+    if (
+      messageDescriptor.mode === "single" ||
+      messageDescriptor.mode === "cycle"
+    ) {
+      this._alternatingTimer = this.time.addEvent({
+        delay: 2_000,
+        loop: true,
+        callback: () => {
+          this._useFirstMessage = !this._useFirstMessage;
+
+          if (
+            messageDescriptor.mode === "single" &&
+            isAlternating(messageDescriptor)
+          ) {
+            this._messageMatrix = makeMatrixForLayout(
+              this._font,
+              this._dimensions.numCols,
+              messageDescriptor.layout,
+              this._useFirstMessage,
+            );
+          }
+
+          if (
+            messageDescriptor.mode === "cycle" &&
+            isAlternating(messageDescriptor)
+          ) {
+            this._messageMatrix = makeCycleMatrix(
+              this._font,
+              this._dimensions.numCols,
+              messageDescriptor.layouts,
+              this._useFirstMessage,
+            );
+          }
+
+          this._updateDots();
+        },
+      });
+    }
+
     if (messageDescriptor.mode === "cycle") {
-      this._rowOffset = 0;
-      this._colOffset = 0;
-
-      if (this._cycleTimer) {
-        this._cycleTimer.destroy();
-        this._cycleTimer = null;
-      }
-
-      if (this._scrollUpTimer) {
-        this._scrollUpTimer.destroy();
-        this._scrollUpTimer = null;
-      }
-
       const numCycleRows = this._messageMatrix.length;
 
       this._cycleTimer = this.time.addEvent({

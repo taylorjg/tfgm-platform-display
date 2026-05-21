@@ -109,12 +109,17 @@ export const makeMatrixForLayout = (
   font: Font,
   numCols: number,
   layout: Layout,
+  useFirstMessage: boolean = true,
 ): string[] => {
   switch (layout.type) {
     case "simple":
       return makeMatrixForAlignment(font, numCols, layout.message);
     case "alternating":
-      return makeMatrixForAlignment(font, numCols, layout.message1);
+      return makeMatrixForAlignment(
+        font,
+        numCols,
+        useFirstMessage ? layout.message1 : layout.message2,
+      );
   }
 };
 
@@ -122,8 +127,11 @@ export const makeCycleMatrix = (
   font: Font,
   numCols: number,
   layouts: Layout[],
+  useFirstMessage: boolean = true,
 ): string[] => {
   return layouts
-    .map((layout) => makeMatrixForLayout(font, numCols, layout))
+    .map((layout) =>
+      makeMatrixForLayout(font, numCols, layout, useFirstMessage),
+    )
     .flat();
 };
