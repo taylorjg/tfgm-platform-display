@@ -47,7 +47,7 @@ const symbols = `
     |     | |  |x |  |     |     
 `;
 
-export const fontMap1 = new Map([
+export const rowFontMap = new Map([
   ...makeFontMapKvps("ABCDEFGHIJKLMNOPQRSTUVWXYZ", uppercaseLetters),
   ...makeFontMapKvps("abcdefghijklmnopqrstuvwxyz", lowercaseLetters),
   ...makeFontMapKvps("0123456789", numbers),

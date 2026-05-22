@@ -1,5 +1,6 @@
-import { fonts } from "@app/fonts";
+import { clockFont, rowFont } from "@app/fonts";
 import { type MessageDescriptor } from "@app/helpers";
+
 import { LedMatrixRow } from "./led-matrix-row";
 
 export type LedMatrixRowsProps = {
@@ -39,7 +40,7 @@ export const LedMatrixRows = ({
       }}
     >
       <LedMatrixRow
-        font={fonts[0]}
+        font={rowFont}
         numCols={185}
         messageDescriptor={messageDescriptors[0]}
         width="1110px"
@@ -47,7 +48,7 @@ export const LedMatrixRows = ({
       />
 
       <LedMatrixRow
-        font={fonts[0]}
+        font={rowFont}
         numCols={185}
         messageDescriptor={messageDescriptors[1]}
         width="1110px"
@@ -55,7 +56,7 @@ export const LedMatrixRows = ({
       />
 
       <LedMatrixRow
-        font={fonts[0]}
+        font={rowFont}
         numCols={185}
         messageDescriptor={alertMessageDescriptor}
         width="1110px"
@@ -63,7 +64,7 @@ export const LedMatrixRows = ({
       />
 
       <LedMatrixRow
-        font={fonts[1]}
+        font={clockFont}
         numCols={63}
         messageDescriptor={clockMessageDescriptor}
         width="366px"

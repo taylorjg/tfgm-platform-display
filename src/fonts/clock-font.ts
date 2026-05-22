@@ -14,6 +14,6 @@ xx    xx    xx    xx       xx    xx      xx  xx    xx xx    xx   xx     xx    xx
  xxxxxx |  xxxx  |xxxxxxxx| xxxxxx |     xx | xxxxxx | xxxxxx |  xx    | xxxxxx | xxxxxx |   |   
 `;
 
-export const fontMap2 = new Map([
+export const clockFontMap = new Map([
   ...makeFontMapKvps("0123456789: ", characters),
 ]);

@@ -1,5 +1,7 @@
 import { first, last, range } from "@app/utils";
 
+import { type CharacterDescriptor, type Font } from "./types";
+
 const BREAK = "|";
 
 const findBreaks = (lastDotLine: string): number[] => {
@@ -13,10 +15,6 @@ const findBreaks = (lastDotLine: string): number[] => {
   }
 
   return breaks;
-};
-
-export type CharacterDescriptor = {
-  dotLines: string[];
 };
 
 export type FontMapKvp = [string, CharacterDescriptor];
@@ -43,4 +41,15 @@ export const makeFontMapKvps = (
     );
     return [ch, { dotLines: characterDotLines }];
   });
+};
+
+export const makeFont = (
+  fontMap: Map<string, CharacterDescriptor>,
+  name: string,
+): Font => {
+  return {
+    name,
+    fontMap,
+    numVerticalDots: fontMap.values().next().value?.dotLines.length ?? 0,
+  };
 };
