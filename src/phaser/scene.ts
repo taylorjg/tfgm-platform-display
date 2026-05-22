@@ -11,8 +11,6 @@ import {
 } from "@app/helpers";
 import { first, range } from "@app/utils";
 
-import { ScrollLeft, type MatrixEffect } from "./matrix-effects";
-
 export type LedMatrixSceneData = {
   font: Font;
   numCols: number;
@@ -25,7 +23,6 @@ export type Dimensions = {
   gap: number;
   numRows: number;
   numCols: number;
-  wrapAtCol: number;
   marginX: number;
   marginY: number;
 };
@@ -33,21 +30,28 @@ export type Dimensions = {
 const ON_COLOUR = 0xffff00;
 const OFF_COLOUR = 0x303030;
 
+const FPS = 60;
+const SCROLL_LEFT_DELAY_MS = 1_000 / FPS;
+const SCROLL_LEFT_DOTS_PER_SECOND = 50;
+const SCROLL_LEFT_DOTS_PER_MS = SCROLL_LEFT_DOTS_PER_SECOND / 1_000;
+const ALTERNATING_DELAY_MS = 2_000;
+const CYCLE_DELAY_MS = 4_000;
+
 export class LedMatrixScene extends Phaser.Scene {
   private _font!: Font;
   private _messageDescriptor!: MessageDescriptor;
   private _messageMatrix!: string[];
   private _dimensions!: Dimensions;
   private _dots: Phaser.GameObjects.Arc[][] = [];
-  private _scrollLeft!: MatrixEffect;
-  private _currentEffect: MatrixEffect | null = null;
   private _includeFirstColon = false;
+  private _alternatingTimer: Phaser.Time.TimerEvent | null = null;
   private _cycleTimer: Phaser.Time.TimerEvent | null = null;
   private _scrollUpTimer: Phaser.Time.TimerEvent | null = null;
+  private _scrollLeftTimer: Phaser.Time.TimerEvent | null = null;
+  private _scrollLeftPrevMs = 0;
   private _rowOffset = 0;
   private _colOffset = 0;
   private _useFirstMessage = true;
-  private _alternatingTimer: Phaser.Time.TimerEvent | null = null;
 
   constructor() {
     console.log("[LedMatrixScene#constructor]");
@@ -69,8 +73,6 @@ export class LedMatrixScene extends Phaser.Scene {
       this,
     );
 
-    this._scrollLeft = new ScrollLeft(this._dimensions);
-
     if (this._messageDescriptor.mode === "clock") {
       this.time.addEvent({
         delay: 500,
@@ -80,13 +82,6 @@ export class LedMatrixScene extends Phaser.Scene {
       });
     } else {
       this._onSetMessageDescriptor(this._messageDescriptor);
-    }
-  }
-
-  update(_: number, deltaMs: number) {
-    if (this._currentEffect) {
-      this._currentEffect.tick(deltaMs);
-      this._updateDots();
     }
   }
 
@@ -109,6 +104,11 @@ export class LedMatrixScene extends Phaser.Scene {
     this._colOffset = 0;
     this._useFirstMessage = true;
 
+    if (this._alternatingTimer) {
+      this._alternatingTimer.destroy();
+      this._alternatingTimer = null;
+    }
+
     if (this._cycleTimer) {
       this._cycleTimer.destroy();
       this._cycleTimer = null;
@@ -119,9 +119,9 @@ export class LedMatrixScene extends Phaser.Scene {
       this._scrollUpTimer = null;
     }
 
-    if (this._alternatingTimer) {
-      this._alternatingTimer.destroy();
-      this._alternatingTimer = null;
+    if (this._scrollLeftTimer) {
+      this._scrollLeftTimer.destroy();
+      this._scrollLeftTimer = null;
     }
 
     if (messageDescriptor.mode === "off") {
@@ -156,8 +156,21 @@ export class LedMatrixScene extends Phaser.Scene {
     const contentCols = firstLine.length;
     const { numCols } = this._dimensions;
 
-    this._currentEffect = contentCols > numCols ? this._scrollLeft : null;
-    this._dimensions.wrapAtCol = firstLine.length + numCols;
+    if (contentCols > numCols) {
+      this._scrollLeftPrevMs = Date.now();
+      this._scrollLeftTimer = this.time.addEvent({
+        delay: SCROLL_LEFT_DELAY_MS,
+        loop: true,
+        callback: () => {
+          const nowMs = Date.now();
+          const deltaMs = nowMs - this._scrollLeftPrevMs;
+          this._scrollLeftPrevMs = nowMs;
+          const dotsToScroll = Math.round(deltaMs * SCROLL_LEFT_DOTS_PER_MS);
+          this._colOffset += dotsToScroll > 1 ? 1 : dotsToScroll;
+          this._updateDots();
+        },
+      });
+    }
 
     this._updateDots();
 
@@ -174,7 +187,7 @@ export class LedMatrixScene extends Phaser.Scene {
       messageDescriptor.mode === "cycle"
     ) {
       this._alternatingTimer = this.time.addEvent({
-        delay: 2_000,
+        delay: ALTERNATING_DELAY_MS,
         loop: true,
         callback: () => {
           this._useFirstMessage = !this._useFirstMessage;
@@ -209,32 +222,19 @@ export class LedMatrixScene extends Phaser.Scene {
     }
 
     if (messageDescriptor.mode === "cycle") {
-      const numCycleRows = this._messageMatrix.length;
-
       this._cycleTimer = this.time.addEvent({
-        delay: 4_000,
+        delay: CYCLE_DELAY_MS,
         loop: true,
         callback: () => {
+          if (this._scrollUpTimer) {
+            this._scrollUpTimer.destroy();
+          }
           this._scrollUpTimer = this.time.addEvent({
             delay: 50,
             repeat: this._dimensions.numRows - 1,
             callback: () => {
-              const { numRows, numCols } = this._dimensions;
-
-              const updateRow = (row: number) => {
-                const rowToUse = (row + this._rowOffset + 1) % numCycleRows;
-
-                for (const col of range(numCols)) {
-                  const colour = this._getDotColour(rowToUse, col);
-                  this._dots[row][col].fillColor = colour;
-                }
-              };
-
-              for (const row of range(numRows)) {
-                updateRow(row);
-              }
-
               this._rowOffset++;
+              this._updateDots();
             },
           });
         },
@@ -264,8 +264,6 @@ export class LedMatrixScene extends Phaser.Scene {
 
     const marginX = (width - (numCols * (diameter + gap) - gap)) / 2;
     const marginY = (height - (numRows * (diameter + gap) - gap)) / 2;
-    const firstLine = first(this._messageMatrix) ?? "";
-    const wrapAtCol = firstLine.length + numCols;
 
     this._dimensions = {
       radius,
@@ -273,7 +271,6 @@ export class LedMatrixScene extends Phaser.Scene {
       gap,
       numRows,
       numCols,
-      wrapAtCol,
       marginX,
       marginY,
     };
@@ -283,12 +280,8 @@ export class LedMatrixScene extends Phaser.Scene {
   };
 
   _getDotColour = (row: number, col: number) => {
-    const nextRowCol = this._currentEffect
-      ? this._currentEffect.nextRowCol(row, col)
-      : { row, col };
-    const { row: actualRow, col: actualCol } = nextRowCol;
-    const line = this._messageMatrix[actualRow] ?? "";
-    const ch = line.at(actualCol);
+    const line = this._messageMatrix[row] ?? "";
+    const ch = line.at(col);
     return ch === "x" ? ON_COLOUR : OFF_COLOUR;
   };
 
@@ -321,10 +314,17 @@ export class LedMatrixScene extends Phaser.Scene {
 
   _updateDots = () => {
     const { numRows, numCols } = this._dimensions;
+    const totalRows = this._messageMatrix.length;
+    const totalCols = first(this._messageMatrix).length + numCols;
 
     for (const row of range(numRows)) {
+      const sourceRow = (row + this._rowOffset) % totalRows;
+
       for (const col of range(numCols)) {
-        this._dots[row][col].fillColor = this._getDotColour(row, col);
+        const sourceCol = (col + this._colOffset) % totalCols;
+
+        const fillColour = this._getDotColour(sourceRow, sourceCol);
+        this._dots[row][col].fillColor = fillColour;
       }
     }
   };

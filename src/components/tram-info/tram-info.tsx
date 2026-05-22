@@ -15,28 +15,26 @@ type TramInfoProps = {
 const ALERT =
   "Welcome to Metrolink. Ticket checks are taking place across the network today. For travel information visit www.TfGM.com.";
 
-const makeLeftRightText = (tram: LiveTram | undefined) => {
-  if (!tram) return { leftText: "", rightText: "", message: "" };
+const makeLeftRightText = (
+  tram: LiveTram | undefined,
+): { leftText: string; rightText: string } => {
+  if (!tram) return { leftText: "", rightText: "" };
 
   const leftText = tram.destinationDisplay;
 
-  const dbl = tram.carriages === "Double" ? "dbl" : "";
-  const due = tram.due > 0 ? `${tram.due} min` : "";
-  const rightText =
-    tram.status !== "Due" ? tram.status : [dbl, due].filter(Boolean).join(" ");
+  const isDouble = tram.carriages === "Double";
+  const isDue = tram.status === "Due";
+  const dbl = isDouble ? "dbl" : "";
+  const mins = isDue ? `${tram.due} min` : "";
+  const rightTextParts = isDue ? [dbl, mins] : [dbl, tram.status];
+  const rightText = rightTextParts.filter(Boolean).join(" ");
 
-  return { leftText, rightText, message: [leftText, rightText].join("|") };
+  return { leftText, rightText };
 };
 
 export const TramInfo = ({ configuration }: TramInfoProps) => {
   const { data: trams = [] } = useGetTrams(configuration);
-
   const messageDescriptors = makeMessageDescriptors(trams);
-  console.log({ messageDescriptors });
-
-  const [firstTram, secondTram] = trams;
-  const firstLeftRightText = makeLeftRightText(firstTram);
-  const secondLeftRightText = makeLeftRightText(secondTram);
 
   return (
     <>
@@ -98,12 +96,7 @@ export const TramInfo = ({ configuration }: TramInfoProps) => {
         </StyledTramInfoInner>
       </StyledTramInfoOuter>
 
-      <LedMatrixRows
-        firstTram={firstLeftRightText.message}
-        secondTram={secondLeftRightText.message}
-        messageDescriptors={messageDescriptors}
-        alert={ALERT}
-      />
+      <LedMatrixRows messageDescriptors={messageDescriptors} alert={ALERT} />
     </>
   );
 };
