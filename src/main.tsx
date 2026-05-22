@@ -8,7 +8,7 @@ import {
   type Configuration,
   type Options,
 } from "@app/contexts";
-import { App } from "@app/App.tsx";
+import { App } from "@app/app";
 
 const queryClient = new QueryClient();
 
