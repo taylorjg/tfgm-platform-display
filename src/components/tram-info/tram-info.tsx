@@ -2,6 +2,7 @@ import { Box, Typography } from "@mui/material";
 
 import { type Configuration } from "@app/contexts";
 import { Progress } from "@app/components/progress";
+import { testModesMap } from "@app/data/test-modes";
 
 import { StyledTramInfoInner, StyledTramInfoOuter } from "./styles";
 import { LedMatrixRows } from "../led-matrix-rows";
@@ -33,8 +34,12 @@ const makeLeftRightText = (
 };
 
 export const TramInfo = ({ configuration }: TramInfoProps) => {
+  const searchParams = new URLSearchParams(window.location.search);
+  const testMode = Number(searchParams.get("testMode"));
+  const testModeDescriptors = testModesMap.get(testMode);
   const { data: trams = [] } = useGetTrams(configuration);
-  const messageDescriptors = makeMessageDescriptors(trams);
+  const messageDescriptors =
+    testModeDescriptors ?? makeMessageDescriptors(trams);
 
   return (
     <>
