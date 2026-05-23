@@ -1,46 +1,51 @@
 /* eslint-disable react-refresh/only-export-components -- context module exports hook and types-- */
-import {
-  createContext,
-  useContext,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+
+import { type RefreshIntervalMs } from "@app/constants";
 
 export type Options = {
   mode: "light" | "dark";
+  refreshIntervalMs: RefreshIntervalMs;
 };
 
 export type OptionsContextValue = {
-  options: Options | null;
+  options: Options;
   setMode: (mode: "light" | "dark") => void;
+  setRefreshIntervalMs: (refreshIntervalMs: RefreshIntervalMs) => void;
 };
 
 const OptionsContext = createContext<OptionsContextValue | null>(null);
 
 export type OptionsProviderProps = {
   children: ReactNode;
-  initialOptions: Options | null;
+  initialOptions: Options;
 };
 
 export const OptionsProvider = ({
   children,
   initialOptions,
 }: OptionsProviderProps) => {
-  const [options, setOptions] = useState<Options | null>(initialOptions);
+  const [options, setOptions] = useState<Options>(initialOptions);
 
   const setMode = (mode: "light" | "dark") => {
-    setOptions((prev) => ({ ...prev, mode }));
+    setOptions((prev) => ({
+      ...prev,
+      mode,
+    }));
   };
 
-  const theme = useMemo(
-    () => createTheme({ palette: { mode: options?.mode } }),
-    [options?.mode],
-  );
+  const setRefreshIntervalMs = (refreshIntervalMs: RefreshIntervalMs) => {
+    setOptions((prev) => ({
+      ...prev,
+      refreshIntervalMs,
+    }));
+  };
+
+  const theme = createTheme({ palette: { mode: options?.mode } });
 
   return (
-    <OptionsContext.Provider value={{ options, setMode }}>
+    <OptionsContext.Provider value={{ options, setMode, setRefreshIntervalMs }}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         {children}

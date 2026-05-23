@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+import { DEFAULT_REFRESH_INTERVAL_MS } from "@app/constants";
 import {
   ConfigurationProvider,
   OptionsProvider,
@@ -22,6 +23,7 @@ const initialConfiguration: Configuration = {
 // TODO: read initialOptions from local storage
 const initialOptions: Options = {
   mode: "dark",
+  refreshIntervalMs: DEFAULT_REFRESH_INTERVAL_MS,
 };
 
 createRoot(document.getElementById("root")!).render(
