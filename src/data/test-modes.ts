@@ -1,112 +1,63 @@
-import type { MessageDescriptor } from "@app/helpers";
+import type { LiveTram } from "@app/hooks";
 
-const testMode1: MessageDescriptor[] = [
+const testMode1: LiveTram[] = [
+  // no trams
+];
+
+const testMode2: LiveTram[] = [
   {
-    mode: "off",
-  },
-  {
-    mode: "off",
+    carriages: "Single",
+    destinationDisplay: "Dartford Bra",
+    status: "Due",
+    due: 3,
   },
 ];
 
-const testMode2: MessageDescriptor[] = [
+const testMode3: LiveTram[] = [
   {
-    mode: "single",
-    layout: {
-      type: "simple",
-      message: {
-        type: "spaceBetween",
-        left: "Dartford Bra",
-        right: "3 min",
-      },
-    },
+    carriages: "Single",
+    destinationDisplay: "Dartford Bra",
+    status: "Approaching",
+    due: 0,
   },
   {
-    mode: "off",
-  },
-];
-
-const testMode3: MessageDescriptor[] = [
-  {
-    mode: "single",
-    layout: {
-      type: "alternating",
-      message1: {
-        type: "left",
-        text: "Dartford Bra",
-      },
-      message2: {
-        type: "centre",
-        text: "Approaching",
-      },
-    },
+    carriages: "Double",
+    destinationDisplay: "Freckles",
+    status: "Due",
+    due: 7,
   },
   {
-    mode: "cycle",
-    layouts: [
-      {
-        type: "simple",
-        message: {
-          type: "spaceBetween",
-          left: "Freckles",
-          right: "dbl 7 min",
-        },
-      },
-      {
-        type: "simple",
-        message: {
-          type: "spaceBetween",
-          left: "Dartford Bra",
-          right: "11 min",
-        },
-      },
-    ],
+    carriages: "Single",
+    destinationDisplay: "Dartford Bra",
+    status: "Due",
+    due: 11,
   },
 ];
 
-const testMode4: MessageDescriptor[] = [
+const testMode4: LiveTram[] = [
   {
-    mode: "single",
-    layout: {
-      type: "simple",
-      message: {
-        type: "spaceBetween",
-        left: "Dartford Bra",
-        right: "dbl",
-      },
-    },
+    carriages: "Double",
+    destinationDisplay: "Dartford Bra",
+    status: "Arrived",
+    due: 0,
   },
   {
-    mode: "cycle",
-    layouts: [
-      {
-        type: "alternating",
-        message1: {
-          type: "left",
-          text: "Freckles",
-        },
-        message2: {
-          type: "centre",
-          text: "Approaching",
-        },
-      },
-      {
-        type: "simple",
-        message: {
-          type: "spaceBetween",
-          left: "Dartford Bra",
-          right: "11 min",
-        },
-      },
-      {
-        type: "simple",
-        message: {
-          type: "spaceBetween",
-          left: "Depot",
-          right: "23 min",
-        },
-      },
-    ],
+    carriages: "Single",
+    destinationDisplay: "Freckles",
+    status: "Approaching",
+    due: 0,
+  },
+  {
+    carriages: "Double",
+    destinationDisplay: "Dartford Bra",
+    status: "Due",
+    due: 11,
+  },
+  {
+    carriages: "Single",
+    destinationDisplay: "Depot",
+    status: "Due",
+    due: 23,
   },
 ];
 

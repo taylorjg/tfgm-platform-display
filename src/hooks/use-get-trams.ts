@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { TFGM_API_URL } from "@app/constants";
 import type { Configuration } from "@app/contexts";
+import { testModesMap } from "@app/data/test-modes";
 
 export type LiveTram = {
   carriages: string;
@@ -35,9 +36,13 @@ export const useGetTrams = (configuration: Configuration | null) => {
   const serviceIds = configuration?.serviceIds;
   const towards = configuration?.towards;
 
+  const searchParams = new URLSearchParams(window.location.search);
+  const testModeParam = Number(searchParams.get("testMode"));
+  const testData = testModesMap.get(testModeParam);
+
   return useQuery({
     queryKey: ["get-trams", atcoCode, serviceIds, towards],
-    queryFn: () => fetchTrams(atcoCode, serviceIds, towards),
+    queryFn: () => testData ?? fetchTrams(atcoCode, serviceIds, towards),
     enabled: Boolean(atcoCode),
     refetchInterval: 10_000,
   });
