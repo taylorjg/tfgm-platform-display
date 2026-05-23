@@ -1,17 +1,10 @@
 import Phaser from "phaser";
 
 import { type Font } from "@app/fonts";
-import {
-  formatTime,
-  type MessageDescriptor,
-  makeMatrixBlank,
-  makeCycleMatrix,
-  makeMatrixForLayout,
-  makeMatrixCentre,
-} from "@app/helpers";
-import { first } from "@app/utils";
+import { formatTime, type MessageDescriptor } from "@app/helpers";
 
 import { Dots, type Dimensions } from "./dots";
+import { Matrix } from "./matrix";
 
 export type { Dimensions } from "./dots";
 
@@ -32,7 +25,7 @@ export class LedMatrixScene extends Phaser.Scene {
   private _font!: Font;
   private _messageDescriptor!: MessageDescriptor;
   private _dimensions!: Dimensions;
-  private _matrix!: string[];
+  private _matrix!: Matrix;
   private _dots!: Dots;
   private _includeFirstColon = false;
   private _alternatingTimer: Phaser.Time.TimerEvent | null = null;
@@ -54,8 +47,7 @@ export class LedMatrixScene extends Phaser.Scene {
 
     this._font = data.font;
     this._messageDescriptor = data.messageDescriptor;
-    this._matrix = makeMatrixBlank(this._font, data.numCols);
-
+    this._matrix = new Matrix(this._font, data.numCols);
     this._dots = new Dots(this);
     this._onResize(data.numCols);
 
@@ -80,11 +72,7 @@ export class LedMatrixScene extends Phaser.Scene {
     this._includeFirstColon = !this._includeFirstColon;
     const now = new Date();
     const nowFormatted = formatTime(now, this._includeFirstColon);
-    this._matrix = makeMatrixCentre(
-      this._font,
-      this._dimensions.numCols,
-      nowFormatted,
-    );
+    this._matrix.makeMatrixCentre(nowFormatted);
     this._updateDots();
   };
 
@@ -126,28 +114,20 @@ export class LedMatrixScene extends Phaser.Scene {
     }
 
     if (messageDescriptor.mode === "single") {
-      this._matrix = makeMatrixForLayout(
-        this._font,
-        this._dimensions.numCols,
+      this._matrix.makeMatrixForLayout(
         messageDescriptor.layout,
         this._useFirstMessage,
       );
     }
 
     if (messageDescriptor.mode === "cycle") {
-      this._matrix = makeCycleMatrix(
-        this._font,
-        this._dimensions.numCols,
+      this._matrix.makeCycleMatrix(
         messageDescriptor.layouts,
         this._useFirstMessage,
       );
     }
 
-    const firstLine = first(this._matrix) ?? "";
-    const contentCols = firstLine.length;
-    const { numCols } = this._dimensions;
-
-    if (contentCols > numCols) {
+    if (this._matrix.needsScrollLeft()) {
       this._scrollLeftPrevMs = Date.now();
       this._scrollLeftTimer = this.time.addEvent({
         delay: SCROLL_LEFT_DELAY_MS,
@@ -187,9 +167,7 @@ export class LedMatrixScene extends Phaser.Scene {
             messageDescriptor.mode === "single" &&
             isAlternating(messageDescriptor)
           ) {
-            this._matrix = makeMatrixForLayout(
-              this._font,
-              this._dimensions.numCols,
+            this._matrix.makeMatrixForLayout(
               messageDescriptor.layout,
               this._useFirstMessage,
             );
@@ -199,9 +177,7 @@ export class LedMatrixScene extends Phaser.Scene {
             messageDescriptor.mode === "cycle" &&
             isAlternating(messageDescriptor)
           ) {
-            this._matrix = makeCycleMatrix(
-              this._font,
-              this._dimensions.numCols,
+            this._matrix.makeCycleMatrix(
               messageDescriptor.layouts,
               this._useFirstMessage,
             );
@@ -271,6 +247,6 @@ export class LedMatrixScene extends Phaser.Scene {
   };
 
   _updateDots = () => {
-    this._dots.update(this._matrix, this._rowOffset, this._colOffset);
+    this._dots.update(this._matrix.data, this._rowOffset, this._colOffset);
   };
 }
