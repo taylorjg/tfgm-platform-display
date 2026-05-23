@@ -9,26 +9,17 @@ import {
   makeMatrixForLayout,
   makeMatrixCentre,
 } from "@app/helpers";
-import { first, range } from "@app/utils";
+import { first } from "@app/utils";
+
+import { Dots, type Dimensions } from "./dots";
+
+export type { Dimensions } from "./dots";
 
 export type LedMatrixSceneData = {
   font: Font;
   numCols: number;
   messageDescriptor: MessageDescriptor;
 };
-
-export type Dimensions = {
-  radius: number;
-  diameter: number;
-  gap: number;
-  numRows: number;
-  numCols: number;
-  marginX: number;
-  marginY: number;
-};
-
-const ON_COLOUR = 0xffff00;
-const OFF_COLOUR = 0x303030;
 
 const FPS = 60;
 const SCROLL_LEFT_DELAY_MS = 1_000 / FPS;
@@ -40,9 +31,9 @@ const CYCLE_DELAY_MS = 4_000;
 export class LedMatrixScene extends Phaser.Scene {
   private _font!: Font;
   private _messageDescriptor!: MessageDescriptor;
-  private _messageMatrix!: string[];
   private _dimensions!: Dimensions;
-  private _dots: Phaser.GameObjects.Arc[][] = [];
+  private _matrix!: string[];
+  private _dots!: Dots;
   private _includeFirstColon = false;
   private _alternatingTimer: Phaser.Time.TimerEvent | null = null;
   private _cycleTimer: Phaser.Time.TimerEvent | null = null;
@@ -63,8 +54,9 @@ export class LedMatrixScene extends Phaser.Scene {
 
     this._font = data.font;
     this._messageDescriptor = data.messageDescriptor;
-    this._messageMatrix = makeMatrixBlank(this._font, data.numCols);
+    this._matrix = makeMatrixBlank(this._font, data.numCols);
 
+    this._dots = new Dots(this);
     this._onResize(data.numCols);
 
     this.game.events.on(
@@ -78,7 +70,6 @@ export class LedMatrixScene extends Phaser.Scene {
         delay: 500,
         loop: true,
         callback: this._updateClock,
-        callbackScope: this,
       });
     } else {
       this._onSetMessageDescriptor(this._messageDescriptor);
@@ -89,7 +80,7 @@ export class LedMatrixScene extends Phaser.Scene {
     this._includeFirstColon = !this._includeFirstColon;
     const now = new Date();
     const nowFormatted = formatTime(now, this._includeFirstColon);
-    this._messageMatrix = makeMatrixCentre(
+    this._matrix = makeMatrixCentre(
       this._font,
       this._dimensions.numCols,
       nowFormatted,
@@ -125,7 +116,7 @@ export class LedMatrixScene extends Phaser.Scene {
     }
 
     if (messageDescriptor.mode === "off") {
-      this._resetDots();
+      this._dots.reset();
       return;
     }
 
@@ -135,7 +126,7 @@ export class LedMatrixScene extends Phaser.Scene {
     }
 
     if (messageDescriptor.mode === "single") {
-      this._messageMatrix = makeMatrixForLayout(
+      this._matrix = makeMatrixForLayout(
         this._font,
         this._dimensions.numCols,
         messageDescriptor.layout,
@@ -144,7 +135,7 @@ export class LedMatrixScene extends Phaser.Scene {
     }
 
     if (messageDescriptor.mode === "cycle") {
-      this._messageMatrix = makeCycleMatrix(
+      this._matrix = makeCycleMatrix(
         this._font,
         this._dimensions.numCols,
         messageDescriptor.layouts,
@@ -152,7 +143,7 @@ export class LedMatrixScene extends Phaser.Scene {
       );
     }
 
-    const firstLine = first(this._messageMatrix) ?? "";
+    const firstLine = first(this._matrix) ?? "";
     const contentCols = firstLine.length;
     const { numCols } = this._dimensions;
 
@@ -196,7 +187,7 @@ export class LedMatrixScene extends Phaser.Scene {
             messageDescriptor.mode === "single" &&
             isAlternating(messageDescriptor)
           ) {
-            this._messageMatrix = makeMatrixForLayout(
+            this._matrix = makeMatrixForLayout(
               this._font,
               this._dimensions.numCols,
               messageDescriptor.layout,
@@ -208,7 +199,7 @@ export class LedMatrixScene extends Phaser.Scene {
             messageDescriptor.mode === "cycle" &&
             isAlternating(messageDescriptor)
           ) {
-            this._messageMatrix = makeCycleMatrix(
+            this._matrix = makeCycleMatrix(
               this._font,
               this._dimensions.numCols,
               messageDescriptor.layouts,
@@ -245,7 +236,7 @@ export class LedMatrixScene extends Phaser.Scene {
   _onResize = (numCols: number) => {
     console.log("[LedMatrixScene#_onResize]");
 
-    this._destroyDots();
+    this._dots.destroy();
 
     const { width, height } = this.scale.displaySize;
     const numRows = this._font.numVerticalDots;
@@ -275,77 +266,11 @@ export class LedMatrixScene extends Phaser.Scene {
       marginY,
     };
 
-    this._initialiseDots();
+    this._dots.initialise(this._dimensions);
     this._updateDots();
   };
 
-  _getDotColour = (row: number, col: number) => {
-    const line = this._messageMatrix[row] ?? "";
-    const ch = line.at(col);
-    return ch === "x" ? ON_COLOUR : OFF_COLOUR;
-  };
-
-  _initialiseDots = () => {
-    console.log("[LedMatrixScene#_initialiseDots]");
-
-    const { numRows, numCols, radius } = this._dimensions;
-
-    this._dots = [];
-
-    for (const row of range(numRows)) {
-      this._dots[row] = [];
-      const cy = this._calculateCy(row);
-      for (const col of range(numCols)) {
-        const cx = this._calculateCx(col);
-        this._dots[row][col] = this.add.circle(cx, cy, radius, OFF_COLOUR);
-      }
-    }
-  };
-
-  _destroyDots = () => {
-    console.log("[LedMatrixScene#_destroyDots]");
-
-    for (const dot of this._dots.flat()) {
-      dot.destroy(true);
-    }
-
-    this._dots = [];
-  };
-
   _updateDots = () => {
-    const { numRows, numCols } = this._dimensions;
-    const totalRows = this._messageMatrix.length;
-    const totalCols = first(this._messageMatrix).length + numCols;
-
-    for (const row of range(numRows)) {
-      const sourceRow = (row + this._rowOffset) % totalRows;
-
-      for (const col of range(numCols)) {
-        const sourceCol = (col + this._colOffset) % totalCols;
-
-        const fillColour = this._getDotColour(sourceRow, sourceCol);
-        this._dots[row][col].fillColor = fillColour;
-      }
-    }
-  };
-
-  _resetDots = () => {
-    const { numRows, numCols } = this._dimensions;
-
-    for (const row of range(numRows)) {
-      for (const col of range(numCols)) {
-        this._dots[row][col].fillColor = OFF_COLOUR;
-      }
-    }
-  };
-
-  _calculateCx = (col: number) => {
-    const { radius, diameter, gap, marginX } = this._dimensions;
-    return marginX + col * (diameter + gap) + radius;
-  };
-
-  _calculateCy = (row: number) => {
-    const { radius, diameter, gap, marginY } = this._dimensions;
-    return marginY + row * (diameter + gap) + radius;
+    this._dots.update(this._matrix, this._rowOffset, this._colOffset);
   };
 }
