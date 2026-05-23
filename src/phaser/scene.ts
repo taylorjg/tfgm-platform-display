@@ -104,7 +104,8 @@ export class LedMatrixScene extends Phaser.Scene {
     }
 
     if (messageDescriptor.mode === "off") {
-      this._dots.reset();
+      this._matrix.makeMatrixBlank();
+      this._updateDots();
       return;
     }
 
@@ -247,6 +248,6 @@ export class LedMatrixScene extends Phaser.Scene {
   };
 
   _updateDots = () => {
-    this._dots.update(this._matrix.data, this._rowOffset, this._colOffset);
+    this._dots.update(this._matrix, this._rowOffset, this._colOffset);
   };
 }

@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 
-import { first, range } from "@app/utils";
+import { range } from "@app/utils";
+import type { Matrix } from "./matrix";
 
 export type Dimensions = {
   radius: number;
@@ -57,10 +58,9 @@ export class Dots {
     this._dots = [];
   }
 
-  update(matrix: string[], rowOffset: number, colOffset: number) {
+  update(matrix: Matrix, rowOffset: number, colOffset: number) {
     const { numRows, numCols } = this._dimensions;
-    const totalRows = matrix.length;
-    const totalCols = first(matrix).length + numCols;
+    const { totalRows, totalCols } = matrix.size();
 
     for (const row of range(numRows)) {
       const sourceRow = (row + rowOffset) % totalRows;
@@ -68,26 +68,13 @@ export class Dots {
       for (const col of range(numCols)) {
         const sourceCol = (col + colOffset) % totalCols;
 
-        const fillColour = this._getDotColour(matrix, sourceRow, sourceCol);
+        const fillColour = matrix.isDotOn(sourceRow, sourceCol)
+          ? ON_COLOUR
+          : OFF_COLOUR;
+
         this._dots[row][col].fillColor = fillColour;
       }
     }
-  }
-
-  reset() {
-    const { numRows, numCols } = this._dimensions;
-
-    for (const row of range(numRows)) {
-      for (const col of range(numCols)) {
-        this._dots[row][col].fillColor = OFF_COLOUR;
-      }
-    }
-  }
-
-  private _getDotColour(matrix: string[], row: number, col: number) {
-    const line = matrix[row] ?? "";
-    const ch = line.at(col);
-    return ch === "x" ? ON_COLOUR : OFF_COLOUR;
   }
 
   private _calculateCx = (col: number) => {
