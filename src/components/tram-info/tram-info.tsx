@@ -3,10 +3,12 @@ import { Box, Typography } from "@mui/material";
 import { type Configuration } from "@app/contexts";
 import { Progress } from "@app/components/progress";
 
-import { StyledTramInfoInner, StyledTramInfoOuter } from "./styles";
-import { LedMatrixRows } from "../led-matrix-rows";
 import { useGetTrams, type LiveTram } from "@app/hooks";
 import { makeMessageDescriptors } from "@app/helpers";
+import { LedMatrixRows } from "@app/components/led-matrix-rows";
+import { PlatformMatrixWrapper } from "@app/components/platform-matrix-wrapper";
+
+import { StyledTramInfoInner, StyledTramInfoOuter } from "./styles";
 
 type TramInfoProps = {
   configuration: Configuration;
@@ -97,6 +99,15 @@ export const TramInfo = ({ configuration }: TramInfoProps) => {
       </StyledTramInfoOuter>
 
       <LedMatrixRows messageDescriptors={messageDescriptors} alert={ALERT} />
+
+      <PlatformMatrixWrapper />
+
+      {/* <div
+        style={{
+          // aspectRatio: "201/58",
+          aspectRatio: "189/46",
+        }}
+      /> */}
     </>
   );
 };
