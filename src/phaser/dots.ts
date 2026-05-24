@@ -9,8 +9,8 @@ export type Dimensions = {
   gap: number;
   numRows: number;
   numCols: number;
-  marginX: number;
-  marginY: number;
+  offsetX: number;
+  offsetY: number;
 };
 
 const ON_COLOUR = 0xffff00;
@@ -38,12 +38,8 @@ export class Dots {
       const cy = this._calculateCy(row);
       for (const col of range(numCols)) {
         const cx = this._calculateCx(col);
-        this._dots[row][col] = this._scene.add.circle(
-          cx,
-          cy,
-          radius,
-          OFF_COLOUR,
-        );
+        const dot = this._scene.add.circle(cx, cy, radius, OFF_COLOUR);
+        this._dots[row][col] = dot;
       }
     }
   }
@@ -67,23 +63,20 @@ export class Dots {
 
       for (const col of range(numCols)) {
         const sourceCol = (col + colOffset) % totalCols;
-
-        const fillColour = matrix.isDotOn(sourceRow, sourceCol)
-          ? ON_COLOUR
-          : OFF_COLOUR;
-
+        const isDotOn = matrix.isDotOn(sourceRow, sourceCol);
+        const fillColour = isDotOn ? ON_COLOUR : OFF_COLOUR;
         this._dots[row][col].fillColor = fillColour;
       }
     }
   }
 
   private _calculateCx = (col: number) => {
-    const { radius, diameter, gap, marginX } = this._dimensions;
-    return marginX + col * (diameter + gap) + radius;
+    const { radius, diameter, gap, offsetX } = this._dimensions;
+    return offsetX + col * (diameter + gap) + radius;
   };
 
   private _calculateCy = (row: number) => {
-    const { radius, diameter, gap, marginY } = this._dimensions;
-    return marginY + row * (diameter + gap) + radius;
+    const { radius, diameter, gap, offsetY } = this._dimensions;
+    return offsetY + row * (diameter + gap) + radius;
   };
 }

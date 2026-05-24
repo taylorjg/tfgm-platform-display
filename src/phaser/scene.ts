@@ -6,8 +6,6 @@ import { formatTime, type MessageDescriptor } from "@app/helpers";
 import { Dots, type Dimensions } from "./dots";
 import { Matrix } from "./matrix";
 
-export type { Dimensions } from "./dots";
-
 export type LedMatrixSceneData = {
   font: Font;
   numCols: number;
@@ -230,8 +228,8 @@ export class LedMatrixScene extends Phaser.Scene {
     const radius = diameter / 2;
     const gap = diameter / 10;
 
-    const marginX = (width - (numCols * (diameter + gap) - gap)) / 2;
-    const marginY = (height - (numRows * (diameter + gap) - gap)) / 2;
+    const offsetX = (width - (numCols * (diameter + gap) - gap)) / 2;
+    const offsetY = (height - (numRows * (diameter + gap) - gap)) / 2;
 
     this._dimensions = {
       radius,
@@ -239,8 +237,8 @@ export class LedMatrixScene extends Phaser.Scene {
       gap,
       numRows,
       numCols,
-      marginX,
-      marginY,
+      offsetX,
+      offsetY,
     };
 
     this._dots.initialise(this._dimensions);
