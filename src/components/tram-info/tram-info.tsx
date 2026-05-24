@@ -1,7 +1,7 @@
-import { Box, Typography } from "@mui/material";
+// import { Box, Typography } from "@mui/material";
 
 import { type Configuration } from "@app/contexts";
-import { Progress } from "@app/components/progress";
+// import { Progress } from "@app/components/progress";
 
 import { useGetTrams, type LiveTram } from "@app/hooks";
 import { makeMessageDescriptors } from "@app/helpers";
@@ -17,22 +17,22 @@ type TramInfoProps = {
 const ALERT =
   "Welcome to Metrolink. Ticket checks are taking place across the network today. For travel information visit www.TfGM.com.";
 
-const makeLeftRightText = (
-  tram: LiveTram | undefined,
-): { leftText: string; rightText: string } => {
-  if (!tram) return { leftText: "", rightText: "" };
+// const makeLeftRightText = (
+//   tram: LiveTram | undefined,
+// ): { leftText: string; rightText: string } => {
+//   if (!tram) return { leftText: "", rightText: "" };
 
-  const leftText = tram.destinationDisplay;
+//   const leftText = tram.destinationDisplay;
 
-  const isDouble = tram.carriages === "Double";
-  const isDue = tram.status === "Due";
-  const dbl = isDouble ? "dbl" : "";
-  const mins = isDue ? `${tram.due} min` : "";
-  const rightTextParts = isDue ? [dbl, mins] : [dbl, tram.status];
-  const rightText = rightTextParts.filter(Boolean).join(" ");
+//   const isDouble = tram.carriages === "Double";
+//   const isDue = tram.status === "Due";
+//   const dbl = isDouble ? "dbl" : "";
+//   const mins = isDue ? `${tram.due} min` : "";
+//   const rightTextParts = isDue ? [dbl, mins] : [dbl, tram.status];
+//   const rightText = rightTextParts.filter(Boolean).join(" ");
 
-  return { leftText, rightText };
-};
+//   return { leftText, rightText };
+// };
 
 export const TramInfo = ({ configuration }: TramInfoProps) => {
   const { data: trams = [] } = useGetTrams(configuration);
@@ -42,7 +42,7 @@ export const TramInfo = ({ configuration }: TramInfoProps) => {
     <>
       <StyledTramInfoOuter>
         <StyledTramInfoInner>
-          {trams ? (
+          {/* {trams ? (
             <Box
               component="ul"
               sx={{
@@ -94,20 +94,11 @@ export const TramInfo = ({ configuration }: TramInfoProps) => {
                 })
               )}
             </Box>
-          ) : null}
+          ) : null} */}
         </StyledTramInfoInner>
       </StyledTramInfoOuter>
-
       <LedMatrixRows messageDescriptors={messageDescriptors} alert={ALERT} />
-
       <PlatformMatrixWrapper />
-
-      {/* <div
-        style={{
-          // aspectRatio: "201/58",
-          aspectRatio: "189/46",
-        }}
-      /> */}
     </>
   );
 };
