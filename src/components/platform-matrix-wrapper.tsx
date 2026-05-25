@@ -39,7 +39,7 @@ export const PlatformMatrixWrapper = ({
   return (
     <div
       ref={parentRef as Ref<HTMLDivElement>}
-      style={{ aspectRatio: "201/58" }}
+      style={{ margin: "0.5rem", width: "100%", aspectRatio: "201/58" }}
     />
   );
 };

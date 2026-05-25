@@ -81,11 +81,11 @@ export class LedMatrixScene2 extends Phaser.Scene {
 
     const numeratorH = 10 * height;
     const denominatorH = 11 * numRows - 1;
-    const diameterH = Math.floor(numeratorH / denominatorH);
+    const diameterH = numeratorH / denominatorH;
 
     const numeratorW = 10 * width;
     const denominatorW = 11 * numCols - 1;
-    const diameterW = Math.floor(numeratorW / denominatorW);
+    const diameterW = numeratorW / denominatorW;
 
     const diameter = Math.min(diameterH, diameterW);
     const radius = diameter / 2;

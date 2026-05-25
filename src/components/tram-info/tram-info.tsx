@@ -2,8 +2,9 @@ import { type Configuration } from "@app/contexts";
 
 import { useGetTrams } from "@app/hooks";
 import { makeMessageDescriptors, type RowDescriptor } from "@app/helpers";
-import { LedMatrixRows } from "@app/components/led-matrix-rows";
 import { PlatformMatrixWrapper } from "@app/components/platform-matrix-wrapper";
+
+import { StyledTramInfo } from "./styles";
 
 type TramInfoProps = {
   configuration: Configuration;
@@ -27,9 +28,8 @@ export const TramInfo = ({ configuration }: TramInfoProps) => {
   };
 
   return (
-    <>
-      <LedMatrixRows messageDescriptors={messageDescriptors} alert={ALERT} />
+    <StyledTramInfo>
       <PlatformMatrixWrapper rowDescriptors={{ row1, row2, row3 }} />
-    </>
+    </StyledTramInfo>
   );
 };
