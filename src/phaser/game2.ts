@@ -1,17 +1,15 @@
 import Phaser from "phaser";
 
-import { LedMatrixScene2, type LedMatrixScene2Data } from "./scene2";
-// import type { MessageDescriptor } from "@app/helpers";
+import { LedMatrixScene2 } from "./scene2";
+import type { RowDescriptors } from "@app/helpers";
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
-  type: Phaser.AUTO,
+  type: Phaser.WEBGL,
   transparent: true,
+  scene: [LedMatrixScene2],
 };
 
-export const initialiseGame2 = (
-  parent: HTMLElement,
-  initialValues: LedMatrixScene2Data,
-) => {
+export const initialiseGame2 = (parent: HTMLElement) => {
   const parentRect = parent.getBoundingClientRect();
   console.log("[initialiseGame2]", { parentRect });
 
@@ -21,15 +19,15 @@ export const initialiseGame2 = (
 
   const game = new Phaser.Game(gameConfig);
 
-  game.scene.add("LedMatrixScene2", LedMatrixScene2, true, initialValues);
-
-  const gameActions = makeGameActions(game);
-
-  return gameActions;
+  return makeGameActions(game);
 };
 
-// TODO: add an interface for the game actions
-const makeGameActions = (game: Phaser.Game) => {
+export interface GameActions {
+  destroy: () => void;
+  changeRowDescriptors: (rowDescriptors: RowDescriptors) => void;
+}
+
+const makeGameActions = (game: Phaser.Game): GameActions => {
   const resizeGameToMatchParent = () => {
     const parent = game.config.parent;
     const parentRect = parent.getBoundingClientRect();
@@ -55,10 +53,10 @@ const makeGameActions = (game: Phaser.Game) => {
   window.addEventListener("resize", onResize);
   screen.orientation?.addEventListener("change", onScreenOrientationChange);
 
-  // const setMessageDescriptor = (messageDescriptor: MessageDescriptor) => {
-  //   console.log("[gameActions#setMessageDescriptor]", messageDescriptor);
-  //   game.events.emit("SetMessageDescriptor", messageDescriptor);
-  // };
+  const changeRowDescriptors = (rowDescriptors: RowDescriptors) => {
+    console.log("[gameActions#changeRowDescriptors]", rowDescriptors);
+    game.events.emit("ChangeRowDescriptors", rowDescriptors);
+  };
 
   const destroy = () => {
     console.log("[gameActions#destroy]");
@@ -71,7 +69,7 @@ const makeGameActions = (game: Phaser.Game) => {
   };
 
   return {
-    // setMessageDescriptor,
     destroy,
+    changeRowDescriptors,
   };
 };

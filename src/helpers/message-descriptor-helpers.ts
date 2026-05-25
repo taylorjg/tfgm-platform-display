@@ -55,6 +55,14 @@ export type MessageDescriptor =
   | CycleMessageDescriptor
   | ClockMessageDescriptor;
 
+export type RowDescriptor = MessageDescriptor;
+
+export type RowDescriptors = {
+  row1: RowDescriptor;
+  row2: RowDescriptor;
+  row3: RowDescriptor;
+};
+
 export const makeTramAlignment = (tram: LiveTram): Alignment => {
   if (tram.status === "Approaching" || tram.status === "Arrived") {
     if (tram.carriages === "Double") {

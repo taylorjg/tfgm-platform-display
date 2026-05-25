@@ -4,11 +4,7 @@ import { clockFont, rowFont } from "@app/fonts";
 
 import type { Dimensions } from "./dots";
 import { MatrixRow } from "./matrix-row";
-
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export type LedMatrixScene2Data = {
-  // TODO
-};
+import type { RowDescriptors } from "@app/helpers";
 
 export class LedMatrixScene2 extends Phaser.Scene {
   private _dimensions!: Dimensions;
@@ -22,8 +18,9 @@ export class LedMatrixScene2 extends Phaser.Scene {
     super("LedMatrixScene2");
   }
 
-  create(data: LedMatrixScene2Data) {
-    console.log("[LedMatrixScene2#create]", data);
+  create() {
+    console.log("[LedMatrixScene2#create]");
+
     // this.scale.on("resize", this._onResize, this);
     this._onResize();
 
@@ -61,7 +58,16 @@ export class LedMatrixScene2 extends Phaser.Scene {
       offsetY: offsetY + 41 * (diameter + gap) - gap,
     });
 
+    this._row1.changeRowDescriptor({ mode: "off" });
+    this._row2.changeRowDescriptor({ mode: "off" });
+    this._row3.changeRowDescriptor({ mode: "off" });
     this._row4.changeRowDescriptor({ mode: "clock" });
+
+    this.game.events.on(
+      "ChangeRowDescriptors",
+      this._onChangeRowDescriptors,
+      this,
+    );
   }
 
   _onResize = () => {
@@ -71,6 +77,7 @@ export class LedMatrixScene2 extends Phaser.Scene {
     const numCols = 201; // cols + gaps + frame = 185 + 2x2 + 6x2
 
     const { width, height } = this.scale.displaySize;
+    console.log("[LedMatrixScene2#_onResize]", { width, height });
 
     const numeratorH = 10 * height;
     const denominatorH = 11 * numRows - 1;
@@ -117,5 +124,13 @@ export class LedMatrixScene2 extends Phaser.Scene {
       offsetY: marginY,
       offsetX: marginX,
     };
+  };
+
+  _onChangeRowDescriptors = (rowDescriptors: RowDescriptors) => {
+    console.log("[LedMatrixScene2#_onChangeRowDescriptors]", rowDescriptors);
+
+    this._row1.changeRowDescriptor(rowDescriptors.row1);
+    this._row2.changeRowDescriptor(rowDescriptors.row2);
+    this._row3.changeRowDescriptor(rowDescriptors.row3);
   };
 }
