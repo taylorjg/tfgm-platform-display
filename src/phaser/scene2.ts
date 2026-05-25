@@ -60,6 +60,8 @@ export class LedMatrixScene2 extends Phaser.Scene {
       offsetX: offsetX + (8 + (185 - 63) / 2) * (diameter + gap) - gap,
       offsetY: offsetY + 41 * (diameter + gap) - gap,
     });
+
+    this._row4.changeRowDescriptor({ mode: "clock" });
   }
 
   _onResize = () => {
@@ -90,10 +92,12 @@ export class LedMatrixScene2 extends Phaser.Scene {
     const borderWidth = 6 * (diameter + gap) - gap;
     const borderColor = 0x808080;
 
+    // Outer frame rect
     this.add
       .rectangle(marginX, marginY, frameWidth, frameHeight, borderColor)
       .setOrigin(0, 0);
 
+    // Inner frame rect
     this.add
       .rectangle(
         marginX + borderWidth,
