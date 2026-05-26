@@ -21,7 +21,7 @@ const isAlternatingRow = (rowDescriptor: RowDescriptor) =>
 
 export class MatrixRow {
   private readonly _scene: Phaser.Scene;
-  private readonly _dimensions: Dimensions;
+  private _dimensions: Dimensions;
   private _matrix: Matrix;
   private _dots!: Dots;
   private _includeFirstColon = false;
@@ -43,6 +43,13 @@ export class MatrixRow {
     this._dots = new Dots(scene);
     this._dots.initialise(dimensions);
     this._dots.update(this._matrix, 0, 0);
+  }
+
+  changeDimensions(dimensions: Dimensions) {
+    this._dimensions = dimensions;
+    this._dots.destroy();
+    this._dots.initialise(dimensions);
+    this._updateDots();
   }
 
   changeRowDescriptor(rowDescriptor: RowDescriptor) {

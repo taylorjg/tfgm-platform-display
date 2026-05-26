@@ -12,6 +12,8 @@ export class LedMatrixScene2 extends Phaser.Scene {
   private _row2!: MatrixRow;
   private _row3!: MatrixRow;
   private _row4!: MatrixRow;
+  private _frameOuter?: Phaser.GameObjects.Rectangle;
+  private _frameInner?: Phaser.GameObjects.Rectangle;
 
   constructor() {
     console.log("[LedMatrixScene2#constructor]");
@@ -21,7 +23,6 @@ export class LedMatrixScene2 extends Phaser.Scene {
   create() {
     console.log("[LedMatrixScene2#create]");
 
-    // this.scale.on("resize", this._onResize, this);
     this._onResize();
 
     const { diameter, gap, offsetX, offsetY } = this._dimensions;
@@ -68,6 +69,8 @@ export class LedMatrixScene2 extends Phaser.Scene {
       this._onChangeRowDescriptors,
       this,
     );
+
+    this.scale.on("resize", this._onResize, this);
   }
 
   _onResize = () => {
@@ -77,7 +80,6 @@ export class LedMatrixScene2 extends Phaser.Scene {
     const numCols = 201; // cols + gaps + frame = 185 + 2x2 + 6x2
 
     const { width, height } = this.scale.displaySize;
-    console.log("[LedMatrixScene2#_onResize]", { width, height });
 
     const numeratorH = 10 * height;
     const denominatorH = 11 * numRows - 1;
@@ -99,13 +101,25 @@ export class LedMatrixScene2 extends Phaser.Scene {
     const borderWidth = 6 * (diameter + gap) - gap;
     const borderColor = 0x808080;
 
-    // Outer frame rect
-    this.add
+    const isMeaningfulChange = this._dimensions
+      ? Math.abs(diameter - this._dimensions.diameter) > 0.1
+      : true;
+
+    if (!isMeaningfulChange) return;
+
+    if (this._frameOuter) {
+      this._frameOuter.destroy();
+    }
+
+    if (this._frameInner) {
+      this._frameInner.destroy();
+    }
+
+    this._frameOuter = this.add
       .rectangle(marginX, marginY, frameWidth, frameHeight, borderColor)
       .setOrigin(0, 0);
 
-    // Inner frame rect
-    this.add
+    this._frameInner = this.add
       .rectangle(
         marginX + borderWidth,
         marginY + borderWidth,
@@ -115,7 +129,7 @@ export class LedMatrixScene2 extends Phaser.Scene {
       )
       .setOrigin(0, 0);
 
-    this._dimensions = {
+    const newDimensions = {
       numRows,
       numCols,
       diameter,
@@ -124,6 +138,40 @@ export class LedMatrixScene2 extends Phaser.Scene {
       offsetY: marginY,
       offsetX: marginX,
     };
+
+    this._dimensions = newDimensions;
+
+    this._row1?.changeDimensions({
+      ...this._dimensions,
+      numRows: 9,
+      numCols: 185,
+      offsetX: marginX + 8 * (diameter + gap) - gap,
+      offsetY: marginY + 8 * (diameter + gap) - gap,
+    });
+
+    this._row2?.changeDimensions({
+      ...this._dimensions,
+      numRows: 9,
+      numCols: 185,
+      offsetX: marginX + 8 * (diameter + gap) - gap,
+      offsetY: marginY + 19 * (diameter + gap) - gap,
+    });
+
+    this._row3?.changeDimensions({
+      ...this._dimensions,
+      numRows: 9,
+      numCols: 185,
+      offsetX: marginX + 8 * (diameter + gap) - gap,
+      offsetY: marginY + 30 * (diameter + gap) - gap,
+    });
+
+    this._row4?.changeDimensions({
+      ...this._dimensions,
+      numRows: 9,
+      numCols: 63,
+      offsetX: marginX + (8 + (185 - 63) / 2) * (diameter + gap) - gap,
+      offsetY: marginY + 41 * (diameter + gap) - gap,
+    });
   };
 
   _onChangeRowDescriptors = (rowDescriptors: RowDescriptors) => {
