@@ -1,15 +1,15 @@
 import { IconButton } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 
-export type SettingsGearProps = {
+export type SidePanelIconButtonProps = {
   onClick: () => void;
 };
 
-export const SettingsGear = ({ onClick }: SettingsGearProps) => {
+export const SidePanelIconButton = ({ onClick }: SidePanelIconButtonProps) => {
   return (
     <IconButton
       type="button"
-      aria-label="Open settings"
+      aria-label="Open side panel"
       onClick={onClick}
       size="small"
       sx={{

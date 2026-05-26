@@ -1,17 +1,30 @@
 import { useState } from "react";
 
-import { SettingsGear, SidePanel, TramInfo, Version } from "@app/components";
-import { useConfiguration } from "./contexts";
+import {
+  SidePanel,
+  SidePanelIconButton,
+  TramInfo,
+  Version,
+} from "@app/components";
+import { useConfiguration } from "@app/contexts";
 
 export const App = () => {
-  const [sidePanelOpen, setSidePanelOpen] = useState(false);
   const { configuration } = useConfiguration();
+  const [sidePanelOpen, setSidePanelOpen] = useState(false);
+
+  const onOpenSidePanel = () => {
+    setSidePanelOpen(true);
+  };
+
+  const onCloseSidePanel = () => {
+    setSidePanelOpen(false);
+  };
 
   return (
     <>
       {configuration && <TramInfo configuration={configuration} />}
-      <SettingsGear onClick={() => setSidePanelOpen(true)} />
-      <SidePanel open={sidePanelOpen} onClose={() => setSidePanelOpen(false)} />
+      <SidePanelIconButton onClick={onOpenSidePanel} />
+      <SidePanel open={sidePanelOpen} onClose={onCloseSidePanel} />
       <Version />
     </>
   );
