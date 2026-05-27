@@ -6,8 +6,8 @@ import { formatTime, type RowDescriptor } from "@app/helpers";
 import { Dots, type Dimensions } from "./dots";
 import { Matrix } from "./matrix";
 
-const FPS = 60;
-const SCROLL_LEFT_DELAY_MS = 1_000 / FPS;
+// const FPS = 60;
+// const SCROLL_LEFT_DELAY_MS = 1_000 / FPS;
 const SCROLL_LEFT_DOTS_PER_SECOND = 50;
 const SCROLL_LEFT_DOTS_PER_MS = SCROLL_LEFT_DOTS_PER_SECOND / 1_000;
 const ALTERNATING_DELAY_MS = 2_000;
@@ -27,12 +27,13 @@ export class MatrixRow {
   private _includeFirstColon = false;
   private _rowOffset = 0;
   private _colOffset = 0;
-  private _scrollLeftPrevMs = 0;
+  // private _scrollLeftPrevMs = 0;
+  private _scrollLeftEnabled = false;
   private _useFirstMessage = true;
   private _clockTimer: Phaser.Time.TimerEvent | null = null;
   private _alternatingTimer: Phaser.Time.TimerEvent | null = null;
   private _cycleTimer: Phaser.Time.TimerEvent | null = null;
-  private _scrollLeftTimer: Phaser.Time.TimerEvent | null = null;
+  // private _scrollLeftTimer: Phaser.Time.TimerEvent | null = null;
   private _scrollUpTimer: Phaser.Time.TimerEvent | null = null;
 
   constructor(scene: Phaser.Scene, font: Font, dimensions: Dimensions) {
@@ -91,15 +92,26 @@ export class MatrixRow {
       this._cycleTimer = null;
     }
 
-    if (this._scrollLeftTimer) {
-      this._scrollLeftTimer.destroy();
-      this._scrollLeftTimer = null;
-    }
+    // if (this._scrollLeftTimer) {
+    //   this._scrollLeftTimer.destroy();
+    //   this._scrollLeftTimer = null;
+    // }
+    this._scrollLeftEnabled = false;
 
     if (this._scrollUpTimer) {
       this._scrollUpTimer.destroy();
       this._scrollUpTimer = null;
     }
+  };
+
+  update = (deltaMs: number) => {
+    console.log({ deltaMs });
+
+    if (!this._scrollLeftEnabled) return;
+
+    const dotsToScroll = Math.round(deltaMs * SCROLL_LEFT_DOTS_PER_MS);
+    this._colOffset += dotsToScroll;
+    this._updateDots();
   };
 
   _handleOffRow = () => {
@@ -150,20 +162,23 @@ export class MatrixRow {
     }
   };
 
+  // _addScrollLeftTimer = () => {
+  //   this._scrollLeftPrevMs = Date.now();
+  //   this._scrollLeftTimer = this._scene.time.addEvent({
+  //     delay: SCROLL_LEFT_DELAY_MS,
+  //     loop: true,
+  //     callback: () => {
+  //       const nowMs = Date.now();
+  //       const deltaMs = nowMs - this._scrollLeftPrevMs;
+  //       this._scrollLeftPrevMs = nowMs;
+  //       const dotsToScroll = Math.round(deltaMs * SCROLL_LEFT_DOTS_PER_MS);
+  //       this._colOffset += dotsToScroll;
+  //       this._updateDots();
+  //     },
+  //   });
+  // };
   _addScrollLeftTimer = () => {
-    this._scrollLeftPrevMs = Date.now();
-    this._scrollLeftTimer = this._scene.time.addEvent({
-      delay: SCROLL_LEFT_DELAY_MS,
-      loop: true,
-      callback: () => {
-        const nowMs = Date.now();
-        const deltaMs = nowMs - this._scrollLeftPrevMs;
-        this._scrollLeftPrevMs = nowMs;
-        const dotsToScroll = Math.round(deltaMs * SCROLL_LEFT_DOTS_PER_MS);
-        this._colOffset += dotsToScroll;
-        this._updateDots();
-      },
-    });
+    this._scrollLeftEnabled = true;
   };
 
   _addScrollUpTimer = () => {
