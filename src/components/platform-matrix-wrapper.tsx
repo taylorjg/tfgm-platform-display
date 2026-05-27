@@ -1,7 +1,7 @@
 import { useEffect, useRef, type Ref } from "react";
 
 import type { RowDescriptors } from "@app/helpers";
-import { initialiseGame2, type GameActions } from "@app/phaser";
+import { initialiseGame, type GameActions } from "@app/phaser";
 
 export type PlatformMatrixWrapperProps = {
   rowDescriptors: RowDescriptors;
@@ -21,7 +21,7 @@ export const PlatformMatrixWrapper = ({
   useEffect(() => {
     if (!parentRef.current) return;
 
-    gameActionsRef.current = initialiseGame2(parentRef.current);
+    gameActionsRef.current = initialiseGame(parentRef.current);
 
     return gameActionsRef.current.destroy;
   }, []);

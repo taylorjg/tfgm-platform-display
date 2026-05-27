@@ -1,17 +1,17 @@
 import Phaser from "phaser";
 
-import { LedMatrixScene2 } from "./scene2";
+import { LedMatrixScene } from "./scene";
 import type { RowDescriptors } from "@app/helpers";
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.WEBGL,
   transparent: true,
-  scene: [LedMatrixScene2],
+  scene: [LedMatrixScene],
 };
 
-export const initialiseGame2 = (parent: HTMLElement) => {
+export const initialiseGame = (parent: HTMLElement) => {
   const parentRect = parent.getBoundingClientRect();
-  console.log("[initialiseGame2]", { parentRect });
+  console.log("[initialiseGame]", { parentRect });
 
   gameConfig.parent = parent;
   gameConfig.width = parentRect.width;

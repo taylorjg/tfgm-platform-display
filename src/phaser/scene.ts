@@ -6,7 +6,7 @@ import type { Dimensions } from "./dots";
 import { MatrixRow } from "./matrix-row";
 import type { RowDescriptors } from "@app/helpers";
 
-export class LedMatrixScene2 extends Phaser.Scene {
+export class LedMatrixScene extends Phaser.Scene {
   private _dimensions!: Dimensions;
   private _row1!: MatrixRow;
   private _row2!: MatrixRow;
@@ -16,12 +16,12 @@ export class LedMatrixScene2 extends Phaser.Scene {
   private _frameInner?: Phaser.GameObjects.Rectangle;
 
   constructor() {
-    console.log("[LedMatrixScene2#constructor]");
-    super("LedMatrixScene2");
+    console.log("[LedMatrixScene#constructor]");
+    super("LedMatrixScene");
   }
 
   create() {
-    console.log("[LedMatrixScene2#create]");
+    console.log("[LedMatrixScene#create]");
 
     this._onResize();
 
@@ -74,7 +74,7 @@ export class LedMatrixScene2 extends Phaser.Scene {
   }
 
   _onResize = () => {
-    console.log("[LedMatrixScene2#_onResize]");
+    console.log("[LedMatrixScene#_onResize]");
 
     const numRows = 58; // rows + gaps + frame = 4x9 + 5x2 + 6x2
     const numCols = 201; // cols + gaps + frame = 185 + 2x2 + 6x2
@@ -175,7 +175,7 @@ export class LedMatrixScene2 extends Phaser.Scene {
   };
 
   _onChangeRowDescriptors = (rowDescriptors: RowDescriptors) => {
-    console.log("[LedMatrixScene2#_onChangeRowDescriptors]", rowDescriptors);
+    console.log("[LedMatrixScene#_onChangeRowDescriptors]", rowDescriptors);
 
     this._row1.changeRowDescriptor(rowDescriptors.row1);
     this._row2.changeRowDescriptor(rowDescriptors.row2);
