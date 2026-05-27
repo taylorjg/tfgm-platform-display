@@ -160,7 +160,7 @@ export class MatrixRow {
         const deltaMs = nowMs - this._scrollLeftPrevMs;
         this._scrollLeftPrevMs = nowMs;
         const dotsToScroll = Math.round(deltaMs * SCROLL_LEFT_DOTS_PER_MS);
-        this._colOffset += dotsToScroll > 1 ? 1 : dotsToScroll;
+        this._colOffset += dotsToScroll;
         this._updateDots();
       },
     });
