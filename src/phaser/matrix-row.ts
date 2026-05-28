@@ -6,12 +6,21 @@ import { formatTime, type RowDescriptor } from "@app/helpers";
 import { Dots, type Dimensions } from "./dots";
 import { Matrix } from "./matrix";
 
-const FPS = 60;
-const SCROLL_LEFT_DELAY_MS = 1_000 / FPS;
-const SCROLL_LEFT_DOTS_PER_SECOND = 50;
-const SCROLL_LEFT_DOTS_PER_MS = SCROLL_LEFT_DOTS_PER_SECOND / 1_000;
-const ALTERNATING_DELAY_MS = 2_000;
-const CYCLE_DELAY_MS = 4_000;
+const SCROLL_H_DOTS_PER_SECOND = 50;
+const SCROLL_H_DOTS_PER_MS = SCROLL_H_DOTS_PER_SECOND / 1_000;
+const SCROLL_H_DELAY_MS = 1_000 / SCROLL_H_DOTS_PER_SECOND;
+
+const SCROLL_V_DOTS_PER_SECOND = 20;
+const SCROLL_V_DOTS_PER_MS = SCROLL_V_DOTS_PER_SECOND / 1_000;
+const SCROLL_V_DELAY_MS = 1_000 / SCROLL_V_DOTS_PER_SECOND;
+
+const ALTERNATING_DELAY_SECONDS = 2;
+const ALTERNATING_DELAY_MS = ALTERNATING_DELAY_SECONDS * 1_000;
+
+const CYCLE_DELAY_SECONDS = 4;
+const CYCLE_DELAY_MS = CYCLE_DELAY_SECONDS * 1_000;
+
+const CLOCK_DELAY_MS = 500;
 
 const isAlternatingRow = (rowDescriptor: RowDescriptor) =>
   (rowDescriptor.mode === "single" &&
@@ -28,6 +37,7 @@ export class MatrixRow {
   private _rowOffset = 0;
   private _colOffset = 0;
   private _scrollLeftPrevMs = 0;
+  private _scrollUpPrevMs = 0;
   private _useFirstMessage = true;
   private _clockTimer: Phaser.Time.TimerEvent | null = null;
   private _alternatingTimer: Phaser.Time.TimerEvent | null = null;
@@ -110,7 +120,7 @@ export class MatrixRow {
   _handleClockRow = () => {
     if (!this._clockTimer) {
       this._clockTimer = this._scene.time.addEvent({
-        delay: 500,
+        delay: CLOCK_DELAY_MS,
         loop: true,
         callback: () => {
           this._updateClock();
@@ -154,16 +164,15 @@ export class MatrixRow {
 
   _addScrollLeftTimer = () => {
     this._scrollLeftPrevMs = Date.now();
+
     this._scrollLeftTimer = this._scene.time.addEvent({
-      delay: SCROLL_LEFT_DELAY_MS,
+      delay: SCROLL_H_DELAY_MS,
       loop: true,
       callback: () => {
         const nowMs = Date.now();
         const deltaMs = nowMs - this._scrollLeftPrevMs;
         this._scrollLeftPrevMs = nowMs;
-        const dotsToScroll = Math.round(deltaMs * SCROLL_LEFT_DOTS_PER_MS);
-        if (dotsToScroll === 0) return;
-
+        const dotsToScroll = Math.round(deltaMs * SCROLL_H_DOTS_PER_MS);
         this._colOffset += dotsToScroll;
         this._updateDots();
       },
@@ -176,11 +185,17 @@ export class MatrixRow {
       this._scrollUpTimer = null;
     }
 
+    this._scrollUpPrevMs = Date.now();
+
     this._scrollUpTimer = this._scene.time.addEvent({
-      delay: 50,
+      delay: SCROLL_V_DELAY_MS,
       repeat: this._dimensions.numRows - 1,
       callback: () => {
-        this._rowOffset++;
+        const nowMs = Date.now();
+        const deltaMs = nowMs - this._scrollUpPrevMs;
+        this._scrollUpPrevMs = nowMs;
+        const dotsToScroll = Math.round(deltaMs * SCROLL_V_DOTS_PER_MS);
+        this._rowOffset += dotsToScroll;
         this._updateDots();
       },
     });
