@@ -73,6 +73,7 @@ export class MatrixRow {
         break;
     }
 
+    this._dots.resetOffsetTracking();
     this._updateDots();
   }
 
@@ -113,6 +114,7 @@ export class MatrixRow {
         loop: true,
         callback: () => {
           this._updateClock();
+          this._dots.resetOffsetTracking();
           this._updateDots();
         },
       });
@@ -160,6 +162,8 @@ export class MatrixRow {
         const deltaMs = nowMs - this._scrollLeftPrevMs;
         this._scrollLeftPrevMs = nowMs;
         const dotsToScroll = Math.round(deltaMs * SCROLL_LEFT_DOTS_PER_MS);
+        if (dotsToScroll === 0) return;
+
         this._colOffset += dotsToScroll;
         this._updateDots();
       },
@@ -216,6 +220,7 @@ export class MatrixRow {
           );
         }
 
+        this._dots.resetOffsetTracking();
         this._updateDots();
       },
     });
