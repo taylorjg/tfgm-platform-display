@@ -73,13 +73,6 @@ export class LedMatrixScene extends Phaser.Scene {
     this.scale.on("resize", this._onResize, this);
   }
 
-  update = (_: unknown, deltaMs: number) => {
-    this._row1.update(deltaMs);
-    this._row2.update(deltaMs);
-    this._row3.update(deltaMs);
-    this._row4.update(deltaMs);
-  };
-
   _onResize = () => {
     console.log("[LedMatrixScene#_onResize]");
 
