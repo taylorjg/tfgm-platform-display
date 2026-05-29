@@ -24,8 +24,8 @@ export const SidePanelIcon = () => {
         size="small"
         sx={{
           position: "fixed",
-          top: 0,
-          left: 0,
+          top: "0.5rem",
+          left: "0.5rem",
           color: "text.secondary",
         }}
       >

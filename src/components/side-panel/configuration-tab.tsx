@@ -23,16 +23,45 @@ import { useConfiguration } from "@app/contexts";
 import { useTramStops, type TramService, type TramStop } from "@app/hooks";
 import { extractServiceColor, extractServiceLocations } from "@app/helpers";
 
+const makeLocationsDirectionLabel = (
+  selectedServices: TramService[],
+  selector: ({
+    startLocation,
+    endLocation,
+  }: {
+    startLocation: string;
+    endLocation: string;
+  }) => string,
+) => {
+  const locations = selectedServices.map((service) =>
+    selector(extractServiceLocations(service)),
+  );
+  return locations.length === 1 ? locations[0] : `${locations[0]} etc.`;
+};
+
 const makeStartLocationsDirectionLabel = (selectedServices: TramService[]) => {
-  return selectedServices
-    .map((service) => extractServiceLocations(service).startLocation)
-    .join(", ");
+  return makeLocationsDirectionLabel(
+    selectedServices,
+    (locations) => locations.startLocation,
+  );
 };
 
 const makeEndLocationsDirectionLabel = (selectedServices: TramService[]) => {
-  return selectedServices
-    .map((service) => extractServiceLocations(service).endLocation)
-    .join(", ");
+  return makeLocationsDirectionLabel(
+    selectedServices,
+    (locations) => locations.endLocation,
+  );
+};
+
+const sortSelectedServices = (
+  allServices: TramService[],
+  selectedServices: TramService[],
+) => {
+  return selectedServices.sort((a, b) => {
+    const aIndex = allServices.indexOf(a);
+    const bIndex = allServices.indexOf(b);
+    return aIndex - bIndex;
+  });
 };
 
 const nullFormState = {
@@ -93,10 +122,18 @@ const ConfigurationForm = ({
 
   const handleServiceToggle = (service: TramService) => {
     setSelectedServices((prev) => {
+      // Is the service already selected ??
       if (prev.some((s) => s.id === service.id)) {
+        // Yes - remove it
         return prev.filter((s) => s.id !== service.id);
       }
-      return [...prev, service];
+
+      // No - add it
+      const newServices = [...prev, service];
+
+      return selectedTramStop
+        ? sortSelectedServices(selectedTramStop.services, newServices)
+        : newServices;
     });
   };
 
@@ -157,23 +194,15 @@ const ConfigurationForm = ({
                   />
                 }
                 label={
-                  <div
+                  <Typography
+                    variant="body2"
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 4,
+                      backgroundColor: extractServiceColor(service),
                     }}
+                    sx={{ p: 0.5 }}
                   >
-                    <div
-                      style={{
-                        backgroundColor: extractServiceColor(service),
-                        width: 40,
-                        height: 8,
-                      }}
-                    />
-                    &nbsp;
                     {service.name}
-                  </div>
+                  </Typography>
                 }
               />
             ))}

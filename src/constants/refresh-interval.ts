@@ -8,4 +8,4 @@ export const REFRESH_INTERVAL_OPTIONS = [
 export type RefreshIntervalMs =
   (typeof REFRESH_INTERVAL_OPTIONS)[number]["value"];
 
-export const DEFAULT_REFRESH_INTERVAL_MS: RefreshIntervalMs = 30_000;
+export const DEFAULT_REFRESH_INTERVAL_MS: RefreshIntervalMs = 10_000;
