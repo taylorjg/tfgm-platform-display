@@ -6,6 +6,7 @@ import type { RowDescriptors } from "@app/helpers";
 const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.WEBGL,
   transparent: true,
+  antialias: true,
   scene: [LedMatrixScene],
 };
 

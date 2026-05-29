@@ -3,6 +3,7 @@ import Phaser from "phaser";
 import { clockFont, rowFont } from "@app/fonts";
 
 import type { Dimensions } from "./dots";
+import { MatrixFrame } from "./matrix-frame";
 import { MatrixRow } from "./matrix-row";
 import type { RowDescriptors } from "@app/helpers";
 
@@ -12,8 +13,7 @@ export class LedMatrixScene extends Phaser.Scene {
   private _row2!: MatrixRow;
   private _row3!: MatrixRow;
   private _row4!: MatrixRow;
-  private _frameOuter?: Phaser.GameObjects.Rectangle;
-  private _frameInner?: Phaser.GameObjects.Rectangle;
+  private _frame!: MatrixFrame;
 
   constructor() {
     console.log("[LedMatrixScene#constructor]");
@@ -23,6 +23,7 @@ export class LedMatrixScene extends Phaser.Scene {
   create() {
     console.log("[LedMatrixScene#create]");
 
+    this._frame = new MatrixFrame(this);
     this._onResize();
 
     const { diameter, gap, offsetX, offsetY } = this._dimensions;
@@ -99,7 +100,6 @@ export class LedMatrixScene extends Phaser.Scene {
     const frameWidth = numCols * (diameter + gap) - gap;
     const frameHeight = numRows * (diameter + gap) - gap;
     const borderWidth = 6 * (diameter + gap) - gap;
-    const borderColor = 0x808080;
 
     const isMeaningfulChange = this._dimensions
       ? Math.abs(diameter - this._dimensions.diameter) > 0.1
@@ -107,27 +107,13 @@ export class LedMatrixScene extends Phaser.Scene {
 
     if (!isMeaningfulChange) return;
 
-    if (this._frameOuter) {
-      this._frameOuter.destroy();
-    }
-
-    if (this._frameInner) {
-      this._frameInner.destroy();
-    }
-
-    this._frameOuter = this.add
-      .rectangle(marginX, marginY, frameWidth, frameHeight, borderColor)
-      .setOrigin(0, 0);
-
-    this._frameInner = this.add
-      .rectangle(
-        marginX + borderWidth,
-        marginY + borderWidth,
-        frameWidth - 2 * borderWidth,
-        frameHeight - 2 * borderWidth,
-        0x000000,
-      )
-      .setOrigin(0, 0);
+    this._frame.rebuild({
+      x: marginX,
+      y: marginY,
+      width: frameWidth,
+      height: frameHeight,
+      borderWidth,
+    });
 
     const newDimensions = {
       numRows,
