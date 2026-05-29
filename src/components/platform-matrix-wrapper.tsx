@@ -21,11 +21,20 @@ export const PlatformMatrixWrapper = ({
   const prevRowsStateRef = useRef<string>("");
 
   useEffect(() => {
-    if (!parentRef.current) return;
+    const parent = parentRef.current;
+    if (!parent) return;
 
-    gameActionsRef.current = initialiseGame(parentRef.current);
+    gameActionsRef.current = initialiseGame(parent);
 
-    return gameActionsRef.current.destroy;
+    const observer = new ResizeObserver(() => {
+      gameActionsRef.current?.resize();
+    });
+    observer.observe(parent);
+
+    return () => {
+      observer.disconnect();
+      gameActionsRef.current?.destroy();
+    };
   }, []);
 
   useEffect(() => {

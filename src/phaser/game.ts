@@ -27,6 +27,7 @@ export interface GameActions {
   destroy: () => void;
   changeRowDescriptors: (rowDescriptors: RowDescriptors) => void;
   setFetching: (isFetching: boolean) => void;
+  resize: () => void;
 }
 
 const makeGameActions = (game: Phaser.Game): GameActions => {
@@ -78,5 +79,6 @@ const makeGameActions = (game: Phaser.Game): GameActions => {
     destroy,
     changeRowDescriptors,
     setFetching,
+    resize: resizeGameToMatchParent,
   };
 };

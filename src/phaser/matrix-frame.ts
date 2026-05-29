@@ -12,6 +12,7 @@ const FRAME_DEPTH = -10;
 
 /** Supersample factor when baking the border into a texture (reduces aliasing). */
 const BORDER_SUPERSAMPLE = 4;
+const BORDER_SUPERSAMPLE_TOUCH = 2;
 
 /** Light post-bake blur to soften gradient banding on long edges. */
 const BORDER_BLUR = {
@@ -156,12 +157,20 @@ const SHINE_CONFIG = {
 
 const shineRestOffset = () => -(SHINE_CONFIG.radius / SHINE_CONFIG.scale);
 
+/** Filter effects on RenderTexture fail to composite on many mobile GPUs. */
+const frameSupportsFilters = (scene: Phaser.Scene) =>
+  !scene.game.device.input.touch;
+
+const borderSupersample = (scene: Phaser.Scene) =>
+  frameSupportsFilters(scene) ? BORDER_SUPERSAMPLE : BORDER_SUPERSAMPLE_TOUCH;
+
 export class MatrixFrame {
   private readonly _scene: Phaser.Scene;
   private _border?: Phaser.GameObjects.RenderTexture;
   private _borderGraphics?: Phaser.GameObjects.Graphics;
   private _innerGraphics?: Phaser.GameObjects.Graphics;
   private _shine?: Phaser.Types.Actions.AddEffectShineReturn;
+  private _fetchAlphaTween?: Phaser.Tweens.Tween;
   private _isFetching = false;
 
   constructor(scene: Phaser.Scene) {
@@ -172,7 +181,7 @@ export class MatrixFrame {
     this.destroy();
 
     const { x, y, width, height, borderWidth } = layout;
-    const ss = BORDER_SUPERSAMPLE;
+    const ss = borderSupersample(this._scene);
     const texWidth = Math.ceil(width * ss);
     const texHeight = Math.ceil(height * ss);
     const texBorderWidth = borderWidth * ss;
@@ -201,36 +210,56 @@ export class MatrixFrame {
     border.draw(borderGraphics);
     border.render();
 
-    border.enableFilters();
-    border.filters!.internal.addBlur(
-      BORDER_BLUR.quality,
-      BORDER_BLUR.x,
-      BORDER_BLUR.y,
-      BORDER_BLUR.strength,
-      undefined,
-      BORDER_BLUR.steps,
-    );
+    if (frameSupportsFilters(this._scene)) {
+      border.enableFilters();
+      border.filters!.internal.addBlur(
+        BORDER_BLUR.quality,
+        BORDER_BLUR.x,
+        BORDER_BLUR.y,
+        BORDER_BLUR.strength,
+        undefined,
+        BORDER_BLUR.steps,
+      );
+      this._setupShine(border, width, height);
+    }
 
     this._border = border;
-    this._setupShine(border, width, height);
     this.setFetching(this._isFetching);
   }
 
   setFetching(isFetching: boolean) {
     this._isFetching = isFetching;
 
-    if (!this._shine) return;
+    if (this._shine) {
+      const { tween, gradient, dynamicTexture } = this._shine;
 
-    const { tween, gradient, dynamicTexture } = this._shine;
-
-    if (isFetching) {
-      tween.restart();
+      if (isFetching) {
+        tween.restart();
+      } else {
+        tween.pause();
+        gradient.offset = shineRestOffset();
+        dynamicTexture.clear().draw(gradient).render();
+      }
       return;
     }
 
-    tween.pause();
-    gradient.offset = shineRestOffset();
-    dynamicTexture.clear().draw(gradient).render();
+    if (!this._border) return;
+
+    this._fetchAlphaTween?.stop();
+    this._fetchAlphaTween = undefined;
+
+    if (isFetching) {
+      this._fetchAlphaTween = this._scene.tweens.add({
+        targets: this._border,
+        alpha: { from: 1, to: 0.82 },
+        duration: 600,
+        yoyo: true,
+        repeat: -1,
+        ease: "Sine.easeInOut",
+      });
+    } else {
+      this._border.setAlpha(1);
+    }
   }
 
   private _setupShine(
@@ -250,6 +279,8 @@ export class MatrixFrame {
   }
 
   destroy() {
+    this._fetchAlphaTween?.stop();
+    this._fetchAlphaTween = undefined;
     this._shine = undefined;
     this._border?.destroy();
     this._border = undefined;
