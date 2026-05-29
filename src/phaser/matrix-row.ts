@@ -32,11 +32,8 @@ export class MatrixRow {
   private _matrix: Matrix;
   private _dots!: Dots;
   private _includeFirstColon = false;
-  private _rowOffset = 0;
-  private _colOffset = 0;
   private _useFirstMessage = true;
-  private readonly _scrollLeftTweenState = { colOffset: 0 };
-  private readonly _scrollUpTweenState = { rowOffset: 0 };
+  private readonly _scrollTweenState = { rowOffset: 0, colOffset: 0 };
   private _scrollLeftRunning = false;
   private _clockTimer: Phaser.Time.TimerEvent | null = null;
   private _alternatingTimer: Phaser.Time.TimerEvent | null = null;
@@ -86,8 +83,8 @@ export class MatrixRow {
   }
 
   _reset = () => {
-    this._rowOffset = 0;
-    this._colOffset = 0;
+    this._scrollTweenState.rowOffset = 0;
+    this._scrollTweenState.colOffset = 0;
     this._useFirstMessage = true;
 
     if (this._alternatingTimer) {
@@ -159,28 +156,25 @@ export class MatrixRow {
   _addScrollLeftTween = () => {
     this._stopScrollLeftTween();
     this._scrollLeftRunning = true;
-    this._scrollLeftTweenState.colOffset = this._colOffset;
     this._runScrollLeftTweenCycle();
   };
 
   _runScrollLeftTweenCycle = () => {
     if (!this._scrollLeftRunning) return;
 
-    const startColOffset = this._scrollLeftTweenState.colOffset;
+    const startColOffset = this._scrollTweenState.colOffset;
     const targetColOffset = startColOffset + SCROLL_H_COLS_PER_CYCLE;
 
     this._scrollLeftTween = this._scene.tweens.add({
-      targets: this._scrollLeftTweenState,
+      targets: this._scrollTweenState,
       colOffset: targetColOffset,
       duration: SCROLL_H_CYCLE_MS,
       ease: "Linear",
       onUpdate: () => {
-        this._colOffset = Math.round(this._scrollLeftTweenState.colOffset);
         this._updateDots();
       },
       onComplete: () => {
-        this._colOffset = targetColOffset;
-        this._scrollLeftTweenState.colOffset = targetColOffset;
+        this._scrollTweenState.colOffset = targetColOffset;
         this._scrollLeftTween = null;
         this._runScrollLeftTweenCycle();
       },
@@ -203,23 +197,20 @@ export class MatrixRow {
     }
 
     const rowsToScroll = this._dimensions.numRows;
-    const startRowOffset = this._rowOffset;
+    const startRowOffset = this._scrollTweenState.rowOffset;
     const targetRowOffset = startRowOffset + rowsToScroll;
     const durationMs = (rowsToScroll / SCROLL_V_DOTS_PER_SECOND) * 1_000;
 
-    this._scrollUpTweenState.rowOffset = startRowOffset;
-
     this._scrollUpTween = this._scene.tweens.add({
-      targets: this._scrollUpTweenState,
+      targets: this._scrollTweenState,
       rowOffset: targetRowOffset,
       duration: durationMs,
       ease: "Linear",
       onUpdate: () => {
-        this._rowOffset = Math.round(this._scrollUpTweenState.rowOffset);
         this._updateDots();
       },
       onComplete: () => {
-        this._rowOffset = targetRowOffset;
+        this._scrollTweenState.rowOffset = targetRowOffset;
         this._updateDots();
         this._scrollUpTween = null;
       },
@@ -273,6 +264,10 @@ export class MatrixRow {
   };
 
   _updateDots = () => {
-    this._dots.update(this._matrix, this._rowOffset, this._colOffset);
+    this._dots.update(
+      this._matrix,
+      Math.round(this._scrollTweenState.rowOffset),
+      Math.round(this._scrollTweenState.colOffset),
+    );
   };
 }
