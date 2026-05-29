@@ -149,13 +149,16 @@ const SHINE_CONFIG = {
   radius: 0.14,
   scale: 2.4,
   direction: Math.PI / 4,
-  duration: 2_000,
+  duration: 4_000,
   yoyo: true,
   ease: "Sine.easeInOut",
   colorFactor: [0.75, 0.78, 0.95, 0.7] as number[],
 } as const;
 
 const shineRestOffset = () => -(SHINE_CONFIG.radius / SHINE_CONFIG.scale);
+
+/** Keep fetch feedback visible at least this long once started (ms). */
+const SHINE_MIN_VISIBLE_MS = 4_000;
 
 /** Filter effects on RenderTexture fail to composite on many mobile GPUs. */
 const frameSupportsFilters = (scene: Phaser.Scene) =>
@@ -171,6 +174,8 @@ export class MatrixFrame {
   private _innerGraphics?: Phaser.GameObjects.Graphics;
   private _shine?: Phaser.Types.Actions.AddEffectShineReturn;
   private _fetchAlphaTween?: Phaser.Tweens.Tween;
+  private _fetchShineStopTimer?: Phaser.Time.TimerEvent;
+  private _fetchShineStartedAt = 0;
   private _isFetching = false;
 
   constructor(scene: Phaser.Scene) {
@@ -230,36 +235,76 @@ export class MatrixFrame {
   setFetching(isFetching: boolean) {
     this._isFetching = isFetching;
 
-    if (this._shine) {
-      const { tween, gradient, dynamicTexture } = this._shine;
+    if (isFetching) {
+      this._startFetchShineAnimation();
+      return;
+    }
 
-      if (isFetching) {
-        tween.restart();
-      } else {
-        tween.pause();
-        gradient.offset = shineRestOffset();
-        dynamicTexture.clear().draw(gradient).render();
-      }
+    if (this._fetchShineStartedAt === 0) {
+      this._stopFetchShineAnimation();
+      return;
+    }
+
+    const elapsed = this._scene.time.now - this._fetchShineStartedAt;
+    const remaining = Math.max(0, SHINE_MIN_VISIBLE_MS - elapsed);
+
+    this._clearFetchShineStopTimer();
+
+    if (remaining === 0) {
+      this._stopFetchShineAnimation();
+      return;
+    }
+
+    this._fetchShineStopTimer = this._scene.time.delayedCall(
+      remaining,
+      this._stopFetchShineAnimation,
+      undefined,
+      this,
+    );
+  }
+
+  private _clearFetchShineStopTimer() {
+    this._fetchShineStopTimer?.remove();
+    this._fetchShineStopTimer = undefined;
+  }
+
+  private _startFetchShineAnimation() {
+    this._clearFetchShineStopTimer();
+    this._fetchShineStartedAt = this._scene.time.now;
+
+    if (this._shine) {
+      this._shine.tween.restart();
       return;
     }
 
     if (!this._border) return;
 
     this._fetchAlphaTween?.stop();
-    this._fetchAlphaTween = undefined;
+    this._fetchAlphaTween = this._scene.tweens.add({
+      targets: this._border,
+      alpha: { from: 1, to: 0.82 },
+      duration: 1_200,
+      yoyo: true,
+      repeat: -1,
+      ease: "Sine.easeInOut",
+    });
+  }
 
-    if (isFetching) {
-      this._fetchAlphaTween = this._scene.tweens.add({
-        targets: this._border,
-        alpha: { from: 1, to: 0.82 },
-        duration: 600,
-        yoyo: true,
-        repeat: -1,
-        ease: "Sine.easeInOut",
-      });
-    } else {
-      this._border.setAlpha(1);
+  private _stopFetchShineAnimation() {
+    this._clearFetchShineStopTimer();
+    this._fetchShineStartedAt = 0;
+
+    if (this._shine) {
+      const { tween, gradient, dynamicTexture } = this._shine;
+      tween.pause();
+      gradient.offset = shineRestOffset();
+      dynamicTexture.clear().draw(gradient).render();
+      return;
     }
+
+    this._fetchAlphaTween?.stop();
+    this._fetchAlphaTween = undefined;
+    this._border?.setAlpha(1);
   }
 
   private _setupShine(
@@ -279,6 +324,8 @@ export class MatrixFrame {
   }
 
   destroy() {
+    this._clearFetchShineStopTimer();
+    this._fetchShineStartedAt = 0;
     this._fetchAlphaTween?.stop();
     this._fetchAlphaTween = undefined;
     this._shine = undefined;
