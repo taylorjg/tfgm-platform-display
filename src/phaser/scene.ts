@@ -71,6 +71,12 @@ export class LedMatrixScene extends Phaser.Scene {
       this,
     );
 
+    this.game.events.on(
+      "FetchingStateChanged",
+      this._onFetchingStateChanged,
+      this,
+    );
+
     this.scale.on("resize", this._onResize, this);
   }
 
@@ -166,5 +172,9 @@ export class LedMatrixScene extends Phaser.Scene {
     this._row1.changeRowDescriptor(rowDescriptors.row1);
     this._row2.changeRowDescriptor(rowDescriptors.row2);
     this._row3.changeRowDescriptor(rowDescriptors.row3);
+  };
+
+  _onFetchingStateChanged = (isFetching: boolean) => {
+    this._frame.setFetching(isFetching);
   };
 }

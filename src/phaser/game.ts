@@ -26,6 +26,7 @@ export const initialiseGame = (parent: HTMLElement) => {
 export interface GameActions {
   destroy: () => void;
   changeRowDescriptors: (rowDescriptors: RowDescriptors) => void;
+  setFetching: (isFetching: boolean) => void;
 }
 
 const makeGameActions = (game: Phaser.Game): GameActions => {
@@ -59,6 +60,10 @@ const makeGameActions = (game: Phaser.Game): GameActions => {
     game.events.emit("ChangeRowDescriptors", rowDescriptors);
   };
 
+  const setFetching = (isFetching: boolean) => {
+    game.events.emit("FetchingStateChanged", isFetching);
+  };
+
   const destroy = () => {
     console.log("[gameActions#destroy]");
     window.removeEventListener("resize", onResize);
@@ -72,5 +77,6 @@ const makeGameActions = (game: Phaser.Game): GameActions => {
   return {
     destroy,
     changeRowDescriptors,
+    setFetching,
   };
 };

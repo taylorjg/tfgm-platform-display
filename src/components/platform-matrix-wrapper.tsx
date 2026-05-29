@@ -1,4 +1,5 @@
 import { useEffect, useRef, type Ref } from "react";
+import { useIsFetching } from "@tanstack/react-query";
 
 import type { RowDescriptors } from "@app/helpers";
 import { initialiseGame, type GameActions } from "@app/phaser";
@@ -14,6 +15,7 @@ const makeRowsState = (rowDescriptors: RowDescriptors): string => {
 export const PlatformMatrixWrapper = ({
   rowDescriptors,
 }: PlatformMatrixWrapperProps) => {
+  const isFetching = useIsFetching() > 0;
   const parentRef = useRef<HTMLElement | null>(null);
   const gameActionsRef = useRef<GameActions | null>(null);
   const prevRowsStateRef = useRef<string>("");
@@ -35,6 +37,10 @@ export const PlatformMatrixWrapper = ({
     gameActionsRef.current?.changeRowDescriptors(rowDescriptors);
     prevRowsStateRef.current = nextRowsState;
   }, [rowDescriptors]);
+
+  useEffect(() => {
+    gameActionsRef.current?.setFetching(isFetching);
+  }, [isFetching]);
 
   return (
     <div

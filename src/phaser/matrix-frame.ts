@@ -144,11 +144,25 @@ const drawInnerFill = (
   );
 };
 
+const SHINE_CONFIG = {
+  radius: 0.14,
+  scale: 2.4,
+  direction: Math.PI / 4,
+  duration: 2_000,
+  yoyo: true,
+  ease: "Sine.easeInOut",
+  colorFactor: [0.75, 0.78, 0.95, 0.7] as number[],
+} as const;
+
+const shineRestOffset = () => -(SHINE_CONFIG.radius / SHINE_CONFIG.scale);
+
 export class MatrixFrame {
   private readonly _scene: Phaser.Scene;
   private _border?: Phaser.GameObjects.RenderTexture;
   private _borderGraphics?: Phaser.GameObjects.Graphics;
   private _innerGraphics?: Phaser.GameObjects.Graphics;
+  private _shine?: Phaser.Types.Actions.AddEffectShineReturn;
+  private _isFetching = false;
 
   constructor(scene: Phaser.Scene) {
     this._scene = scene;
@@ -198,22 +212,45 @@ export class MatrixFrame {
     );
 
     this._border = border;
+    this._setupShine(border, width, height);
+    this.setFetching(this._isFetching);
+  }
 
-    Phaser.Actions.AddEffectShine(border, {
+  setFetching(isFetching: boolean) {
+    this._isFetching = isFetching;
+
+    if (!this._shine) return;
+
+    const { tween, gradient, dynamicTexture } = this._shine;
+
+    if (isFetching) {
+      tween.restart();
+      return;
+    }
+
+    tween.pause();
+    gradient.offset = shineRestOffset();
+    dynamicTexture.clear().draw(gradient).render();
+  }
+
+  private _setupShine(
+    border: Phaser.GameObjects.RenderTexture,
+    width: number,
+    height: number,
+  ) {
+    const [shine] = Phaser.Actions.AddEffectShine(border, {
       width,
       height,
-      radius: 0.14,
-      scale: 2.4,
-      direction: Math.PI / 4,
-      duration: 4_000,
-      repeatDelay: 2_000,
-      yoyo: true,
-      ease: "Sine.easeInOut",
-      colorFactor: [0.75, 0.78, 0.95, 0.7],
+      ...SHINE_CONFIG,
     });
+    this._shine = shine;
+    shine.tween.pause();
+    shine.gradient.offset = shineRestOffset();
+    shine.dynamicTexture.clear().draw(shine.gradient).render();
   }
 
   destroy() {
+    this._shine = undefined;
     this._border?.destroy();
     this._border = undefined;
 
