@@ -11,8 +11,6 @@ const SCROLL_H_DOTS_PER_MS = SCROLL_H_DOTS_PER_SECOND / 1_000;
 const SCROLL_H_DELAY_MS = 1_000 / SCROLL_H_DOTS_PER_SECOND;
 
 const SCROLL_V_DOTS_PER_SECOND = 20;
-const SCROLL_V_DOTS_PER_MS = SCROLL_V_DOTS_PER_SECOND / 1_000;
-const SCROLL_V_DELAY_MS = 1_000 / SCROLL_V_DOTS_PER_SECOND;
 
 const ALTERNATING_DELAY_SECONDS = 2;
 const ALTERNATING_DELAY_MS = ALTERNATING_DELAY_SECONDS * 1_000;
@@ -37,13 +35,13 @@ export class MatrixRow {
   private _rowOffset = 0;
   private _colOffset = 0;
   private _scrollLeftPrevMs = 0;
-  private _scrollUpPrevMs = 0;
   private _useFirstMessage = true;
+  private readonly _scrollUpTweenState = { rowOffset: 0 };
   private _clockTimer: Phaser.Time.TimerEvent | null = null;
   private _alternatingTimer: Phaser.Time.TimerEvent | null = null;
   private _cycleTimer: Phaser.Time.TimerEvent | null = null;
   private _scrollLeftTimer: Phaser.Time.TimerEvent | null = null;
-  private _scrollUpTimer: Phaser.Time.TimerEvent | null = null;
+  private _scrollUpTween: Phaser.Tweens.Tween | null = null;
 
   constructor(scene: Phaser.Scene, font: Font, dimensions: Dimensions) {
     this._scene = scene;
@@ -106,9 +104,9 @@ export class MatrixRow {
       this._scrollLeftTimer = null;
     }
 
-    if (this._scrollUpTimer) {
-      this._scrollUpTimer.destroy();
-      this._scrollUpTimer = null;
+    if (this._scrollUpTween) {
+      this._scrollUpTween.stop();
+      this._scrollUpTween = null;
     }
   };
 
@@ -177,24 +175,32 @@ export class MatrixRow {
     });
   };
 
-  _addScrollUpTimer = () => {
-    if (this._scrollUpTimer) {
-      this._scrollUpTimer.destroy();
-      this._scrollUpTimer = null;
+  _addScrollUpTween = () => {
+    if (this._scrollUpTween) {
+      this._scrollUpTween.stop();
+      this._scrollUpTween = null;
     }
 
-    this._scrollUpPrevMs = Date.now();
+    const rowsToScroll = this._dimensions.numRows;
+    const startRowOffset = this._rowOffset;
+    const targetRowOffset = startRowOffset + rowsToScroll;
+    const durationMs = (rowsToScroll / SCROLL_V_DOTS_PER_SECOND) * 1_000;
 
-    this._scrollUpTimer = this._scene.time.addEvent({
-      delay: SCROLL_V_DELAY_MS,
-      repeat: this._dimensions.numRows - 1,
-      callback: () => {
-        const nowMs = Date.now();
-        const deltaMs = nowMs - this._scrollUpPrevMs;
-        this._scrollUpPrevMs = nowMs;
-        const dotsToScroll = Math.round(deltaMs * SCROLL_V_DOTS_PER_MS);
-        this._rowOffset += dotsToScroll;
+    this._scrollUpTweenState.rowOffset = startRowOffset;
+
+    this._scrollUpTween = this._scene.tweens.add({
+      targets: this._scrollUpTweenState,
+      rowOffset: targetRowOffset,
+      duration: durationMs,
+      ease: "Linear",
+      onUpdate: () => {
+        this._rowOffset = Math.round(this._scrollUpTweenState.rowOffset);
         this._updateDots();
+      },
+      onComplete: () => {
+        this._rowOffset = targetRowOffset;
+        this._updateDots();
+        this._scrollUpTween = null;
       },
     });
   };
@@ -204,7 +210,7 @@ export class MatrixRow {
       delay: CYCLE_DELAY_MS,
       loop: true,
       callback: () => {
-        this._addScrollUpTimer();
+        this._addScrollUpTween();
       },
     });
   };
