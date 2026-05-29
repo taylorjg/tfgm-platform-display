@@ -22,8 +22,6 @@ export class Dots {
   private _graphics?: Phaser.GameObjects.Graphics;
   private _dimensions!: Dimensions;
   private readonly _scene: Phaser.Scene;
-  private _lastColOffset: number | null = null;
-  private _lastRowOffset: number | null = null;
 
   constructor(scene: Phaser.Scene) {
     this._scene = scene;
@@ -33,8 +31,6 @@ export class Dots {
     this.destroy();
 
     this._dimensions = dimensions;
-    this._lastColOffset = null;
-    this._lastRowOffset = null;
 
     const { offsetX, offsetY } = dimensions;
     const width = this._gridWidth();
@@ -44,84 +40,81 @@ export class Dots {
       .renderTexture(offsetX, offsetY, width, height)
       .setOrigin(0, 0);
 
-    this._graphics = this._scene.make.graphics({}, false);
+    this._graphics = this._scene.make.graphics();
   }
 
   destroy() {
     this._renderTexture?.destroy(true);
-    this._graphics?.destroy(true);
-
     this._renderTexture = undefined;
+
+    this._graphics?.destroy(true);
     this._graphics = undefined;
-    this._lastColOffset = null;
-    this._lastRowOffset = null;
   }
 
   update(matrix: Matrix, rowOffset: number, colOffset: number) {
     if (!this._renderTexture || !this._graphics) return;
 
-    if (
-      this._lastColOffset === colOffset &&
-      this._lastRowOffset === rowOffset
-    ) {
-      return;
-    }
-
     this._redraw(matrix, rowOffset, colOffset);
-    this._lastColOffset = colOffset;
-    this._lastRowOffset = rowOffset;
-  }
-
-  resetOffsetTracking() {
-    this._lastColOffset = null;
-    this._lastRowOffset = null;
   }
 
   private _redraw(matrix: Matrix, rowOffset: number, colOffset: number) {
-    this._graphics!.clear();
+    if (!this._renderTexture || !this._graphics) return;
+
+    this._graphics.clear();
 
     const { numRows, numCols } = this._dimensions;
+
     for (const row of range(numRows)) {
       for (const col of range(numCols)) {
-        this._drawDot(matrix, rowOffset, colOffset, row, col);
+        this._drawDot(matrix, row, col, rowOffset, colOffset);
       }
     }
 
-    this._renderTexture!.clear();
-    this._renderTexture!.fill(BG_COLOUR);
-    this._renderTexture!.draw(this._graphics!, 0, 0);
-    this._renderTexture!.render();
+    this._renderTexture.clear();
+    this._renderTexture.fill(BG_COLOUR);
+    this._renderTexture.draw(this._graphics);
+    this._renderTexture.render();
   }
 
   private _drawDot(
     matrix: Matrix,
+    row: number,
+    col: number,
     rowOffset: number,
     colOffset: number,
-    screenRow: number,
-    screenCol: number,
   ) {
+    if (!this._graphics) return;
+
     const { totalRows, totalCols } = matrix.size();
-    const sourceRow = (screenRow + rowOffset) % totalRows;
-    const sourceCol = (screenCol + colOffset) % totalCols;
-    const colour = matrix.isDotOn(sourceRow, sourceCol)
-      ? ON_COLOUR
-      : OFF_COLOUR;
+    const sourceRow = (row + rowOffset) % totalRows;
+    const sourceCol = (col + colOffset) % totalCols;
 
-    const { radius, diameter, gap } = this._dimensions;
-    const x = screenCol * (diameter + gap) + radius;
-    const y = screenRow * (diameter + gap) + radius;
+    const isDotOn = matrix.isDotOn(sourceRow, sourceCol);
+    const colour = isDotOn ? ON_COLOUR : OFF_COLOUR;
 
-    this._graphics!.fillStyle(colour, 1);
-    this._graphics!.fillCircle(x, y, radius);
+    const x = this._calculateX(col);
+    const y = this._calculateY(row);
+    const radius = this._dimensions.radius;
+
+    this._graphics.fillStyle(colour);
+    this._graphics.fillCircle(x, y, radius);
   }
 
   private _gridWidth = () => {
-    const { numCols, diameter, gap } = this._dimensions;
-    return numCols * (diameter + gap) - gap;
+    return this._calculateX(this._dimensions.numCols);
   };
 
   private _gridHeight = () => {
-    const { numRows, diameter, gap } = this._dimensions;
-    return numRows * (diameter + gap) - gap;
+    return this._calculateX(this._dimensions.numRows);
+  };
+
+  private _calculateX = (col: number) => {
+    const { diameter, gap, radius } = this._dimensions;
+    return col * (diameter + gap) + radius;
+  };
+
+  private _calculateY = (row: number) => {
+    const { diameter, gap, radius } = this._dimensions;
+    return row * (diameter + gap) + radius;
   };
 }

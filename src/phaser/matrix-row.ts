@@ -83,7 +83,6 @@ export class MatrixRow {
         break;
     }
 
-    this._dots.resetOffsetTracking();
     this._updateDots();
   }
 
@@ -124,7 +123,6 @@ export class MatrixRow {
         loop: true,
         callback: () => {
           this._updateClock();
-          this._dots.resetOffsetTracking();
           this._updateDots();
         },
       });
@@ -235,7 +233,6 @@ export class MatrixRow {
           );
         }
 
-        this._dots.resetOffsetTracking();
         this._updateDots();
       },
     });
