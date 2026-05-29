@@ -33,10 +33,22 @@ export interface GameActions {
 const makeGameActions = (game: Phaser.Game): GameActions => {
   const resizeGameToMatchParent = () => {
     const parent = game.config.parent;
+    if (!parent || typeof parent === "string") return;
+
     const parentRect = parent.getBoundingClientRect();
-    console.log("[resizeGameToMatchParent]", { parentRect });
-    const newWidth = parentRect.width;
-    const newHeight = parentRect.height;
+    const newWidth = Math.round(parentRect.width);
+    const newHeight = Math.round(parentRect.height);
+
+    if (newWidth <= 0 || newHeight <= 0) return;
+
+    const { width, height } = game.scale;
+    if (width === newWidth && height === newHeight) return;
+
+    console.log("[resizeGameToMatchParent]", {
+      parentRect,
+      newWidth,
+      newHeight,
+    });
     game.scale.resize(newWidth, newHeight);
   };
 

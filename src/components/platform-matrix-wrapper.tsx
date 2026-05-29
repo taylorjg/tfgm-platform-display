@@ -26,13 +26,13 @@ export const PlatformMatrixWrapper = ({
 
     gameActionsRef.current = initialiseGame(parent);
 
-    const observer = new ResizeObserver(() => {
+    // One deferred resize once layout has settled (e.g. aspect-ratio on mobile).
+    const frameId = requestAnimationFrame(() => {
       gameActionsRef.current?.resize();
     });
-    observer.observe(parent);
 
     return () => {
-      observer.disconnect();
+      cancelAnimationFrame(frameId);
       gameActionsRef.current?.destroy();
     };
   }, []);
