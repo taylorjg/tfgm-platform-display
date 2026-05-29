@@ -7,8 +7,8 @@ import { Dots, type Dimensions } from "./dots";
 import { Matrix } from "./matrix";
 
 const SCROLL_H_DOTS_PER_SECOND = 40;
-const SCROLL_H_DOTS_PER_MS = SCROLL_H_DOTS_PER_SECOND / 1_000;
-const SCROLL_H_DELAY_MS = 1_000 / SCROLL_H_DOTS_PER_SECOND;
+const SCROLL_H_CYCLE_MS = 1_000;
+const SCROLL_H_COLS_PER_CYCLE = SCROLL_H_DOTS_PER_SECOND;
 
 const SCROLL_V_DOTS_PER_SECOND = 20;
 
@@ -34,13 +34,14 @@ export class MatrixRow {
   private _includeFirstColon = false;
   private _rowOffset = 0;
   private _colOffset = 0;
-  private _scrollLeftPrevMs = 0;
   private _useFirstMessage = true;
+  private readonly _scrollLeftTweenState = { colOffset: 0 };
   private readonly _scrollUpTweenState = { rowOffset: 0 };
+  private _scrollLeftRunning = false;
   private _clockTimer: Phaser.Time.TimerEvent | null = null;
   private _alternatingTimer: Phaser.Time.TimerEvent | null = null;
   private _cycleTimer: Phaser.Time.TimerEvent | null = null;
-  private _scrollLeftTimer: Phaser.Time.TimerEvent | null = null;
+  private _scrollLeftTween: Phaser.Tweens.Tween | null = null;
   private _scrollUpTween: Phaser.Tweens.Tween | null = null;
 
   constructor(scene: Phaser.Scene, font: Font, dimensions: Dimensions) {
@@ -99,10 +100,7 @@ export class MatrixRow {
       this._cycleTimer = null;
     }
 
-    if (this._scrollLeftTimer) {
-      this._scrollLeftTimer.destroy();
-      this._scrollLeftTimer = null;
-    }
+    this._stopScrollLeftTween();
 
     if (this._scrollUpTween) {
       this._scrollUpTween.stop();
@@ -138,7 +136,7 @@ export class MatrixRow {
     );
 
     if (this._matrix.needsScrollLeft()) {
-      this._addScrollLeftTimer();
+      this._addScrollLeftTween();
     }
 
     if (isAlternatingRow(rowDescriptor)) {
@@ -158,21 +156,44 @@ export class MatrixRow {
     }
   };
 
-  _addScrollLeftTimer = () => {
-    this._scrollLeftPrevMs = Date.now();
+  _addScrollLeftTween = () => {
+    this._stopScrollLeftTween();
+    this._scrollLeftRunning = true;
+    this._scrollLeftTweenState.colOffset = this._colOffset;
+    this._runScrollLeftTweenCycle();
+  };
 
-    this._scrollLeftTimer = this._scene.time.addEvent({
-      delay: SCROLL_H_DELAY_MS,
-      loop: true,
-      callback: () => {
-        const nowMs = Date.now();
-        const deltaMs = nowMs - this._scrollLeftPrevMs;
-        this._scrollLeftPrevMs = nowMs;
-        const dotsToScroll = Math.round(deltaMs * SCROLL_H_DOTS_PER_MS);
-        this._colOffset += dotsToScroll;
+  _runScrollLeftTweenCycle = () => {
+    if (!this._scrollLeftRunning) return;
+
+    const startColOffset = this._scrollLeftTweenState.colOffset;
+    const targetColOffset = startColOffset + SCROLL_H_COLS_PER_CYCLE;
+
+    this._scrollLeftTween = this._scene.tweens.add({
+      targets: this._scrollLeftTweenState,
+      colOffset: targetColOffset,
+      duration: SCROLL_H_CYCLE_MS,
+      ease: "Linear",
+      onUpdate: () => {
+        this._colOffset = Math.round(this._scrollLeftTweenState.colOffset);
         this._updateDots();
       },
+      onComplete: () => {
+        this._colOffset = targetColOffset;
+        this._scrollLeftTweenState.colOffset = targetColOffset;
+        this._scrollLeftTween = null;
+        this._runScrollLeftTweenCycle();
+      },
     });
+  };
+
+  _stopScrollLeftTween = () => {
+    this._scrollLeftRunning = false;
+
+    if (this._scrollLeftTween) {
+      this._scrollLeftTween.stop();
+      this._scrollLeftTween = null;
+    }
   };
 
   _addScrollUpTween = () => {
