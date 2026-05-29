@@ -6,7 +6,7 @@ import { formatTime, type RowDescriptor } from "@app/helpers";
 import { Dots, type Dimensions } from "./dots";
 import { Matrix } from "./matrix";
 
-const SCROLL_H_DOTS_PER_SECOND = 50;
+const SCROLL_H_DOTS_PER_SECOND = 40;
 const SCROLL_H_DOTS_PER_MS = SCROLL_H_DOTS_PER_SECOND / 1_000;
 const SCROLL_H_DELAY_MS = 1_000 / SCROLL_H_DOTS_PER_SECOND;
 

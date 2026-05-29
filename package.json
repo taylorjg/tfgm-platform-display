@@ -2,7 +2,7 @@
   "name": "tfgm-platform-display",
   "description": "TfGM Platform Display",
   "private": true,
-  "version": "0.0.11-renderTexture-b",
+  "version": "0.0.11-renderTexture-c",
   "type": "module",
   "scripts": {
     "dev": "vite",
