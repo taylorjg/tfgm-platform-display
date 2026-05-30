@@ -1,7 +1,11 @@
 import { type Configuration } from "@app/contexts";
 
 import { useGetTrams } from "@app/hooks";
-import { makeMessageDescriptors, type RowDescriptor } from "@app/helpers";
+import {
+  makeRow1Descriptor,
+  makeRow2Descriptor,
+  makeRow3Descriptor,
+} from "@app/helpers";
 import { PlatformMatrixWrapper } from "@app/components/platform-matrix-wrapper";
 
 import { StyledTramInfo } from "./styles";
@@ -15,17 +19,10 @@ const ALERT =
 
 export const TramInfo = ({ configuration }: TramInfoProps) => {
   const { data: trams = [] } = useGetTrams(configuration);
-  const messageDescriptors = makeMessageDescriptors(trams);
 
-  const row1 = messageDescriptors[0];
-  const row2 = messageDescriptors[1];
-  const row3: RowDescriptor = {
-    mode: "single",
-    layout: {
-      type: "simple",
-      message: { type: "left", text: ALERT },
-    },
-  };
+  const row1 = makeRow1Descriptor(trams);
+  const row2 = makeRow2Descriptor(trams);
+  const row3 = makeRow3Descriptor(ALERT);
 
   return (
     <StyledTramInfo>

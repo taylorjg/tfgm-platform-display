@@ -31,31 +31,29 @@ export type AlternatingLayout = {
 
 export type Layout = SimpleLayout | AlternatingLayout;
 
-export type OffMessageDescriptor = {
+export type OffRowDescriptor = {
   mode: "off";
 };
 
-export type SingleMessageDescriptor = {
+export type SingleRowDescriptor = {
   mode: "single";
   layout: Layout;
 };
 
-export type CycleMessageDescriptor = {
+export type CycleRowDescriptor = {
   mode: "cycle";
   layouts: Layout[];
 };
 
-export type ClockMessageDescriptor = {
+export type ClockRowDescriptor = {
   mode: "clock";
 };
 
-export type MessageDescriptor =
-  | OffMessageDescriptor
-  | SingleMessageDescriptor
-  | CycleMessageDescriptor
-  | ClockMessageDescriptor;
-
-export type RowDescriptor = MessageDescriptor;
+export type RowDescriptor =
+  | OffRowDescriptor
+  | SingleRowDescriptor
+  | CycleRowDescriptor
+  | ClockRowDescriptor;
 
 export type RowDescriptors = {
   row1: RowDescriptor;
@@ -116,43 +114,49 @@ export const makeTramLayout = (tram: LiveTram): Layout => {
   };
 };
 
-export const makeMessageDescriptors = (
-  trams: LiveTram[],
-): MessageDescriptor[] => {
-  const messageDescriptors: MessageDescriptor[] = [];
-
-  const [firstTram, ...otherTrams] = trams;
+export const makeRow1Descriptor = (trams: LiveTram[]): RowDescriptor => {
+  const [firstTram] = trams;
 
   if (firstTram) {
-    messageDescriptors.push({
+    return {
       mode: "single",
       layout: makeTramLayout(firstTram),
-    });
-  } else {
-    messageDescriptors.push({
-      mode: "off",
-    });
+    };
   }
 
+  return {
+    mode: "off",
+  };
+};
+
+export const makeRow2Descriptor = (trams: LiveTram[]): RowDescriptor => {
+  const [, ...otherTrams] = trams;
+
   if (otherTrams.length === 0) {
-    messageDescriptors.push({
+    return {
       mode: "off",
-    });
+    };
   }
 
   if (otherTrams.length === 1) {
-    messageDescriptors.push({
+    return {
       mode: "single",
       layout: makeTramLayout(otherTrams[0]),
-    });
+    };
   }
 
-  if (otherTrams.length > 1) {
-    messageDescriptors.push({
-      mode: "cycle",
-      layouts: otherTrams.map(makeTramLayout),
-    });
-  }
+  return {
+    mode: "cycle",
+    layouts: otherTrams.map(makeTramLayout),
+  };
+};
 
-  return messageDescriptors;
+export const makeRow3Descriptor = (alert: string): RowDescriptor => {
+  return {
+    mode: "single",
+    layout: {
+      type: "simple",
+      message: { type: "left", text: alert },
+    },
+  };
 };
