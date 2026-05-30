@@ -3,6 +3,7 @@ import Phaser from "phaser";
 import type { Font } from "@app/fonts";
 import { formatTime, type RowDescriptor } from "@app/helpers";
 
+import { offColourObject, onColourObject } from "./constants";
 import { Dots, type Dimensions } from "./dots";
 import { MatrixState } from "./matrix-state";
 
@@ -19,6 +20,8 @@ const CYCLE_DELAY_SECONDS = 4;
 const CYCLE_DELAY_MS = CYCLE_DELAY_SECONDS * 1_000;
 
 const CLOCK_DELAY_MS = 500;
+
+const FADE_OUT_DURATION_MS = 1_000;
 
 const isAlternatingRow = (rowDescriptor: RowDescriptor) =>
   (rowDescriptor.mode === "single" &&
@@ -47,7 +50,7 @@ export class MatrixRow {
     this._matrixState = new MatrixState(font, dimensions.numCols);
     this._dots = new Dots(scene);
     this._dots.initialise(dimensions);
-    this._dots.update(this._matrixState, 0, 0);
+    this._updateDots();
   }
 
   changeDimensions(dimensions: Dimensions) {
@@ -57,28 +60,75 @@ export class MatrixRow {
     this._updateDots();
   }
 
+  _waitForScrollUpTweenToComplete = (onComplete: () => void) => {
+    if (this._scrollUpTween) {
+      console.log("adding handler for:", Phaser.Tweens.Events.TWEEN_COMPLETE);
+      this._scrollUpTween.on(Phaser.Tweens.Events.TWEEN_COMPLETE, onComplete);
+    } else {
+      onComplete();
+    }
+  };
+
+  _performFadeOutTween = (onComplete: () => void) => {
+    const valueWrapper = { value: 0 };
+
+    this._scene.tweens.add({
+      targets: valueWrapper,
+      value: 100,
+      ease: "Linear",
+      duration: FADE_OUT_DURATION_MS,
+      onUpdate: (tween) => {
+        const currentStep = tween.getValue() ?? 0;
+        const { r, g, b } = Phaser.Display.Color.Interpolate.ColorWithColor(
+          onColourObject,
+          offColourObject,
+          100,
+          currentStep,
+          true,
+        );
+        const fillColour = Phaser.Display.Color.GetColor(r, g, b);
+        this._updateDots(fillColour);
+      },
+      onComplete,
+    });
+  };
+
   changeRowDescriptor(rowDescriptor: RowDescriptor) {
-    this._reset();
-
-    switch (rowDescriptor.mode) {
-      case "off":
-        this._handleOffRow();
-        break;
-
-      case "clock":
-        this._handleClockRow();
-        break;
-
-      case "single":
-        this._handleSingleRow(rowDescriptor);
-        break;
-
-      case "cycle":
-        this._handleCycleRow(rowDescriptor);
-        break;
+    if (this._scrollLeftTween) {
+      this._scrollLeftTween.pause();
+    }
+    if (this._alternatingTimer) {
+      this._alternatingTimer.remove();
+    }
+    if (this._cycleTimer) {
+      this._cycleTimer.remove();
     }
 
-    this._updateDots();
+    this._waitForScrollUpTweenToComplete(() => {
+      this._performFadeOutTween(() => {
+        this._reset();
+
+        switch (rowDescriptor.mode) {
+          case "off":
+            this._handleOffRow();
+            break;
+
+          case "clock":
+            this._handleClockRow();
+            break;
+
+          case "single":
+            this._handleSingleRow(rowDescriptor);
+            break;
+
+          case "cycle":
+            this._handleCycleRow(rowDescriptor);
+            break;
+        }
+
+        this._updateDots();
+      });
+    });
   }
 
   _reset = () => {
@@ -265,11 +315,12 @@ export class MatrixRow {
     this._matrixState.makeMatrixCentre(nowFormatted);
   };
 
-  _updateDots = () => {
+  _updateDots = (fillColour?: number) => {
     this._dots.update(
       this._matrixState,
       Math.round(this._scrollTweenState.rowOffset),
       Math.round(this._scrollTweenState.colOffset),
+      fillColour,
     );
   };
 }

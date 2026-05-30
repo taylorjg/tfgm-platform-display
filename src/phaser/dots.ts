@@ -2,6 +2,7 @@ import Phaser from "phaser";
 
 import { range } from "@app/utils";
 
+import { BG_COLOUR, OFF_COLOUR, ON_COLOUR } from "./constants";
 import type { MatrixState } from "./matrix-state";
 
 export type Dimensions = {
@@ -13,10 +14,6 @@ export type Dimensions = {
   offsetX: number;
   offsetY: number;
 };
-
-const ON_COLOUR = 0xffff00;
-const OFF_COLOUR = 0x303030;
-const BG_COLOUR = 0x000000;
 
 export class Dots {
   private _renderTexture?: Phaser.GameObjects.RenderTexture;
@@ -52,16 +49,22 @@ export class Dots {
     this._graphics = undefined;
   }
 
-  update(matrixState: MatrixState, rowOffset: number, colOffset: number) {
+  update(
+    matrixState: MatrixState,
+    rowOffset: number,
+    colOffset: number,
+    fillColour?: number,
+  ) {
     if (!this._renderTexture || !this._graphics) return;
 
-    this._redraw(matrixState, rowOffset, colOffset);
+    this._redraw(matrixState, rowOffset, colOffset, fillColour);
   }
 
   private _redraw(
     matrixState: MatrixState,
     rowOffset: number,
     colOffset: number,
+    fillColour?: number,
   ) {
     if (!this._renderTexture || !this._graphics) return;
 
@@ -71,7 +74,7 @@ export class Dots {
 
     for (const row of range(numRows)) {
       for (const col of range(numCols)) {
-        this._drawDot(matrixState, row, col, rowOffset, colOffset);
+        this._drawDot(matrixState, row, col, rowOffset, colOffset, fillColour);
       }
     }
 
@@ -87,6 +90,7 @@ export class Dots {
     col: number,
     rowOffset: number,
     colOffset: number,
+    fillColour?: number,
   ) {
     if (!this._graphics) return;
 
@@ -95,7 +99,7 @@ export class Dots {
     const sourceCol = (col + colOffset) % totalCols;
 
     const isDotOn = matrixState.isDotOn(sourceRow, sourceCol);
-    const colour = isDotOn ? ON_COLOUR : OFF_COLOUR;
+    const colour = isDotOn ? (fillColour ?? ON_COLOUR) : OFF_COLOUR;
 
     const x = this._calculateX(col);
     const y = this._calculateY(row);

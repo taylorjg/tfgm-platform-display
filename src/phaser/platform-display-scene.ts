@@ -108,7 +108,7 @@ export class PlatformDisplayScene extends Phaser.Scene {
     const borderWidth = 6 * (diameter + gap) - gap;
 
     const isMeaningfulChange = this._dimensions
-      ? Math.abs(diameter - this._dimensions.diameter) > 0.1
+      ? Math.abs(diameter - this._dimensions.diameter) > 0.01
       : true;
 
     if (!isMeaningfulChange) return;
