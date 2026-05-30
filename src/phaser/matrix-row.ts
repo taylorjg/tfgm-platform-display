@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 
 import type { Font } from "@app/fonts";
-import { formatTime, type RowDescriptor } from "@app/helpers";
+import { formatTime, tweenComplete, type RowDescriptor } from "@app/helpers";
 
 import { offColourObject, onColourObject } from "./constants";
 import { Dots, type Dimensions } from "./dots";
@@ -60,19 +60,16 @@ export class MatrixRow {
     this._updateDots();
   }
 
-  _waitForScrollUpTweenToComplete = (onComplete: () => void) => {
+  _waitForScrollUpTweenToComplete = async () => {
     if (this._scrollUpTween) {
-      console.log("adding handler for:", Phaser.Tweens.Events.TWEEN_COMPLETE);
-      this._scrollUpTween.on(Phaser.Tweens.Events.TWEEN_COMPLETE, onComplete);
-    } else {
-      onComplete();
+      await tweenComplete(this._scrollUpTween);
     }
   };
 
-  _performFadeOutTween = (onComplete: () => void) => {
+  _performFadeOutTween = async () => {
     const valueWrapper = { value: 0 };
 
-    this._scene.tweens.add({
+    const fadeOutTween = this._scene.tweens.add({
       targets: valueWrapper,
       value: 100,
       ease: "Linear",
@@ -89,11 +86,12 @@ export class MatrixRow {
         const fillColour = Phaser.Display.Color.GetColor(r, g, b);
         this._updateDots(fillColour);
       },
-      onComplete,
     });
+
+    await tweenComplete(fadeOutTween);
   };
 
-  changeRowDescriptor(rowDescriptor: RowDescriptor) {
+  async changeRowDescriptor(rowDescriptor: RowDescriptor) {
     if (this._scrollLeftTween) {
       this._scrollLeftTween.pause();
     }
@@ -104,31 +102,30 @@ export class MatrixRow {
       this._cycleTimer.remove();
     }
 
-    this._waitForScrollUpTweenToComplete(() => {
-      this._performFadeOutTween(() => {
-        this._reset();
+    await this._waitForScrollUpTweenToComplete();
+    await this._performFadeOutTween();
 
-        switch (rowDescriptor.mode) {
-          case "off":
-            this._handleOffRow();
-            break;
+    this._reset();
 
-          case "clock":
-            this._handleClockRow();
-            break;
+    switch (rowDescriptor.mode) {
+      case "off":
+        this._handleOffRow();
+        break;
 
-          case "single":
-            this._handleSingleRow(rowDescriptor);
-            break;
+      case "clock":
+        this._handleClockRow();
+        break;
 
-          case "cycle":
-            this._handleCycleRow(rowDescriptor);
-            break;
-        }
+      case "single":
+        this._handleSingleRow(rowDescriptor);
+        break;
 
-        this._updateDots();
-      });
-    });
+      case "cycle":
+        this._handleCycleRow(rowDescriptor);
+        break;
+    }
+
+    this._updateDots();
   }
 
   _reset = () => {
