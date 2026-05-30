@@ -1,6 +1,6 @@
 import type { Font } from "@app/fonts";
 import { first, isEven, range, sumBy } from "@app/utils";
-import type { Alignment, Layout } from "./message-descriptor-helpers";
+import type { Alignment, Layout } from "./row-descriptor-helpers";
 
 const makeChequeredPattern = (width: number, rowIndex: number): string => {
   return range(width)
