@@ -4,7 +4,7 @@ import type { Font } from "@app/fonts";
 import { formatTime, type RowDescriptor } from "@app/helpers";
 
 import { Dots, type Dimensions } from "./dots";
-import { Matrix } from "./matrix";
+import { MatrixState } from "./matrix-state";
 
 const SCROLL_H_DOTS_PER_SECOND = 40;
 const SCROLL_H_CYCLE_MS = 1_000;
@@ -29,7 +29,7 @@ const isAlternatingRow = (rowDescriptor: RowDescriptor) =>
 export class MatrixRow {
   private readonly _scene: Phaser.Scene;
   private _dimensions: Dimensions;
-  private _matrix: Matrix;
+  private _matrixState: MatrixState;
   private _dots!: Dots;
   private _includeFirstColon = false;
   private _useFirstMessage = true;
@@ -44,11 +44,10 @@ export class MatrixRow {
   constructor(scene: Phaser.Scene, font: Font, dimensions: Dimensions) {
     this._scene = scene;
     this._dimensions = dimensions;
-    this._matrix = new Matrix(font, dimensions.numCols);
-    this._matrix.makeMatrixBlank();
+    this._matrixState = new MatrixState(font, dimensions.numCols);
     this._dots = new Dots(scene);
     this._dots.initialise(dimensions);
-    this._dots.update(this._matrix, 0, 0);
+    this._dots.update(this._matrixState, 0, 0);
   }
 
   changeDimensions(dimensions: Dimensions) {
@@ -106,7 +105,7 @@ export class MatrixRow {
   };
 
   _handleOffRow = () => {
-    this._matrix.makeMatrixBlank();
+    this._matrixState.makeMatrixBlank();
   };
 
   _handleClockRow = () => {
@@ -127,12 +126,12 @@ export class MatrixRow {
   _handleSingleRow = (rowDescriptor: RowDescriptor) => {
     if (rowDescriptor.mode !== "single") return;
 
-    this._matrix.makeMatrixForLayout(
+    this._matrixState.makeMatrixForLayout(
       rowDescriptor.layout,
       this._useFirstMessage,
     );
 
-    if (this._matrix.needsScrollLeft()) {
+    if (this._matrixState.needsScrollLeft()) {
       this._addScrollLeftTween();
     }
 
@@ -144,7 +143,10 @@ export class MatrixRow {
   _handleCycleRow = (rowDescriptor: RowDescriptor) => {
     if (rowDescriptor.mode !== "cycle") return;
 
-    this._matrix.makeCycleMatrix(rowDescriptor.layouts, this._useFirstMessage);
+    this._matrixState.makeCycleMatrix(
+      rowDescriptor.layouts,
+      this._useFirstMessage,
+    );
 
     this._addCycleTimer();
 
@@ -238,14 +240,14 @@ export class MatrixRow {
         this._useFirstMessage = !this._useFirstMessage;
 
         if (isSingle) {
-          this._matrix.makeMatrixForLayout(
+          this._matrixState.makeMatrixForLayout(
             rowDescriptor.layout,
             this._useFirstMessage,
           );
         }
 
         if (isCycle) {
-          this._matrix.makeCycleMatrix(
+          this._matrixState.makeCycleMatrix(
             rowDescriptor.layouts,
             this._useFirstMessage,
           );
@@ -260,12 +262,12 @@ export class MatrixRow {
     this._includeFirstColon = !this._includeFirstColon;
     const now = new Date();
     const nowFormatted = formatTime(now, this._includeFirstColon);
-    this._matrix.makeMatrixCentre(nowFormatted);
+    this._matrixState.makeMatrixCentre(nowFormatted);
   };
 
   _updateDots = () => {
     this._dots.update(
-      this._matrix,
+      this._matrixState,
       Math.round(this._scrollTweenState.rowOffset),
       Math.round(this._scrollTweenState.colOffset),
     );

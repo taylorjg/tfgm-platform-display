@@ -1,7 +1,8 @@
 import Phaser from "phaser";
 
 import { range } from "@app/utils";
-import type { Matrix } from "./matrix";
+
+import type { MatrixState } from "./matrix-state";
 
 export type Dimensions = {
   radius: number;
@@ -51,13 +52,17 @@ export class Dots {
     this._graphics = undefined;
   }
 
-  update(matrix: Matrix, rowOffset: number, colOffset: number) {
+  update(matrixState: MatrixState, rowOffset: number, colOffset: number) {
     if (!this._renderTexture || !this._graphics) return;
 
-    this._redraw(matrix, rowOffset, colOffset);
+    this._redraw(matrixState, rowOffset, colOffset);
   }
 
-  private _redraw(matrix: Matrix, rowOffset: number, colOffset: number) {
+  private _redraw(
+    matrixState: MatrixState,
+    rowOffset: number,
+    colOffset: number,
+  ) {
     if (!this._renderTexture || !this._graphics) return;
 
     this._graphics.clear();
@@ -66,7 +71,7 @@ export class Dots {
 
     for (const row of range(numRows)) {
       for (const col of range(numCols)) {
-        this._drawDot(matrix, row, col, rowOffset, colOffset);
+        this._drawDot(matrixState, row, col, rowOffset, colOffset);
       }
     }
 
@@ -77,7 +82,7 @@ export class Dots {
   }
 
   private _drawDot(
-    matrix: Matrix,
+    matrixState: MatrixState,
     row: number,
     col: number,
     rowOffset: number,
@@ -85,11 +90,11 @@ export class Dots {
   ) {
     if (!this._graphics) return;
 
-    const { totalRows, totalCols } = matrix.size();
+    const { totalRows, totalCols } = matrixState.size();
     const sourceRow = (row + rowOffset) % totalRows;
     const sourceCol = (col + colOffset) % totalCols;
 
-    const isDotOn = matrix.isDotOn(sourceRow, sourceCol);
+    const isDotOn = matrixState.isDotOn(sourceRow, sourceCol);
     const colour = isDotOn ? ON_COLOUR : OFF_COLOUR;
 
     const x = this._calculateX(col);

@@ -6,7 +6,7 @@ import {
   makeRow2Descriptor,
   makeRow3Descriptor,
 } from "@app/helpers";
-import { PlatformMatrixWrapper } from "@app/components/platform-matrix-wrapper";
+import { PlatformDisplayWrapper } from "@app/components/platform-display-wrapper";
 
 import { StyledMainView } from "./styles";
 
@@ -26,7 +26,7 @@ export const MainView = ({ configuration }: MainViewProps) => {
 
   return (
     <StyledMainView>
-      <PlatformMatrixWrapper rowDescriptors={{ row1, row2, row3 }} />
+      <PlatformDisplayWrapper rowDescriptors={{ row1, row2, row3 }} />
     </StyledMainView>
   );
 };

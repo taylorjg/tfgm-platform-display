@@ -1,13 +1,14 @@
 import Phaser from "phaser";
 
-import { LedMatrixScene } from "./scene";
 import type { RowDescriptors } from "@app/helpers";
+
+import { PlatformDisplayScene } from "./platform-display-scene";
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.WEBGL,
   transparent: true,
   antialias: true,
-  scene: [LedMatrixScene],
+  scene: [PlatformDisplayScene],
 };
 
 export const initialiseGame = (parent: HTMLElement) => {
@@ -26,8 +27,7 @@ export const initialiseGame = (parent: HTMLElement) => {
 export interface GameActions {
   destroy: () => void;
   changeRowDescriptors: (rowDescriptors: RowDescriptors) => void;
-  setFetching: (isFetching: boolean) => void;
-  resize: () => void;
+  setIsFetching: (isFetching: boolean) => void;
 }
 
 const makeGameActions = (game: Phaser.Game): GameActions => {
@@ -73,7 +73,7 @@ const makeGameActions = (game: Phaser.Game): GameActions => {
     game.events.emit("ChangeRowDescriptors", rowDescriptors);
   };
 
-  const setFetching = (isFetching: boolean) => {
+  const setIsFetching = (isFetching: boolean) => {
     game.events.emit("FetchingStateChanged", isFetching);
   };
 
@@ -90,7 +90,6 @@ const makeGameActions = (game: Phaser.Game): GameActions => {
   return {
     destroy,
     changeRowDescriptors,
-    setFetching,
-    resize: resizeGameToMatchParent,
+    setIsFetching,
   };
 };

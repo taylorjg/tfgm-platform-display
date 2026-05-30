@@ -8,7 +8,7 @@ import {
 } from "@app/helpers";
 import { first } from "@app/utils";
 
-export class Matrix {
+export class MatrixState {
   private readonly _font: Font;
   private readonly _numCols: number;
   private _data: string[] = [];

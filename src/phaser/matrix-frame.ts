@@ -229,10 +229,10 @@ export class MatrixFrame {
     }
 
     this._border = border;
-    this.setFetching(this._isFetching);
+    this.setIsFetching(this._isFetching);
   }
 
-  setFetching(isFetching: boolean) {
+  setIsFetching(isFetching: boolean) {
     this._isFetching = isFetching;
 
     if (isFetching) {

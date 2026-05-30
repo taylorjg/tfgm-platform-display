@@ -4,7 +4,7 @@ import { useIsFetching } from "@tanstack/react-query";
 import type { RowDescriptors } from "@app/helpers";
 import { initialiseGame, type GameActions } from "@app/phaser";
 
-export type PlatformMatrixWrapperProps = {
+export type PlatformDisplayWrapperProps = {
   rowDescriptors: RowDescriptors;
 };
 
@@ -12,9 +12,9 @@ const makeRowsState = (rowDescriptors: RowDescriptors): string => {
   return JSON.stringify(rowDescriptors);
 };
 
-export const PlatformMatrixWrapper = ({
+export const PlatformDisplayWrapper = ({
   rowDescriptors,
-}: PlatformMatrixWrapperProps) => {
+}: PlatformDisplayWrapperProps) => {
   const isFetching = useIsFetching() > 0;
   const parentRef = useRef<HTMLElement | null>(null);
   const gameActionsRef = useRef<GameActions | null>(null);
@@ -26,13 +26,7 @@ export const PlatformMatrixWrapper = ({
 
     gameActionsRef.current = initialiseGame(parent);
 
-    // One deferred resize once layout has settled (e.g. aspect-ratio on mobile).
-    const frameId = requestAnimationFrame(() => {
-      gameActionsRef.current?.resize();
-    });
-
     return () => {
-      cancelAnimationFrame(frameId);
       gameActionsRef.current?.destroy();
     };
   }, []);
@@ -48,7 +42,7 @@ export const PlatformMatrixWrapper = ({
   }, [rowDescriptors]);
 
   useEffect(() => {
-    gameActionsRef.current?.setFetching(isFetching);
+    gameActionsRef.current?.setIsFetching(isFetching);
   }, [isFetching]);
 
   return (

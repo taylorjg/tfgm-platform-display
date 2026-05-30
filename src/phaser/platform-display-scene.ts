@@ -1,27 +1,27 @@
 import Phaser from "phaser";
 
 import { clockFont, rowFont } from "@app/fonts";
+import type { RowDescriptors } from "@app/helpers";
 
 import type { Dimensions } from "./dots";
 import { MatrixFrame } from "./matrix-frame";
 import { MatrixRow } from "./matrix-row";
-import type { RowDescriptors } from "@app/helpers";
 
-export class LedMatrixScene extends Phaser.Scene {
+export class PlatformDisplayScene extends Phaser.Scene {
   private _dimensions!: Dimensions;
+  private _frame!: MatrixFrame;
   private _row1!: MatrixRow;
   private _row2!: MatrixRow;
   private _row3!: MatrixRow;
   private _row4!: MatrixRow;
-  private _frame!: MatrixFrame;
 
   constructor() {
-    console.log("[LedMatrixScene#constructor]");
-    super("LedMatrixScene");
+    console.log("[PlatformDisplayScene#constructor]");
+    super("PlatformDisplayScene");
   }
 
   create() {
-    console.log("[LedMatrixScene#create]");
+    console.log("[PlatformDisplayScene#create]");
 
     this._frame = new MatrixFrame(this);
     this._onResize();
@@ -81,7 +81,7 @@ export class LedMatrixScene extends Phaser.Scene {
   }
 
   _onResize = () => {
-    console.log("[LedMatrixScene#_onResize]");
+    console.log("[PlatformDisplayScene#_onResize]");
 
     const numRows = 58; // rows + gaps + frame = 4x9 + 5x2 + 6x2
     const numCols = 201; // cols + gaps + frame = 185 + 2x2 + 6x2
@@ -167,7 +167,10 @@ export class LedMatrixScene extends Phaser.Scene {
   };
 
   _onChangeRowDescriptors = (rowDescriptors: RowDescriptors) => {
-    console.log("[LedMatrixScene#_onChangeRowDescriptors]", rowDescriptors);
+    console.log(
+      "[PlatformDisplayScene#_onChangeRowDescriptors]",
+      rowDescriptors,
+    );
 
     this._row1.changeRowDescriptor(rowDescriptors.row1);
     this._row2.changeRowDescriptor(rowDescriptors.row2);
@@ -175,6 +178,6 @@ export class LedMatrixScene extends Phaser.Scene {
   };
 
   _onFetchingStateChanged = (isFetching: boolean) => {
-    this._frame.setFetching(isFetching);
+    this._frame.setIsFetching(isFetching);
   };
 }
