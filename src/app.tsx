@@ -1,7 +1,7 @@
 import {
   FullscreenToggle,
   SidePanelIcon,
-  TramInfo,
+  MainView,
   Version,
 } from "@app/components";
 import { useConfiguration } from "@app/contexts";
@@ -11,7 +11,7 @@ export const App = () => {
 
   return (
     <>
-      {configuration && <TramInfo configuration={configuration} />}
+      {configuration && <MainView configuration={configuration} />}
       <SidePanelIcon />
       <FullscreenToggle />
       <Version />

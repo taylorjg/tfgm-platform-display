@@ -8,16 +8,16 @@ import {
 } from "@app/helpers";
 import { PlatformMatrixWrapper } from "@app/components/platform-matrix-wrapper";
 
-import { StyledTramInfo } from "./styles";
+import { StyledMainView } from "./styles";
 
-type TramInfoProps = {
+type MainViewProps = {
   configuration: Configuration;
 };
 
 const ALERT =
   "Welcome to Metrolink. Ticket checks are taking place across the network today. For travel information visit www.TfGM.com.";
 
-export const TramInfo = ({ configuration }: TramInfoProps) => {
+export const MainView = ({ configuration }: MainViewProps) => {
   const { data: trams = [] } = useGetTrams(configuration);
 
   const row1 = makeRow1Descriptor(trams);
@@ -25,8 +25,8 @@ export const TramInfo = ({ configuration }: TramInfoProps) => {
   const row3 = makeRow3Descriptor(ALERT);
 
   return (
-    <StyledTramInfo>
+    <StyledMainView>
       <PlatformMatrixWrapper rowDescriptors={{ row1, row2, row3 }} />
-    </StyledTramInfo>
+    </StyledMainView>
   );
 };
