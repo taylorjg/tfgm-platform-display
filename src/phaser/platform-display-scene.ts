@@ -7,6 +7,7 @@ import type { Dimensions } from "./dots";
 import { MatrixFrame } from "./matrix-frame";
 import { MatrixRow } from "./matrix-row";
 
+// These sizes are all measured in "dots" e.g. frame border is 6 dots wide, gaps are 2 dots wide, etc.
 const MAIN_ROW_ROWS = 9;
 const MAIN_ROW_COLS = 185;
 const CLOCK_ROW_ROWS = 9;
@@ -34,6 +35,7 @@ export class PlatformDisplayScene extends Phaser.Scene {
     console.log("[PlatformDisplayScene#create]");
 
     this._frame = new MatrixFrame(this);
+
     this._onResize();
 
     this._row1 = new MatrixRow(
@@ -146,8 +148,6 @@ export class PlatformDisplayScene extends Phaser.Scene {
     });
 
     const newDimensions = {
-      numRows,
-      numCols,
       diameter,
       radius,
       gap,
