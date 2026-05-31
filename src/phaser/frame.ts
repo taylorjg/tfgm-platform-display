@@ -167,7 +167,7 @@ const frameSupportsFilters = (scene: Phaser.Scene) =>
 const borderSupersample = (scene: Phaser.Scene) =>
   frameSupportsFilters(scene) ? BORDER_SUPERSAMPLE : BORDER_SUPERSAMPLE_TOUCH;
 
-export class MatrixFrame {
+export class Frame {
   private readonly _scene: Phaser.Scene;
   private _border?: Phaser.GameObjects.RenderTexture;
   private _borderGraphics?: Phaser.GameObjects.Graphics;

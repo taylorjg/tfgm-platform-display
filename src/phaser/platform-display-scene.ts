@@ -4,7 +4,7 @@ import { clockFont, rowFont } from "@app/fonts";
 import type { RowDescriptors } from "@app/helpers";
 
 import type { Dimensions } from "./dots";
-import { MatrixFrame } from "./matrix-frame";
+import { Frame } from "./frame";
 import { MatrixRow } from "./matrix-row";
 
 // These sizes are all measured in "dots" e.g. frame border is 6 dots wide, gaps are 2 dots wide, etc.
@@ -20,7 +20,7 @@ const TOTAL_COLS = MAIN_ROW_COLS + GAP_SIZE * 2 + FRAME_SIZE * 2;
 
 export class PlatformDisplayScene extends Phaser.Scene {
   private _dimensions!: Dimensions;
-  private _frame!: MatrixFrame;
+  private _frame!: Frame;
   private _row1!: MatrixRow;
   private _row2!: MatrixRow;
   private _row3!: MatrixRow;
@@ -34,7 +34,7 @@ export class PlatformDisplayScene extends Phaser.Scene {
   create() {
     console.log("[PlatformDisplayScene#create]");
 
-    this._frame = new MatrixFrame(this);
+    this._frame = new Frame(this);
 
     this._onResize();
 
