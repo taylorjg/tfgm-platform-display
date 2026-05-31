@@ -1,10 +1,12 @@
 import type { Font } from "@app/fonts";
 import {
+  makeRowMatrixWithBlankLine,
   makeMatrixBlank,
   makeMatrixCentre,
   makeCycleMatrix,
   makeMatrixForLayout,
   type Layout,
+  type RowDescriptor,
 } from "@app/helpers";
 import { first } from "@app/utils";
 
@@ -63,6 +65,14 @@ export class MatrixState {
       this._numCols,
       layouts,
       useFirstMessage,
+    );
+  }
+
+  makeRowMatrixWithBlankLine(rowDescriptor: RowDescriptor) {
+    this._data = makeRowMatrixWithBlankLine(
+      this._font,
+      this._numCols,
+      rowDescriptor,
     );
   }
 }

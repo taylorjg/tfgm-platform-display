@@ -1,6 +1,12 @@
 import type { Font } from "@app/fonts";
 import { first, isEven, range, sumBy } from "@app/utils";
-import type { Alignment, Layout } from "./row-descriptor-helpers";
+import type {
+  Alignment,
+  Layout,
+  RowDescriptor,
+} from "./row-descriptor-helpers";
+
+const GAP = " ";
 
 const makeChequeredPattern = (width: number, rowIndex: number): string => {
   return range(width)
@@ -8,7 +14,7 @@ const makeChequeredPattern = (width: number, rowIndex: number): string => {
     .join("");
 };
 
-const makeMissingCharacterDotGrid = (font: Font): string[] => {
+const makeMissingCharacter = (font: Font): string[] => {
   const values = Array.from(font.fontMap.values());
   const totalWidths = sumBy(values, (value) => value.dotLines[0].length);
   const averageWidth = Math.ceil(totalWidths / values.length);
@@ -26,13 +32,11 @@ const lookupCharacter =
       console.warn(
         `Character "${ch}" not found in fontMap for font "${font.name}".`,
       );
-      return makeMissingCharacterDotGrid(font);
+      return makeMissingCharacter(font);
     }
 
     return value.dotLines;
   };
-
-const GAP = " ";
 
 export const makeMatrixBlank = (font: Font, numCols: number): string[] => {
   return range(font.numVerticalDots).map(() => " ".repeat(numCols));
@@ -134,4 +138,30 @@ export const makeCycleMatrix = (
       makeMatrixForLayout(font, numCols, layout, useFirstMessage),
     )
     .flat();
+};
+
+const makeRowMatrix = (
+  font: Font,
+  numCols: number,
+  rowDescriptor: RowDescriptor,
+): string[] => {
+  if (rowDescriptor.mode === "single") {
+    return makeMatrixForLayout(font, numCols, rowDescriptor.layout, true);
+  }
+
+  if (rowDescriptor.mode === "cycle") {
+    return makeMatrixForLayout(font, numCols, rowDescriptor.layouts[0], true);
+  }
+
+  return makeMatrixBlank(font, numCols);
+};
+
+export const makeRowMatrixWithBlankLine = (
+  font: Font,
+  numCols: number,
+  rowDescriptor: RowDescriptor,
+): string[] => {
+  const blankMatrix = makeMatrixBlank(font, numCols);
+  const rowMatrix = makeRowMatrix(font, numCols, rowDescriptor);
+  return [...blankMatrix, ...rowMatrix];
 };

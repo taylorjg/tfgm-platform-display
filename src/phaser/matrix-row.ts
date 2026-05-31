@@ -91,6 +91,14 @@ export class MatrixRow {
     await tweenComplete(fadeOutTween);
   };
 
+  _scrollUpNewRow = async (rowDescriptor: RowDescriptor) => {
+    this._matrixState.makeRowMatrixWithBlankLine(rowDescriptor);
+    this._addScrollUpTween();
+    if (this._scrollUpTween) {
+      await tweenComplete(this._scrollUpTween);
+    }
+  };
+
   async changeRowDescriptor(rowDescriptor: RowDescriptor) {
     if (this._scrollLeftTween) {
       this._scrollLeftTween.pause();
@@ -104,6 +112,7 @@ export class MatrixRow {
 
     await this._waitForScrollUpTweenToComplete();
     await this._performFadeOutTween();
+    await this._scrollUpNewRow(rowDescriptor);
 
     this._reset();
 
