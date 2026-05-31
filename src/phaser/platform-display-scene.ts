@@ -109,28 +109,25 @@ export class PlatformDisplayScene extends Phaser.Scene {
   private _onResize = () => {
     console.log("[PlatformDisplayScene#_onResize]");
 
-    const numRows = TOTAL_ROWS;
-    const numCols = TOTAL_COLS;
-
     const { width, height } = this.scale.displaySize;
 
     const numeratorH = 10 * height;
-    const denominatorH = 11 * numRows - 1;
+    const denominatorH = 11 * TOTAL_ROWS - 1;
     const diameterH = numeratorH / denominatorH;
 
     const numeratorW = 10 * width;
-    const denominatorW = 11 * numCols - 1;
+    const denominatorW = 11 * TOTAL_COLS - 1;
     const diameterW = numeratorW / denominatorW;
 
     const diameter = Math.min(diameterH, diameterW);
     const radius = diameter / 2;
     const gap = diameter / 10;
 
-    const marginX = (width - (numCols * (diameter + gap) - gap)) / 2;
-    const marginY = (height - (numRows * (diameter + gap) - gap)) / 2;
+    const marginX = (width - (TOTAL_COLS * (diameter + gap) - gap)) / 2;
+    const marginY = (height - (TOTAL_ROWS * (diameter + gap) - gap)) / 2;
 
-    const frameWidth = numCols * (diameter + gap) - gap;
-    const frameHeight = numRows * (diameter + gap) - gap;
+    const frameWidth = TOTAL_COLS * (diameter + gap) - gap;
+    const frameHeight = TOTAL_ROWS * (diameter + gap) - gap;
     const borderWidth = 6 * (diameter + gap) - gap;
 
     const isMeaningfulChange = this._dimensions
