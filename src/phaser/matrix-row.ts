@@ -37,7 +37,6 @@ export class MatrixRow {
   private _includeFirstColon = false;
   private _useFirstMessage = true;
   private readonly _scrollTweenState = { rowOffset: 0, colOffset: 0 };
-  private _scrollLeftRunning = false;
   private _clockTimer: Phaser.Time.TimerEvent | null = null;
   private _alternatingTimer: Phaser.Time.TimerEvent | null = null;
   private _cycleTimer: Phaser.Time.TimerEvent | null = null;
@@ -213,13 +212,10 @@ export class MatrixRow {
 
   _addScrollLeftTween = () => {
     this._stopScrollLeftTween();
-    this._scrollLeftRunning = true;
     this._runScrollLeftTweenCycle();
   };
 
   _runScrollLeftTweenCycle = () => {
-    if (!this._scrollLeftRunning) return;
-
     const startColOffset = this._scrollTweenState.colOffset;
     const targetColOffset = startColOffset + SCROLL_H_COLS_PER_CYCLE;
 
@@ -240,8 +236,6 @@ export class MatrixRow {
   };
 
   _stopScrollLeftTween = () => {
-    this._scrollLeftRunning = false;
-
     if (this._scrollLeftTween) {
       this._scrollLeftTween.stop();
       this._scrollLeftTween = null;
