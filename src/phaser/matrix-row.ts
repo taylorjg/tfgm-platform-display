@@ -31,31 +31,38 @@ const isAlternatingRow = (rowDescriptor: RowDescriptor) =>
 
 export class MatrixRow {
   private readonly _scene: Phaser.Scene;
-  private _dimensions: Dimensions;
-  private _matrixState: MatrixState;
-  private _dots!: Dots;
+  private readonly _numRows: number;
+  private readonly _numCols: number;
+  private readonly _matrixState: MatrixState;
+  private readonly _dots!: Dots;
+  private readonly _scrollTweenState = { rowOffset: 0, colOffset: 0 };
   private _includeFirstColon = false;
   private _useFirstMessage = true;
-  private readonly _scrollTweenState = { rowOffset: 0, colOffset: 0 };
   private _clockTimer: Phaser.Time.TimerEvent | null = null;
   private _alternatingTimer: Phaser.Time.TimerEvent | null = null;
   private _cycleTimer: Phaser.Time.TimerEvent | null = null;
   private _scrollLeftTween: Phaser.Tweens.Tween | null = null;
   private _scrollUpTween: Phaser.Tweens.Tween | null = null;
 
-  constructor(scene: Phaser.Scene, font: Font, dimensions: Dimensions) {
+  constructor(
+    scene: Phaser.Scene,
+    font: Font,
+    dimensions: Dimensions,
+    numRows: number,
+    numCols: number,
+  ) {
     this._scene = scene;
-    this._dimensions = dimensions;
-    this._matrixState = new MatrixState(font, dimensions.numCols);
+    this._numRows = numRows;
+    this._numCols = numCols;
+    this._matrixState = new MatrixState(font, numCols);
     this._dots = new Dots(scene);
-    this._dots.initialise(dimensions);
+    this._dots.initialise(dimensions, this._numRows, this._numCols);
     this._updateDots();
   }
 
   changeDimensions(dimensions: Dimensions) {
-    this._dimensions = dimensions;
     this._dots.destroy();
-    this._dots.initialise(dimensions);
+    this._dots.initialise(dimensions, this._numRows, this._numCols);
     this._updateDots();
   }
 
@@ -253,7 +260,7 @@ export class MatrixRow {
       this._scrollUpTween = null;
     }
 
-    const rowsToScroll = this._dimensions.numRows;
+    const rowsToScroll = this._numRows;
     const startRowOffset = this._scrollTweenState.rowOffset;
     const targetRowOffset = startRowOffset + rowsToScroll;
     const durationMs = (rowsToScroll / SCROLL_V_DOTS_PER_SECOND) * 1_000;

@@ -36,37 +36,53 @@ export class PlatformDisplayScene extends Phaser.Scene {
     this._frame = new MatrixFrame(this);
     this._onResize();
 
-    this._row1 = new MatrixRow(this, rowFont, {
-      ...this._dimensions,
-      numRows: MAIN_ROW_ROWS,
-      numCols: MAIN_ROW_COLS,
-      offsetX: this._calculateOffsetX(0),
-      offsetY: this._calculateOffsetY(0),
-    });
+    this._row1 = new MatrixRow(
+      this,
+      rowFont,
+      {
+        ...this._dimensions,
+        offsetX: this._calculateOffsetX(0),
+        offsetY: this._calculateOffsetY(0),
+      },
+      MAIN_ROW_ROWS,
+      MAIN_ROW_COLS,
+    );
 
-    this._row2 = new MatrixRow(this, rowFont, {
-      ...this._dimensions,
-      numRows: MAIN_ROW_ROWS,
-      numCols: MAIN_ROW_COLS,
-      offsetX: this._calculateOffsetX(0),
-      offsetY: this._calculateOffsetY(MAIN_ROW_ROWS + GAP_SIZE),
-    });
+    this._row2 = new MatrixRow(
+      this,
+      rowFont,
+      {
+        ...this._dimensions,
+        offsetX: this._calculateOffsetX(0),
+        offsetY: this._calculateOffsetY(MAIN_ROW_ROWS + GAP_SIZE),
+      },
+      MAIN_ROW_ROWS,
+      MAIN_ROW_COLS,
+    );
 
-    this._row3 = new MatrixRow(this, rowFont, {
-      ...this._dimensions,
-      numRows: MAIN_ROW_ROWS,
-      numCols: MAIN_ROW_COLS,
-      offsetX: this._calculateOffsetX(0),
-      offsetY: this._calculateOffsetY((MAIN_ROW_ROWS + GAP_SIZE) * 2),
-    });
+    this._row3 = new MatrixRow(
+      this,
+      rowFont,
+      {
+        ...this._dimensions,
+        offsetX: this._calculateOffsetX(0),
+        offsetY: this._calculateOffsetY((MAIN_ROW_ROWS + GAP_SIZE) * 2),
+      },
+      MAIN_ROW_ROWS,
+      MAIN_ROW_COLS,
+    );
 
-    this._row4 = new MatrixRow(this, clockFont, {
-      ...this._dimensions,
-      numRows: CLOCK_ROW_ROWS,
-      numCols: CLOCK_ROW_COLS,
-      offsetX: this._calculateOffsetX((MAIN_ROW_COLS - CLOCK_ROW_COLS) / 2),
-      offsetY: this._calculateOffsetY((MAIN_ROW_ROWS + GAP_SIZE) * 3),
-    });
+    this._row4 = new MatrixRow(
+      this,
+      clockFont,
+      {
+        ...this._dimensions,
+        offsetX: this._calculateOffsetX((MAIN_ROW_COLS - CLOCK_ROW_COLS) / 2),
+        offsetY: this._calculateOffsetY((MAIN_ROW_ROWS + GAP_SIZE) * 3),
+      },
+      CLOCK_ROW_ROWS,
+      CLOCK_ROW_COLS,
+    );
 
     this._row1.transition({ mode: "off" });
     this._row2.transition({ mode: "off" });
@@ -143,32 +159,24 @@ export class PlatformDisplayScene extends Phaser.Scene {
 
     this._row1?.changeDimensions({
       ...this._dimensions,
-      numRows: MAIN_ROW_ROWS,
-      numCols: MAIN_ROW_COLS,
       offsetX: this._calculateOffsetX(0),
       offsetY: this._calculateOffsetY(0),
     });
 
     this._row2?.changeDimensions({
       ...this._dimensions,
-      numRows: MAIN_ROW_ROWS,
-      numCols: MAIN_ROW_COLS,
       offsetX: this._calculateOffsetX(0),
       offsetY: this._calculateOffsetY(MAIN_ROW_ROWS + GAP_SIZE),
     });
 
     this._row3?.changeDimensions({
       ...this._dimensions,
-      numRows: MAIN_ROW_ROWS,
-      numCols: MAIN_ROW_COLS,
       offsetX: this._calculateOffsetX(0),
       offsetY: this._calculateOffsetY((MAIN_ROW_ROWS + GAP_SIZE) * 2),
     });
 
     this._row4?.changeDimensions({
       ...this._dimensions,
-      numRows: CLOCK_ROW_ROWS,
-      numCols: CLOCK_ROW_COLS,
       offsetX: this._calculateOffsetX((MAIN_ROW_COLS - CLOCK_ROW_COLS) / 2),
       offsetY: this._calculateOffsetY((MAIN_ROW_ROWS + GAP_SIZE) * 3),
     });

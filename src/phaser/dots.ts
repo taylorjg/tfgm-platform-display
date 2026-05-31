@@ -9,26 +9,28 @@ export type Dimensions = {
   radius: number;
   diameter: number;
   gap: number;
-  numRows: number;
-  numCols: number;
   offsetX: number;
   offsetY: number;
 };
 
 export class Dots {
+  private readonly _scene: Phaser.Scene;
+  private _dimensions!: Dimensions;
+  private _numRows!: number;
+  private _numCols!: number;
   private _renderTexture?: Phaser.GameObjects.RenderTexture;
   private _graphics?: Phaser.GameObjects.Graphics;
-  private _dimensions!: Dimensions;
-  private readonly _scene: Phaser.Scene;
 
   constructor(scene: Phaser.Scene) {
     this._scene = scene;
   }
 
-  initialise(dimensions: Dimensions) {
+  initialise(dimensions: Dimensions, numRows: number, numCols: number) {
     this.destroy();
 
     this._dimensions = dimensions;
+    this._numRows = numRows;
+    this._numCols = numCols;
 
     const { offsetX, offsetY } = dimensions;
     const width = this._gridWidth();
@@ -70,10 +72,8 @@ export class Dots {
 
     this._graphics.clear();
 
-    const { numRows, numCols } = this._dimensions;
-
-    for (const row of range(numRows)) {
-      for (const col of range(numCols)) {
+    for (const row of range(this._numRows)) {
+      for (const col of range(this._numCols)) {
         this._drawDot(matrixState, row, col, rowOffset, colOffset, fillColour);
       }
     }
@@ -110,11 +110,11 @@ export class Dots {
   }
 
   private _gridWidth = () => {
-    return this._calculateX(this._dimensions.numCols);
+    return this._calculateX(this._numCols);
   };
 
   private _gridHeight = () => {
-    return this._calculateX(this._dimensions.numRows);
+    return this._calculateX(this._numRows);
   };
 
   private _calculateX = (col: number) => {
