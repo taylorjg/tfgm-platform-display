@@ -1,11 +1,6 @@
 import { type Configuration } from "@app/contexts";
 
 import { useGetTrams } from "@app/hooks";
-import {
-  makeRow1Descriptor,
-  makeRow2Descriptor,
-  makeRow3Descriptor,
-} from "@app/helpers";
 import { PlatformDisplayWrapper } from "@app/components/platform-display-wrapper";
 
 import { StyledMainView } from "./styles";
@@ -20,13 +15,9 @@ const ALERT =
 export const MainView = ({ configuration }: MainViewProps) => {
   const { data: trams = [] } = useGetTrams(configuration);
 
-  const row1 = makeRow1Descriptor(trams);
-  const row2 = makeRow2Descriptor(trams);
-  const row3 = makeRow3Descriptor(ALERT);
-
   return (
     <StyledMainView>
-      <PlatformDisplayWrapper rowDescriptors={{ row1, row2, row3 }} />
+      <PlatformDisplayWrapper trams={trams} alert={ALERT} />
     </StyledMainView>
   );
 };

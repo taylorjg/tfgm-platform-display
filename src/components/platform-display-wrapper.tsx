@@ -1,24 +1,54 @@
 import { useEffect, useRef, type Ref } from "react";
 import { useIsFetching } from "@tanstack/react-query";
 
-import type { RowDescriptors } from "@app/helpers";
 import { initialiseGame, type GameActions } from "@app/phaser";
+import type { LiveTram } from "@app/hooks";
+import {
+  makeRow1Descriptor,
+  makeRow2Descriptor,
+  makeRow3Descriptor,
+} from "@app/helpers";
 
 export type PlatformDisplayWrapperProps = {
-  rowDescriptors: RowDescriptors;
+  trams: LiveTram[];
+  alert: string;
 };
 
-const makeRowsState = (rowDescriptors: RowDescriptors): string => {
-  return JSON.stringify(rowDescriptors);
+const makeRowsState = (trams: LiveTram[]): string => {
+  return JSON.stringify(trams);
+};
+
+const getOnlyDueValuesHaveChanged = (rowState1: string, rowState2: string) => {
+  const trams1 = JSON.parse(rowState1);
+  const trams2 = JSON.parse(rowState2);
+
+  const numTrams1 = trams1.length;
+  const numTrams2 = trams2.length;
+  if (numTrams1 + numTrams2 === 0) return false;
+  if (numTrams1 !== numTrams2) return false;
+
+  for (const tram of trams1) {
+    delete tram.due;
+  }
+
+  for (const tram of trams2) {
+    delete tram.due;
+  }
+
+  const rowState3 = makeRowsState(trams1);
+  const rowState4 = makeRowsState(trams2);
+
+  return rowState3 === rowState4;
 };
 
 export const PlatformDisplayWrapper = ({
-  rowDescriptors,
+  trams,
+  alert,
 }: PlatformDisplayWrapperProps) => {
   const isFetching = useIsFetching() > 0;
   const parentRef = useRef<HTMLElement | null>(null);
   const gameActionsRef = useRef<GameActions | null>(null);
-  const prevRowsStateRef = useRef<string>("");
+  const prevRowsStateRef = useRef<string>("[]");
 
   useEffect(() => {
     const parent = parentRef.current;
@@ -33,13 +63,26 @@ export const PlatformDisplayWrapper = ({
 
   useEffect(() => {
     const prevRowsState = prevRowsStateRef.current;
-    const nextRowsState = makeRowsState(rowDescriptors);
+    const nextRowsState = makeRowsState(trams);
 
     if (nextRowsState === prevRowsState) return;
 
-    gameActionsRef.current?.changeRowDescriptors(rowDescriptors);
+    const onlyDueValuesHaveChanged = getOnlyDueValuesHaveChanged(
+      prevRowsState,
+      nextRowsState,
+    );
+
+    const row1 = makeRow1Descriptor(trams);
+    const row2 = makeRow2Descriptor(trams);
+    const row3 = makeRow3Descriptor(alert);
+    const rowDescriptors = { row1, row2, row3 };
+
+    gameActionsRef.current?.changeRowDescriptors(
+      rowDescriptors,
+      onlyDueValuesHaveChanged,
+    );
     prevRowsStateRef.current = nextRowsState;
-  }, [rowDescriptors]);
+  }, [trams, alert]);
 
   useEffect(() => {
     gameActionsRef.current?.setIsFetching(isFetching);

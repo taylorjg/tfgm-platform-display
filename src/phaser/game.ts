@@ -26,7 +26,10 @@ export const initialiseGame = (parent: HTMLElement) => {
 
 export interface GameActions {
   destroy: () => void;
-  changeRowDescriptors: (rowDescriptors: RowDescriptors) => void;
+  changeRowDescriptors: (
+    rowDescriptors: RowDescriptors,
+    onlyDueValuesHaveChanged: boolean,
+  ) => void;
   setIsFetching: (isFetching: boolean) => void;
 }
 
@@ -68,9 +71,20 @@ const makeGameActions = (game: Phaser.Game): GameActions => {
   window.addEventListener("resize", onResize);
   screen.orientation?.addEventListener("change", onScreenOrientationChange);
 
-  const changeRowDescriptors = (rowDescriptors: RowDescriptors) => {
-    console.log("[gameActions#changeRowDescriptors]", rowDescriptors);
-    game.events.emit("ChangeRowDescriptors", rowDescriptors);
+  const changeRowDescriptors = (
+    rowDescriptors: RowDescriptors,
+    onlyDueValuesHaveChanged: boolean,
+  ) => {
+    console.log("[gameActions#changeRowDescriptors]", {
+      rowDescriptors,
+      onlyDueValuesHaveChanged,
+    });
+
+    game.events.emit(
+      "ChangeRowDescriptors",
+      rowDescriptors,
+      onlyDueValuesHaveChanged,
+    );
   };
 
   const setIsFetching = (isFetching: boolean) => {

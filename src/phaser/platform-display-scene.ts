@@ -86,10 +86,10 @@ export class PlatformDisplayScene extends Phaser.Scene {
       CLOCK_ROW_COLS,
     );
 
-    this._row1.transition({ mode: "off" });
-    this._row2.transition({ mode: "off" });
-    this._row3.transition({ mode: "off" });
-    this._row4.transition({ mode: "clock" });
+    this._row1.updateRowDescriptor({ mode: "off" });
+    this._row2.updateRowDescriptor({ mode: "off" });
+    this._row3.updateRowDescriptor({ mode: "off" });
+    this._row4.updateRowDescriptor({ mode: "clock" });
 
     this.game.events.on(
       "ChangeRowDescriptors",
@@ -179,21 +179,30 @@ export class PlatformDisplayScene extends Phaser.Scene {
     });
   };
 
-  private _onChangeRowDescriptors = async (rowDescriptors: RowDescriptors) => {
+  private _onChangeRowDescriptors = async (
+    rowDescriptors: RowDescriptors,
+    onlyDueValuesHaveChanged: boolean,
+  ) => {
     console.log(
       "[PlatformDisplayScene#_onChangeRowDescriptors]",
       rowDescriptors,
     );
 
-    await Promise.all([
-      this._row1.preTransition(),
-      this._row2.preTransition(),
-      this._row3.preTransition(),
-    ]);
+    if (onlyDueValuesHaveChanged) {
+      this._row1.updateRowDescriptor(rowDescriptors.row1);
+      this._row2.updateRowDescriptor(rowDescriptors.row2);
+      this._row3.updateRowDescriptor(rowDescriptors.row3);
+    } else {
+      await Promise.all([
+        this._row1.preTransition(),
+        this._row2.preTransition(),
+        this._row3.preTransition(),
+      ]);
 
-    this._row1.transition(rowDescriptors.row1);
-    this._row2.transition(rowDescriptors.row2);
-    this._row3.transition(rowDescriptors.row3);
+      this._row1.transitionToRowDescriptor(rowDescriptors.row1);
+      this._row2.transitionToRowDescriptor(rowDescriptors.row2);
+      this._row3.transitionToRowDescriptor(rowDescriptors.row3);
+    }
   };
 
   private _onFetchingStateChanged = (isFetching: boolean) => {

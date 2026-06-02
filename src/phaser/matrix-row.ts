@@ -105,26 +105,7 @@ export class MatrixRow {
     }
   };
 
-  async preTransition() {
-    if (this._scrollLeftTween) {
-      this._scrollLeftTween.pause();
-    }
-
-    if (this._alternatingTimer) {
-      this._alternatingTimer.remove();
-    }
-
-    if (this._cycleTimer) {
-      this._cycleTimer.remove();
-    }
-
-    await this._waitForScrollUpTweenToComplete();
-  }
-
-  async transition(rowDescriptor: RowDescriptor) {
-    await this._performFadeOutTween();
-    await this._scrollUpNewRow(rowDescriptor);
-
+  async updateRowDescriptor(rowDescriptor: RowDescriptor) {
     this._reset();
 
     switch (rowDescriptor.mode) {
@@ -146,6 +127,28 @@ export class MatrixRow {
     }
 
     this._updateDots();
+  }
+
+  async preTransition() {
+    if (this._scrollLeftTween) {
+      this._scrollLeftTween.pause();
+    }
+
+    if (this._alternatingTimer) {
+      this._alternatingTimer.remove();
+    }
+
+    if (this._cycleTimer) {
+      this._cycleTimer.remove();
+    }
+
+    await this._waitForScrollUpTweenToComplete();
+  }
+
+  async transitionToRowDescriptor(rowDescriptor: RowDescriptor) {
+    await this._performFadeOutTween();
+    await this._scrollUpNewRow(rowDescriptor);
+    this.updateRowDescriptor(rowDescriptor);
   }
 
   private _reset = () => {
