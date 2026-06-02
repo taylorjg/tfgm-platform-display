@@ -99,6 +99,14 @@ export class MatrixRow {
 
   private _scrollUpNewRow = async (rowDescriptor: RowDescriptor) => {
     this._matrixState.makeRowMatrixWithBlankLine(rowDescriptor);
+
+    if (this._matrixState.needsScrollLeft()) {
+      this._setColOffsetToScrollLeftStart();
+    } else {
+      this._scrollTweenState.colOffset = 0;
+    }
+
+    this._updateDots();
     this._addScrollUpTween();
     if (this._scrollUpTween) {
       await tweenComplete(this._scrollUpTween);
@@ -227,7 +235,14 @@ export class MatrixRow {
 
   private _addScrollLeftTween = () => {
     this._stopScrollLeftTween();
+    this._setColOffsetToScrollLeftStart();
+    this._updateDots();
     this._runScrollLeftTweenCycle();
+  };
+
+  private _setColOffsetToScrollLeftStart = () => {
+    const { totalCols } = this._matrixState.size();
+    this._scrollTweenState.colOffset = totalCols - this._numCols;
   };
 
   private _runScrollLeftTweenCycle = () => {

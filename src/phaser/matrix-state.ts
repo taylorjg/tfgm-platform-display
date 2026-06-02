@@ -8,7 +8,6 @@ import {
   type Layout,
   type RowDescriptor,
 } from "@app/helpers";
-import { first } from "@app/utils";
 
 export class MatrixState {
   private readonly _font: Font;
@@ -21,8 +20,15 @@ export class MatrixState {
     this.makeMatrixBlank();
   }
 
+  private _contentCols = (): number => {
+    return this._data.reduce(
+      (maxCols, row) => Math.max(maxCols, row.length),
+      0,
+    );
+  };
+
   size(): { totalRows: number; totalCols: number } {
-    const w = this._data[0]?.length ?? 0;
+    const w = this._contentCols();
     const h = this._data.length;
 
     return {
@@ -38,7 +44,7 @@ export class MatrixState {
   }
 
   needsScrollLeft(): boolean {
-    const contentCols = first(this._data)?.length ?? 0;
+    const contentCols = this._contentCols();
     return contentCols > this._numCols;
   }
 
