@@ -161,7 +161,6 @@ export class MatrixRow {
 
   private _reset = () => {
     this._scrollTweenState.rowOffset = 0;
-    this._scrollTweenState.colOffset = 0;
     this._useFirstMessage = true;
 
     if (this._alternatingTimer) {
@@ -173,8 +172,6 @@ export class MatrixRow {
       this._cycleTimer.destroy();
       this._cycleTimer = null;
     }
-
-    this._stopScrollLeftTween();
 
     if (this._scrollUpTween) {
       this._scrollUpTween.stop();
