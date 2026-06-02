@@ -33,8 +33,8 @@ export class Dots {
     this._numCols = numCols;
 
     const { offsetX, offsetY } = dimensions;
-    const width = this._gridWidth();
-    const height = this._gridHeight();
+    const width = this._width();
+    const height = this._height();
 
     this._renderTexture = this._scene.add
       .renderTexture(offsetX, offsetY, width, height)
@@ -101,29 +101,24 @@ export class Dots {
     const isDotOn = matrixState.isDotOn(sourceRow, sourceCol);
     const colour = isDotOn ? (fillColour ?? ON_COLOUR) : OFF_COLOUR;
 
-    const x = this._calculateX(col);
-    const y = this._calculateY(row);
+    const x = this._dotsToPixels(col);
+    const y = this._dotsToPixels(row);
     const radius = this._dimensions.radius;
 
     this._graphics.fillStyle(colour);
     this._graphics.fillCircle(x, y, radius);
   }
 
-  private _gridWidth = () => {
-    return this._calculateX(this._numCols);
+  private _width = () => {
+    return this._dotsToPixels(this._numCols);
   };
 
-  private _gridHeight = () => {
-    return this._calculateX(this._numRows);
+  private _height = () => {
+    return this._dotsToPixels(this._numRows);
   };
 
-  private _calculateX = (col: number) => {
+  private _dotsToPixels = (numDots: number) => {
     const { diameter, gap, radius } = this._dimensions;
-    return col * (diameter + gap) + radius;
-  };
-
-  private _calculateY = (row: number) => {
-    const { diameter, gap, radius } = this._dimensions;
-    return row * (diameter + gap) + radius;
+    return numDots * (diameter + gap) + radius;
   };
 }
