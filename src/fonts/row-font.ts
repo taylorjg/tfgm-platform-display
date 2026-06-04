@@ -36,20 +36,20 @@ x   x   x   x    x   x    x  x   x x   x   x   x   x x   x
      |    |     |     |     |     |     |     |     |     `;
 
 const symbols = `
-                    x  xxx       
-                    x x   x     x
-                      x xxx    x 
-           x          x x x   x  
-     xxxxx            x xxx  x   
-           x          x     x    
-              x  x     xxxx      
-                 x               
-    |     | |  |x |  |     |     
+                    x  xxx         xx  
+                    x x   x     x x  x 
+                      x xxx    x   xx  
+           x          x x x   x   x x x
+     xxxxx            x xxx  x    x  x 
+           x          x     x     x  x 
+              x  x     xxxx        xx x
+                 x                     
+    |     | |  |x |  |     |     |     
 `;
 
 export const rowFontMap = new Map([
   ...makeFontMapKvps("ABCDEFGHIJKLMNOPQRSTUVWXYZ", uppercaseLetters),
   ...makeFontMapKvps("abcdefghijklmnopqrstuvwxyz", lowercaseLetters),
   ...makeFontMapKvps("0123456789", numbers),
-  ...makeFontMapKvps(" -:.,'@/", symbols),
+  ...makeFontMapKvps(" -:.,'@/&", symbols),
 ]);
