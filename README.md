@@ -28,7 +28,13 @@ Built with:
 
 Deployed to GitHub Pages [here](https://taylorjg.github.io/tfgm-platform-display).
 
-## Links
+# Screenshots
+
+![Screenshot 1](screenshots/screenshot-1.png)
+
+![Screenshot 2](screenshots/screenshot-2.png)
+
+# Links
 
 * Test modes - hardcoded data with fictitious names:
   * [Test mode 1](https://taylorjg.github.io/tfgm-platform-display?testMode=1)
