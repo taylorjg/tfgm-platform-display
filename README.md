@@ -34,6 +34,20 @@ Deployed to GitHub Pages [here](https://taylorjg.github.io/tfgm-platform-display
 
 ![Screenshot 2](screenshots/screenshot-2.png)
 
+# To Do
+
+* [ ] Use the API to determine the most appropriate alert text (currently, it is hardcoded)
+* [ ] Network requests: add error handling / surface errors
+* [ ] Show an empty block when no tram stop has been configured yet
+* [ ] Support saving of named configurations
+* [ ] Support quickly selecting a named configuration
+* [ ] Save configurations and options in local storage
+* [ ] Show the currently selected tram stop / configuration
+* [ ] Refactoring / code improvements
+* [ ] Add CI/CD GitHub Actions workflow
+* [ ] Add unit tests
+* [ ] Add integration tests
+
 # Links
 
 * Test modes - hardcoded data with fictitious names:
