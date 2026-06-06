@@ -88,6 +88,7 @@ export const PlatformDisplayWrapper = ({
       <div
         aria-hidden="true"
         hidden
+        data-testid="row-descriptors"
         data-row-descriptors={JSON.stringify(rowDescriptors)}
       />
       <div

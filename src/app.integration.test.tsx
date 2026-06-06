@@ -2,7 +2,7 @@
 
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { cleanup, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 
 import { TFGM_API_URL } from "@app/constants";
 import {
@@ -30,11 +30,10 @@ const DISPLAY_ALERT =
 const server = setupServer(...handlers);
 
 const getRowDescriptors = (): RowDescriptors => {
-  const element = document.querySelector("[data-row-descriptors]");
-  expect(element).not.toBeNull();
+  const element = screen.getByTestId("row-descriptors");
 
   return JSON.parse(
-    element!.getAttribute("data-row-descriptors")!,
+    element.getAttribute("data-row-descriptors")!,
   ) as RowDescriptors;
 };
 
@@ -43,7 +42,6 @@ beforeAll(() => {
 });
 
 afterEach(() => {
-  cleanup();
   server.resetHandlers();
 });
 
@@ -60,6 +58,8 @@ describe("App integration", () => {
         makeRowDescriptors(mockTrams, DISPLAY_ALERT),
       );
     });
+
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 
   it("shows an error alert when the tram fetch fails", async () => {
@@ -71,8 +71,14 @@ describe("App integration", () => {
 
     renderApp();
 
-    expect(await screen.findByText("Unable to load tram data.")).toBeTruthy();
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Unable to load tram data.",
+    );
 
-    expect(getRowDescriptors()).toEqual(makeRowDescriptors([], DISPLAY_ALERT));
+    await waitFor(() => {
+      expect(getRowDescriptors()).toEqual(
+        makeRowDescriptors([], DISPLAY_ALERT),
+      );
+    });
   });
 });
