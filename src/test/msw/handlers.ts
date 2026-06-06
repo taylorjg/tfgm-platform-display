@@ -12,6 +12,6 @@ export const mockTrams: LiveTram[] = [
   },
 ];
 
-export const handlers = [
-  http.get(`${TFGM_API_URL}/trams`, () => HttpResponse.json(mockTrams)),
-];
+const mockGetTrams = () => HttpResponse.json(mockTrams);
+
+export const handlers = [http.get(`${TFGM_API_URL}/trams`, mockGetTrams)];
