@@ -3,11 +3,7 @@ import { useIsFetching } from "@tanstack/react-query";
 
 import { initialiseGame, type GameActions } from "@app/phaser";
 import type { LiveTram } from "@app/hooks";
-import {
-  makeRow1Descriptor,
-  makeRow2Descriptor,
-  makeRow3Descriptor,
-} from "@app/helpers";
+import { makeRowDescriptors } from "@app/helpers";
 
 export type PlatformDisplayWrapperProps = {
   trams: LiveTram[];
@@ -72,10 +68,7 @@ export const PlatformDisplayWrapper = ({
       nextRowsState,
     );
 
-    const row1 = makeRow1Descriptor(trams);
-    const row2 = makeRow2Descriptor(trams);
-    const row3 = makeRow3Descriptor(alert);
-    const rowDescriptors = { row1, row2, row3 };
+    const rowDescriptors = makeRowDescriptors(trams, alert);
 
     gameActionsRef.current?.changeRowDescriptors(
       rowDescriptors,
@@ -88,10 +81,19 @@ export const PlatformDisplayWrapper = ({
     gameActionsRef.current?.setIsFetching(isFetching);
   }, [isFetching]);
 
+  const rowDescriptors = makeRowDescriptors(trams, alert);
+
   return (
-    <div
-      ref={parentRef as Ref<HTMLDivElement>}
-      style={{ width: "100%", aspectRatio: "201/58" }}
-    />
+    <>
+      <div
+        aria-hidden="true"
+        hidden
+        data-row-descriptors={JSON.stringify(rowDescriptors)}
+      />
+      <div
+        ref={parentRef as Ref<HTMLDivElement>}
+        style={{ width: "100%", aspectRatio: "201/58" }}
+      />
+    </>
   );
 };
