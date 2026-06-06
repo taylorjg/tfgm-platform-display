@@ -37,7 +37,7 @@ Deployed to GitHub Pages [here](https://taylorjg.github.io/tfgm-platform-display
 # To Do
 
 * [ ] Use the API to determine the most appropriate alert text (currently, it is hardcoded)
-* [ ] Network requests: add error handling / surface errors
+* [x] Network requests: add error handling / surface errors
 * [ ] Show an empty block when no tram stop has been configured yet
 * [ ] Support saving of named configurations
 * [ ] Support quickly selecting a named configuration
