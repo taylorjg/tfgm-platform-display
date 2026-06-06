@@ -4,6 +4,7 @@ import globals from "globals";
 import eslintPluginPrettier from "eslint-plugin-prettier";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
+import vitest from "eslint-plugin-vitest";
 import tseslint from "typescript-eslint";
 import { defineConfig, globalIgnores } from "eslint/config";
 
@@ -26,6 +27,15 @@ export default defineConfig([
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+    },
+  },
+  {
+    files: ["**/*.{test,integration.test}.{ts,tsx}"],
+    plugins: {
+      vitest,
+    },
+    languageOptions: {
+      globals: vitest.environments.env.globals,
     },
   },
   {

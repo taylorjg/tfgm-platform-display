@@ -45,7 +45,7 @@ Deployed to GitHub Pages [here](https://taylorjg.github.io/tfgm-platform-display
 * [ ] Show the currently selected tram stop / configuration
 * [ ] Refactoring / code improvements
 * [x] Add unit tests
-* [ ] Add integration tests
+* [x] Add integration tests
 * [x] Add CI/CD GitHub Actions workflow
 
 # Links

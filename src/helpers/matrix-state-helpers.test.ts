@@ -1,7 +1,5 @@
 /* eslint-disable prettier/prettier */
 
-import { describe, expect, it, vi } from "vitest";
-
 import { clockFont } from "@app/fonts";
 import type { Font } from "@app/fonts";
 
