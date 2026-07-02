@@ -168,7 +168,7 @@ const ConfigurationForm = ({
           value={selectedTramStop?.atcoCode ?? ""}
           onChange={handleTramStopChange}
           // https://github.com/mui/material-ui/issues/34656
-          MenuProps={{ PaperProps: { sx: { maxHeight: 350 } } }}
+          MenuProps={{ slotProps: { paper: { sx: { maxHeight: 350 } } } }}
         >
           {tramStops.map(({ atcoCode, name }) => (
             <MenuItem key={atcoCode} value={atcoCode}>
