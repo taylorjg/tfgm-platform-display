@@ -2,7 +2,7 @@
   "name": "tfgm-platform-display",
   "description": "TfGM Platform Display",
   "private": true,
-  "version": "0.0.26",
+  "version": "0.0.27",
   "type": "module",
   "scripts": {
     "dev": "vite",
