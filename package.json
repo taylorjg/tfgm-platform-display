@@ -45,7 +45,7 @@
     "happy-dom": "^20.10.2",
     "msw": "^2.14.6",
     "prettier": "^3.8.1",
-    "typescript": "~6.0.3",
+    "typescript": "~7.0.2",
     "typescript-eslint": "^8.62.1",
     "vite": "^8.0.1",
     "vitest": "^4.1.8"
