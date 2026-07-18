@@ -1,3 +1,5 @@
+[![CI/CD](https://github.com/taylorjg/tfgm-platform-display/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/taylorjg/tfgm-platform-display/actions/workflows/ci-cd.yml)
+
 # TfGM Platform Display
 
 A web app that simulates a Metrolink platform dot-matrix display. It renders a LED-style sign with animated scrolling text, alternating messages, and a live clock, driven by real-time tram arrival data from the TfGM API.
