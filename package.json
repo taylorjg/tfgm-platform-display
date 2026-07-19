@@ -49,5 +49,9 @@
     "typescript-eslint": "^8.62.1",
     "vite": "^8.1.5",
     "vitest": "^4.1.8"
+  },
+  "allowScripts": {
+    "fsevents@2.3.3": true,
+    "msw@2.15.0": true
   }
 }
