@@ -1,6 +1,6 @@
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
-// curl https://hsf41foww6.execute-api.us-east-1.amazonaws.com/search-locations -s | jq > search-locations.json
+// curl https://8qyltr090f.execute-api.us-east-1.amazonaws.com/search-locations -s | jq > search-locations.json
 import searchLocations from "@app/data/search-locations.json" with { type: "json" };
 
 export type TramService = {
