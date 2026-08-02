@@ -70,5 +70,5 @@ Deployed to GitHub Pages [here](https://taylorjg.github.io/tfgm-platform-display
   * [Phaser](https://phaser.io)
   * [Phaser Docs](https://docs.phaser.io)
 * Backend repo:
-  * [Repo for AWS Lambda Functions](https://github.com/taylorjg/sls4-test)
+  * [Repo for AWS Lambda Functions](https://github.com/taylorjg/tfgm-platform-display-serverless)
   * [Serverless Framework](https://www.serverless.com)
