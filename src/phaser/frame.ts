@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 
+import { frameSupportsFilters } from "./frame-filter-capability";
+
 export type FrameLayout = {
   x: number;
   y: number;
@@ -48,10 +50,6 @@ const shineRestOffset = () => -(SHINE_CONFIG.radius / SHINE_CONFIG.scale);
 
 /** Keep fetch feedback visible at least this long once started (ms). */
 const SHINE_MIN_VISIBLE_MS = 4_000;
-
-/** Filter effects on RenderTexture fail to composite on many mobile GPUs. */
-const frameSupportsFilters = (scene: Phaser.Scene) =>
-  !scene.game.device.input.touch;
 
 const borderSupersample = (scene: Phaser.Scene) =>
   frameSupportsFilters(scene) ? BORDER_SUPERSAMPLE : BORDER_SUPERSAMPLE_TOUCH;
@@ -150,8 +148,8 @@ export class Frame {
     this._fetchAlphaTween?.stop();
     this._fetchAlphaTween = this._scene.tweens.add({
       targets: this._border,
-      alpha: { from: 1, to: 0.82 },
-      duration: 1_200,
+      alpha: { from: 1, to: 0.55 },
+      duration: 900,
       yoyo: true,
       repeat: -1,
       ease: "Sine.easeInOut",

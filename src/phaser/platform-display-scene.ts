@@ -4,6 +4,7 @@ import { clockFont, rowFont } from "@app/fonts";
 import type { RowDescriptors } from "@app/helpers";
 
 import type { Dimensions } from "./dots";
+import { initFrameFilterCapability } from "./frame-filter-capability";
 import { Frame } from "./frame";
 import { MatrixRow } from "./matrix-row";
 
@@ -31,8 +32,10 @@ export class PlatformDisplayScene extends Phaser.Scene {
     super("PlatformDisplayScene");
   }
 
-  create() {
+  async create() {
     console.log("[PlatformDisplayScene#create]");
+
+    await initFrameFilterCapability(this);
 
     this._frame = new Frame(this);
 
