@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 
 import { frameSupportsFilters } from "./frame-filter-capability";
+import { tweenColor } from "./color-tween";
 
 export type FrameLayout = {
   x: number;
@@ -19,6 +20,9 @@ const BORDER_SUPERSAMPLE_TOUCH = 2;
 /** Flat metallic frame — shine comes from AddEffectShine during fetches. */
 const FRAME_FILL = 0xa8a8b0;
 
+/** Brighter peak for the colour-pulse fallback on filterless devices. */
+const PULSE_FRAME_BRIGHT = 0xd4d4dc;
+
 const drawFrame = (
   graphics: Phaser.GameObjects.Graphics,
   x: number,
@@ -26,10 +30,11 @@ const drawFrame = (
   width: number,
   height: number,
   borderWidth: number,
+  frameFill: number = FRAME_FILL,
 ) => {
   const bw = Math.round(borderWidth);
 
-  graphics.fillStyle(FRAME_FILL);
+  graphics.fillStyle(frameFill);
   graphics.fillRect(x, y, width, height);
 
   graphics.fillStyle(0x000000);
@@ -51,8 +56,7 @@ const shineRestOffset = () => -(SHINE_CONFIG.radius / SHINE_CONFIG.scale);
 /** Keep fetch feedback visible at least this long once started (ms). */
 const SHINE_MIN_VISIBLE_MS = 4_000;
 
-/** Alpha pulse fallback — dips slightly then peaks at full opacity (no tint). */
-const PULSE_ALPHA_REST = 0.72;
+const PULSE_DURATION_MS = 900;
 
 const borderSupersample = (scene: Phaser.Scene) =>
   frameSupportsFilters(scene) ? BORDER_SUPERSAMPLE : BORDER_SUPERSAMPLE_TOUCH;
@@ -62,10 +66,13 @@ export class Frame {
   private _border?: Phaser.GameObjects.RenderTexture;
   private _borderGraphics?: Phaser.GameObjects.Graphics;
   private _shine?: Phaser.Types.Actions.AddEffectShineReturn;
-  private _fetchAlphaTween?: Phaser.Tweens.Tween;
+  private _fetchPulseTween?: Phaser.Tweens.Tween;
   private _fetchShineStopTimer?: Phaser.Time.TimerEvent;
   private _fetchShineStartedAt = 0;
   private _isFetching = false;
+  private _texWidth = 0;
+  private _texHeight = 0;
+  private _texBorderWidth = 0;
 
   constructor(scene: Phaser.Scene) {
     this._scene = scene;
@@ -79,6 +86,10 @@ export class Frame {
     const texWidth = Math.ceil(width * ss);
     const texHeight = Math.ceil(height * ss);
     const texBorderWidth = borderWidth * ss;
+
+    this._texWidth = texWidth;
+    this._texHeight = texHeight;
+    this._texBorderWidth = texBorderWidth;
 
     const borderGraphics = this._scene.make.graphics({}, false);
     drawFrame(borderGraphics, 0, 0, texWidth, texHeight, texBorderWidth);
@@ -137,6 +148,24 @@ export class Frame {
     this._fetchShineStopTimer = undefined;
   }
 
+  private _redrawBorderFill(frameFill: number) {
+    if (!this._border || !this._borderGraphics) return;
+
+    this._borderGraphics.clear();
+    drawFrame(
+      this._borderGraphics,
+      0,
+      0,
+      this._texWidth,
+      this._texHeight,
+      this._texBorderWidth,
+      frameFill,
+    );
+    this._border.clear();
+    this._border.draw(this._borderGraphics);
+    this._border.render();
+  }
+
   private _startFetchShineAnimation() {
     this._clearFetchShineStopTimer();
     this._fetchShineStartedAt = this._scene.time.now;
@@ -148,16 +177,18 @@ export class Frame {
 
     if (!this._border) return;
 
-    this._fetchAlphaTween?.stop();
-    this._border.clearTint();
-    this._border.setAlpha(PULSE_ALPHA_REST);
-    this._fetchAlphaTween = this._scene.tweens.add({
-      targets: this._border,
-      alpha: 1,
-      duration: 900,
-      yoyo: true,
-      ease: "Sine.easeInOut",
-    });
+    this._fetchPulseTween?.stop();
+    this._fetchPulseTween = tweenColor(
+      this._scene,
+      FRAME_FILL,
+      PULSE_FRAME_BRIGHT,
+      {
+        duration: PULSE_DURATION_MS,
+        yoyo: true,
+        ease: "Sine.easeInOut",
+        onUpdate: (fillColour) => this._redrawBorderFill(fillColour),
+      },
+    );
   }
 
   private _stopFetchShineAnimation() {
@@ -172,10 +203,9 @@ export class Frame {
       return;
     }
 
-    this._fetchAlphaTween?.stop();
-    this._fetchAlphaTween = undefined;
-    this._border?.setAlpha(1);
-    this._border?.clearTint();
+    this._fetchPulseTween?.stop();
+    this._fetchPulseTween = undefined;
+    this._redrawBorderFill(FRAME_FILL);
   }
 
   private _setupShine(
@@ -197,8 +227,8 @@ export class Frame {
   destroy() {
     this._clearFetchShineStopTimer();
     this._fetchShineStartedAt = 0;
-    this._fetchAlphaTween?.stop();
-    this._fetchAlphaTween = undefined;
+    this._fetchPulseTween?.stop();
+    this._fetchPulseTween = undefined;
     this._shine = undefined;
     this._border?.destroy();
     this._border = undefined;

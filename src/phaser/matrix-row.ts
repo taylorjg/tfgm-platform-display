@@ -3,6 +3,7 @@ import Phaser from "phaser";
 import type { Font } from "@app/fonts";
 import { formatTime, tweenComplete, type RowDescriptor } from "@app/helpers";
 
+import { tweenColorComplete } from "./color-tween";
 import { offColourObject, onColourObject } from "./constants";
 import { Dots, type Dimensions } from "./dots";
 import { MatrixState } from "./matrix-state";
@@ -73,28 +74,10 @@ export class MatrixRow {
   };
 
   private _performFadeOutTween = async () => {
-    const valueWrapper = { value: 0 };
-
-    const fadeOutTween = this._scene.tweens.add({
-      targets: valueWrapper,
-      value: 100,
-      ease: "Linear",
+    await tweenColorComplete(this._scene, onColourObject, offColourObject, {
       duration: FADE_OUT_DURATION_MS,
-      onUpdate: (tween) => {
-        const currentStep = tween.getValue() ?? 0;
-        const { r, g, b } = Phaser.Display.Color.Interpolate.ColorWithColor(
-          onColourObject,
-          offColourObject,
-          100,
-          currentStep,
-          true,
-        );
-        const fillColour = Phaser.Display.Color.GetColor(r, g, b);
-        this._updateDots(fillColour);
-      },
+      onUpdate: (fillColour) => this._updateDots(fillColour),
     });
-
-    await tweenComplete(fadeOutTween);
   };
 
   private _scrollUpNewRow = async (rowDescriptor: RowDescriptor) => {
