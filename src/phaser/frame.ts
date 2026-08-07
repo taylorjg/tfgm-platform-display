@@ -14,41 +14,10 @@ const FRAME_DEPTH = -10;
 const BORDER_SUPERSAMPLE = 4;
 const BORDER_SUPERSAMPLE_TOUCH = 2;
 
-/** Light post-bake blur to soften gradient banding on long edges. */
-const BORDER_BLUR = {
-  quality: 0,
-  x: 0.75,
-  y: 0.75,
-  strength: 0.8,
-  steps: 2,
-} as const;
+/** Flat metallic frame — shine comes from AddEffectShine during fetches. */
+const FRAME_FILL = 0xa8a8b0;
 
-type GradientColors = [number, number, number, number];
-
-const fillMitreSegment = (
-  graphics: Phaser.GameObjects.Graphics,
-  colors: GradientColors,
-  x0: number,
-  y0: number,
-  x1: number,
-  y1: number,
-  x2: number,
-  y2: number,
-  x3: number,
-  y3: number,
-) => {
-  graphics.fillGradientStyle(...colors);
-  graphics.beginPath();
-  graphics.moveTo(x0, y0);
-  graphics.lineTo(x1, y1);
-  graphics.lineTo(x2, y2);
-  graphics.lineTo(x3, y3);
-  graphics.closePath();
-  graphics.fillPath();
-};
-
-/** Brushed-aluminium border with 45° mitred inner corners. */
-const drawMetallicBorder = (
+const drawFrame = (
   graphics: Phaser.GameObjects.Graphics,
   x: number,
   y: number,
@@ -57,92 +26,12 @@ const drawMetallicBorder = (
   borderWidth: number,
 ) => {
   const bw = Math.round(borderWidth);
-  const right = x + width;
-  const bottom = y + height;
-  const innerRight = right - bw;
-  const innerBottom = bottom - bw;
-  const innerLeft = x + bw;
-  const innerTop = y + bw;
 
-  fillMitreSegment(
-    graphics,
-    [0xe8e8f0, 0xb4b4bc, 0x6a6a72, 0x5a5a62],
-    x,
-    y,
-    right,
-    y,
-    innerRight,
-    innerTop,
-    innerLeft,
-    innerTop,
-  );
-
-  fillMitreSegment(
-    graphics,
-    [0x3a3a42, 0x4a4a52, 0x9898a0, 0x888890],
-    right,
-    bottom,
-    x,
-    bottom,
-    innerLeft,
-    innerBottom,
-    innerRight,
-    innerBottom,
-  );
-
-  fillMitreSegment(
-    graphics,
-    [0xd4d4dc, 0x484850, 0xacacb4, 0x42424a],
-    x,
-    bottom,
-    x,
-    y,
-    innerLeft,
-    innerTop,
-    innerLeft,
-    innerBottom,
-  );
-
-  fillMitreSegment(
-    graphics,
-    [0x5c5c64, 0x94949c, 0x505058, 0xc4c4cc],
-    right,
-    y,
-    right,
-    bottom,
-    innerRight,
-    innerBottom,
-    innerRight,
-    innerTop,
-  );
-};
-
-/** Black fill for the matrix opening and mitre cutouts beneath each corner diagonal. */
-const drawInnerFill = (
-  graphics: Phaser.GameObjects.Graphics,
-  width: number,
-  height: number,
-  borderWidth: number,
-) => {
-  const bw = Math.round(borderWidth);
-  const right = width;
-  const bottom = height;
-  const innerRight = right - bw;
-  const innerBottom = bottom - bw;
+  graphics.fillStyle(FRAME_FILL);
+  graphics.fillRect(x, y, width, height);
 
   graphics.fillStyle(0x000000);
-  graphics.fillRect(bw, bw, width - 2 * bw, height - 2 * bw);
-  graphics.fillTriangle(0, 0, 0, bw, bw, bw);
-  graphics.fillTriangle(right, 0, right - bw, bw, right, bw);
-  graphics.fillTriangle(0, bottom, 0, innerBottom, bw, innerBottom);
-  graphics.fillTriangle(
-    right,
-    bottom,
-    right,
-    innerBottom,
-    innerRight,
-    innerBottom,
-  );
+  graphics.fillRect(x + bw, y + bw, width - 2 * bw, height - 2 * bw);
 };
 
 const SHINE_CONFIG = {
@@ -171,7 +60,6 @@ export class Frame {
   private readonly _scene: Phaser.Scene;
   private _border?: Phaser.GameObjects.RenderTexture;
   private _borderGraphics?: Phaser.GameObjects.Graphics;
-  private _innerGraphics?: Phaser.GameObjects.Graphics;
   private _shine?: Phaser.Types.Actions.AddEffectShineReturn;
   private _fetchAlphaTween?: Phaser.Tweens.Tween;
   private _fetchShineStopTimer?: Phaser.Time.TimerEvent;
@@ -192,39 +80,19 @@ export class Frame {
     const texBorderWidth = borderWidth * ss;
 
     const borderGraphics = this._scene.make.graphics({}, false);
-    drawMetallicBorder(
-      borderGraphics,
-      0,
-      0,
-      texWidth,
-      texHeight,
-      texBorderWidth,
-    );
+    drawFrame(borderGraphics, 0, 0, texWidth, texHeight, texBorderWidth);
     this._borderGraphics = borderGraphics;
-
-    const innerGraphics = this._scene.make.graphics({}, false);
-    drawInnerFill(innerGraphics, texWidth, texHeight, texBorderWidth);
-    this._innerGraphics = innerGraphics;
 
     const border = this._scene.add.renderTexture(x, y, texWidth, texHeight);
     border.setOrigin(0, 0);
     border.setDisplaySize(width, height);
     border.setDepth(FRAME_DEPTH);
     border.clear();
-    border.draw(innerGraphics);
     border.draw(borderGraphics);
     border.render();
 
     if (frameSupportsFilters(this._scene)) {
       border.enableFilters();
-      border.filters!.internal.addBlur(
-        BORDER_BLUR.quality,
-        BORDER_BLUR.x,
-        BORDER_BLUR.y,
-        BORDER_BLUR.strength,
-        undefined,
-        BORDER_BLUR.steps,
-      );
       this._setupShine(border, width, height);
     }
 
@@ -334,8 +202,5 @@ export class Frame {
 
     this._borderGraphics?.destroy();
     this._borderGraphics = undefined;
-
-    this._innerGraphics?.destroy();
-    this._innerGraphics = undefined;
   }
 }
