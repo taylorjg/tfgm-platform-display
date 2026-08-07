@@ -10,8 +10,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "lint": "eslint .",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "vitest run --reporter verbose",
     "preview": "vite preview",
     "open": "open https://taylorjg.github.io/tfgm-platform-display"
   },
