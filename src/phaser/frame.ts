@@ -51,6 +51,9 @@ const shineRestOffset = () => -(SHINE_CONFIG.radius / SHINE_CONFIG.scale);
 /** Keep fetch feedback visible at least this long once started (ms). */
 const SHINE_MIN_VISIBLE_MS = 4_000;
 
+/** Tint pulse fallback — ramps from muted to white for a bright throb. */
+const PULSE_TINT_REST = 0x888890;
+
 const borderSupersample = (scene: Phaser.Scene) =>
   frameSupportsFilters(scene) ? BORDER_SUPERSAMPLE : BORDER_SUPERSAMPLE_TOUCH;
 
@@ -147,9 +150,10 @@ export class Frame {
 
     this._fetchAlphaTween?.stop();
     this._border.setAlpha(1);
+    this._border.setTint(PULSE_TINT_REST);
     this._fetchAlphaTween = this._scene.tweens.add({
       targets: this._border,
-      alpha: { from: 1, to: 0.55 },
+      tint: 0xffffff,
       duration: 900,
       yoyo: true,
       ease: "Sine.easeInOut",
@@ -171,6 +175,7 @@ export class Frame {
     this._fetchAlphaTween?.stop();
     this._fetchAlphaTween = undefined;
     this._border?.setAlpha(1);
+    this._border?.clearTint();
   }
 
   private _setupShine(
