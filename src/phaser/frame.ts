@@ -146,12 +146,12 @@ export class Frame {
     if (!this._border) return;
 
     this._fetchAlphaTween?.stop();
+    this._border.setAlpha(1);
     this._fetchAlphaTween = this._scene.tweens.add({
       targets: this._border,
       alpha: { from: 1, to: 0.55 },
       duration: 900,
       yoyo: true,
-      repeat: -1,
       ease: "Sine.easeInOut",
     });
   }
