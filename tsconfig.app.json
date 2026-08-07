@@ -2,8 +2,7 @@
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "paths": {
-      "@app/*": ["./src/*"],
-      "@mui/icons-material": ["./node_modules/@mui/icons-material/index.d.mts"]
+      "@app/*": ["./src/*"]
     },
     "target": "ES2023",
     "useDefineForClassFields": true,
