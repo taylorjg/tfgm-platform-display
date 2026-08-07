@@ -1,6 +1,8 @@
 import { IconButton } from "@mui/material";
-import FullscreenIcon from "@mui/icons-material/Fullscreen";
-import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
+import {
+  Fullscreen as FullscreenIcon,
+  FullscreenExit as FullscreenExitIcon,
+} from "@mui/icons-material";
 
 import { useFullscreen } from "@app/hooks";
 
