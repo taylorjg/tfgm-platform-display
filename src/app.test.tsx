@@ -1,5 +1,3 @@
-// @vitest-environment happy-dom
-
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { screen, waitFor } from "@testing-library/react";
@@ -49,7 +47,7 @@ afterAll(() => {
   server.close();
 });
 
-describe("App integration", () => {
+describe("App", () => {
   it("displays row descriptors from a successful tram fetch", async () => {
     renderApp();
 

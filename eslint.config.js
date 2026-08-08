@@ -30,7 +30,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["**/*.{test,integration.test}.{ts,tsx}"],
+    files: ["**/*.test.{ts,tsx}"],
     plugins: {
       vitest,
     },
