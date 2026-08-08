@@ -9,7 +9,7 @@
     "build": "tsc -b && vite build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
-    "lint": "eslint .",
+    "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "test": "vitest run",
     "preview": "vite preview",
     "open": "open https://taylorjg.github.io/tfgm-platform-display"
