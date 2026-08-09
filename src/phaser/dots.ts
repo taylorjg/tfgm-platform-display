@@ -55,7 +55,7 @@ export class Dots {
     matrixState: MatrixState,
     rowOffset: number,
     colOffset: number,
-    fillColour?: number,
+    fillColour?: number
   ) {
     if (!this._renderTexture || !this._graphics) return;
 
@@ -66,7 +66,7 @@ export class Dots {
     matrixState: MatrixState,
     rowOffset: number,
     colOffset: number,
-    fillColour?: number,
+    fillColour?: number
   ) {
     if (!this._renderTexture || !this._graphics) return;
 
@@ -90,7 +90,7 @@ export class Dots {
     col: number,
     rowOffset: number,
     colOffset: number,
-    fillColour?: number,
+    fillColour?: number
   ) {
     if (!this._graphics) return;
 

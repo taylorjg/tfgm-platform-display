@@ -28,7 +28,7 @@ export interface GameActions {
   destroy: () => void;
   changeRowDescriptors: (
     rowDescriptors: RowDescriptors,
-    onlyDueValuesHaveChanged: boolean,
+    onlyDueValuesHaveChanged: boolean
   ) => void;
   setIsFetching: (isFetching: boolean) => void;
 }
@@ -63,7 +63,7 @@ const makeGameActions = (game: Phaser.Game): GameActions => {
   const onScreenOrientationChange = (e: Event) => {
     console.log(
       "[onScreenOrientationChange]",
-      (e.target as ScreenOrientation).type,
+      (e.target as ScreenOrientation).type
     );
     resizeGameToMatchParent();
   };
@@ -73,7 +73,7 @@ const makeGameActions = (game: Phaser.Game): GameActions => {
 
   const changeRowDescriptors = (
     rowDescriptors: RowDescriptors,
-    onlyDueValuesHaveChanged: boolean,
+    onlyDueValuesHaveChanged: boolean
   ) => {
     console.log("[gameActions#changeRowDescriptors]", {
       rowDescriptors,
@@ -83,7 +83,7 @@ const makeGameActions = (game: Phaser.Game): GameActions => {
     game.events.emit(
       "ChangeRowDescriptors",
       rowDescriptors,
-      onlyDueValuesHaveChanged,
+      onlyDueValuesHaveChanged
     );
   };
 
@@ -96,7 +96,7 @@ const makeGameActions = (game: Phaser.Game): GameActions => {
     window.removeEventListener("resize", onResize);
     screen.orientation?.removeEventListener(
       "change",
-      onScreenOrientationChange,
+      onScreenOrientationChange
     );
     game.destroy(true);
   };

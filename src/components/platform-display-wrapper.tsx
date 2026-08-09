@@ -65,14 +65,14 @@ export const PlatformDisplayWrapper = ({
 
     const onlyDueValuesHaveChanged = getOnlyDueValuesHaveChanged(
       prevRowsState,
-      nextRowsState,
+      nextRowsState
     );
 
     const rowDescriptors = makeRowDescriptors(trams, alert);
 
     gameActionsRef.current?.changeRowDescriptors(
       rowDescriptors,
-      onlyDueValuesHaveChanged,
+      onlyDueValuesHaveChanged
     );
     prevRowsStateRef.current = nextRowsState;
   }, [trams, alert]);

@@ -26,13 +26,13 @@ export const extractServiceColor = (service: TramService): string => {
 };
 
 export const extractServiceLocations = (
-  service: TramService,
+  service: TramService
 ): { startLocation: string; endLocation: string } => {
   const elements = service.name.split(" - ");
 
   console.assert(
     elements.length === 2,
-    "Service name should have the format: <startLocation> - <endLocation>",
+    "Service name should have the format: <startLocation> - <endLocation>"
   );
 
   return {

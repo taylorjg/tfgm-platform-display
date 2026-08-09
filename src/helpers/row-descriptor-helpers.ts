@@ -163,7 +163,7 @@ export const makeRow3Descriptor = (alert: string): RowDescriptor => {
 
 export const makeRowDescriptors = (
   trams: LiveTram[],
-  alert: string,
+  alert: string
 ): RowDescriptors => ({
   row1: makeRow1Descriptor(trams),
   row2: makeRow2Descriptor(trams),

@@ -30,7 +30,7 @@ const drawFrame = (
   width: number,
   height: number,
   borderWidth: number,
-  frameFill: number = FRAME_FILL,
+  frameFill: number = FRAME_FILL
 ) => {
   const bw = Math.round(borderWidth);
 
@@ -139,7 +139,7 @@ export class Frame {
       remaining,
       this._stopFetchShineAnimation,
       undefined,
-      this,
+      this
     );
   }
 
@@ -159,7 +159,7 @@ export class Frame {
       this._texWidth,
       this._texHeight,
       this._texBorderWidth,
-      frameFill,
+      frameFill
     );
     this._border.clear();
     this._border.draw(this._borderGraphics);
@@ -187,7 +187,7 @@ export class Frame {
         yoyo: true,
         ease: "Sine.easeInOut",
         onUpdate: (fillColour) => this._redrawBorderFill(fillColour),
-      },
+      }
     );
   }
 
@@ -211,7 +211,7 @@ export class Frame {
   private _setupShine(
     border: Phaser.GameObjects.RenderTexture,
     width: number,
-    height: number,
+    height: number
   ) {
     const [shine] = Phaser.Actions.AddEffectShine(border, {
       width,

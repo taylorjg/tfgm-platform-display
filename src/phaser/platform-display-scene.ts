@@ -50,7 +50,7 @@ export class PlatformDisplayScene extends Phaser.Scene {
         offsetY: this._calculateOffsetY(0),
       },
       MAIN_ROW_ROWS,
-      MAIN_ROW_COLS,
+      MAIN_ROW_COLS
     );
 
     this._row2 = new MatrixRow(
@@ -62,7 +62,7 @@ export class PlatformDisplayScene extends Phaser.Scene {
         offsetY: this._calculateOffsetY(MAIN_ROW_ROWS + GAP_SIZE),
       },
       MAIN_ROW_ROWS,
-      MAIN_ROW_COLS,
+      MAIN_ROW_COLS
     );
 
     this._row3 = new MatrixRow(
@@ -74,7 +74,7 @@ export class PlatformDisplayScene extends Phaser.Scene {
         offsetY: this._calculateOffsetY((MAIN_ROW_ROWS + GAP_SIZE) * 2),
       },
       MAIN_ROW_ROWS,
-      MAIN_ROW_COLS,
+      MAIN_ROW_COLS
     );
 
     this._row4 = new MatrixRow(
@@ -86,7 +86,7 @@ export class PlatformDisplayScene extends Phaser.Scene {
         offsetY: this._calculateOffsetY((MAIN_ROW_ROWS + GAP_SIZE) * 3),
       },
       CLOCK_ROW_ROWS,
-      CLOCK_ROW_COLS,
+      CLOCK_ROW_COLS
     );
 
     this._row1.updateRowDescriptor({ mode: "off" });
@@ -97,13 +97,13 @@ export class PlatformDisplayScene extends Phaser.Scene {
     this.game.events.on(
       "ChangeRowDescriptors",
       this._onChangeRowDescriptors,
-      this,
+      this
     );
 
     this.game.events.on(
       "FetchingStateChanged",
       this._onFetchingStateChanged,
-      this,
+      this
     );
 
     this.scale.on("resize", this._onResize, this);
@@ -184,11 +184,11 @@ export class PlatformDisplayScene extends Phaser.Scene {
 
   private _onChangeRowDescriptors = async (
     rowDescriptors: RowDescriptors,
-    onlyDueValuesHaveChanged: boolean,
+    onlyDueValuesHaveChanged: boolean
   ) => {
     console.log(
       "[PlatformDisplayScene#_onChangeRowDescriptors]",
-      rowDescriptors,
+      rowDescriptors
     );
 
     if (onlyDueValuesHaveChanged) {

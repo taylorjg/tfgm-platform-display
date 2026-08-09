@@ -14,7 +14,7 @@ export type LiveTram = {
 const fetchTrams = async (
   atcoCode: string | undefined,
   serviceIds: string[] | undefined,
-  towards: "starts" | "ends" | undefined,
+  towards: "starts" | "ends" | undefined
 ): Promise<LiveTram[]> => {
   const url = new URL(`${TFGM_API_URL}/trams`);
 
@@ -25,7 +25,7 @@ const fetchTrams = async (
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(
-      `Failed to fetch trams: ${response.status} ${response.statusText}`,
+      `Failed to fetch trams: ${response.status} ${response.statusText}`
     );
   }
   return (await response.json()) as LiveTram[];

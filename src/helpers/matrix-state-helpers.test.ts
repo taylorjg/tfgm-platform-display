@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-
 import { clockFont } from "@app/fonts";
 import type { Font } from "@app/fonts";
 
@@ -16,26 +14,14 @@ const testFont: Font = {
   name: "test",
   numVerticalDots: 3,
   fontMap: new Map([
-    ["A", { dotLines: [
-      "xx",
-      "xx",
-      "xx",
-    ] }],
-    ["B", { dotLines: [
-      "x ",
-      " x",
-      "x ",
-    ] }],
+    ["A", { dotLines: ["xx", "xx", "xx"] }],
+    ["B", { dotLines: ["x ", " x", "x "] }],
   ]),
 };
 
 describe("makeMatrixBlank", () => {
   it("returns blank rows matching the font height and column count", () => {
-    expect(makeMatrixBlank(testFont, 5)).toEqual([
-      "     ",
-      "     ",
-      "     ",
-    ]);
+    expect(makeMatrixBlank(testFont, 5)).toEqual(["     ", "     ", "     "]);
   });
 });
 
@@ -64,12 +50,8 @@ describe("makeMatrixForAlignment", () => {
       makeMatrixForAlignment(testFont, 10, {
         type: "left",
         text: "A",
-      }),
-    ).toEqual([
-      "xx",
-      "xx",
-      "xx",
-    ]);
+      })
+    ).toEqual(["xx", "xx", "xx"]);
   });
 
   it("returns centred text", () => {
@@ -77,12 +59,8 @@ describe("makeMatrixForAlignment", () => {
       makeMatrixForAlignment(testFont, 8, {
         type: "centre",
         text: "A",
-      }),
-    ).toEqual([
-      "   xx",
-      "   xx",
-      "   xx",
-    ]);
+      })
+    ).toEqual(["   xx", "   xx", "   xx"]);
   });
 
   it("returns spaceBetween text with padding between sides", () => {
@@ -91,12 +69,8 @@ describe("makeMatrixForAlignment", () => {
         type: "spaceBetween",
         left: "A",
         right: "B",
-      }),
-    ).toEqual([
-      "xx      x ",
-      "xx       x",
-      "xx      x ",
-    ]);
+      })
+    ).toEqual(["xx      x ", "xx       x", "xx      x "]);
   });
 });
 
@@ -106,12 +80,8 @@ describe("makeMatrixForLayout", () => {
       makeMatrixForLayout(testFont, 10, {
         type: "simple",
         message: { type: "left", text: "A" },
-      }),
-    ).toEqual([
-      "xx",
-      "xx",
-      "xx",
-    ]);
+      })
+    ).toEqual(["xx", "xx", "xx"]);
   });
 
   it("uses the first alternating message by default", () => {
@@ -120,12 +90,8 @@ describe("makeMatrixForLayout", () => {
         type: "alternating",
         message1: { type: "left", text: "A" },
         message2: { type: "left", text: "B" },
-      }),
-    ).toEqual([
-      "xx",
-      "xx",
-      "xx",
-    ]);
+      })
+    ).toEqual(["xx", "xx", "xx"]);
   });
 
   it("uses the second alternating message when requested", () => {
@@ -138,41 +104,26 @@ describe("makeMatrixForLayout", () => {
           message1: { type: "left", text: "A" },
           message2: { type: "left", text: "B" },
         },
-        false,
-      ),
-    ).toEqual([
-      "x ",
-      " x",
-      "x ",
-    ]);
+        false
+      )
+    ).toEqual(["x ", " x", "x "]);
   });
 });
 
 describe("makeCycleMatrix", () => {
   it("concatenates each layout matrix in order", () => {
     expect(
-      makeCycleMatrix(
-        testFont,
-        10,
-        [
-          {
-            type: "simple",
-            message: { type: "left", text: "A" },
-          },
-          {
-            type: "simple",
-            message: { type: "left", text: "B" },
-          },
-        ],
-      ),
-    ).toEqual([
-      "xx",
-      "xx",
-      "xx",
-      "x ",
-      " x",
-      "x ",
-    ]);
+      makeCycleMatrix(testFont, 10, [
+        {
+          type: "simple",
+          message: { type: "left", text: "A" },
+        },
+        {
+          type: "simple",
+          message: { type: "left", text: "B" },
+        },
+      ])
+    ).toEqual(["xx", "xx", "xx", "x ", " x", "x "]);
   });
 });
 
@@ -196,15 +147,8 @@ describe("makeRowMatrixWithBlankLine", () => {
           type: "simple",
           message: { type: "left", text: "A" },
         },
-      }),
-    ).toEqual([
-      "     ",
-      "     ",
-      "     ",
-      "xx",
-      "xx",
-      "xx",
-    ]);
+      })
+    ).toEqual(["     ", "     ", "     ", "xx", "xx", "xx"]);
   });
 
   it("prepends a blank line before the first layout of a cycle row", () => {
@@ -221,15 +165,8 @@ describe("makeRowMatrixWithBlankLine", () => {
             message: { type: "left", text: "B" },
           },
         ],
-      }),
-    ).toEqual([
-      "     ",
-      "     ",
-      "     ",
-      "xx",
-      "xx",
-      "xx",
-    ]);
+      })
+    ).toEqual(["     ", "     ", "     ", "xx", "xx", "xx"]);
   });
 });
 
@@ -243,14 +180,10 @@ describe("missing characters", () => {
     });
 
     expect(warnSpy).toHaveBeenCalledWith(
-      'Character "?" not found in fontMap for font "test".',
+      'Character "?" not found in fontMap for font "test".'
     );
     expect(matrix).toHaveLength(3);
-    expect(matrix).toEqual([
-      "x ",
-      " x",
-      "x ",
-    ]);
+    expect(matrix).toEqual(["x ", " x", "x "]);
 
     warnSpy.mockRestore();
   });

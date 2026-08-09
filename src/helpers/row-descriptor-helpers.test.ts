@@ -9,8 +9,7 @@ import {
 } from "./row-descriptor-helpers.ts";
 
 const makeTram = (
-  overrides: Partial<LiveTram> &
-    Pick<LiveTram, "destinationDisplay" | "status">,
+  overrides: Partial<LiveTram> & Pick<LiveTram, "destinationDisplay" | "status">
 ): LiveTram => ({
   carriages: "Single",
   due: 0,
@@ -24,8 +23,8 @@ describe("makeTramAlignment", () => {
         makeTram({
           destinationDisplay: "Piccadilly",
           status: "Approaching",
-        }),
-      ),
+        })
+      )
     ).toEqual({
       type: "left",
       text: "Piccadilly",
@@ -39,8 +38,8 @@ describe("makeTramAlignment", () => {
           destinationDisplay: "Piccadilly",
           status: "Approaching",
           carriages: "Double",
-        }),
-      ),
+        })
+      )
     ).toEqual({
       type: "spaceBetween",
       left: "Piccadilly",
@@ -54,8 +53,8 @@ describe("makeTramAlignment", () => {
         makeTram({
           destinationDisplay: "Victoria",
           status: "Arrived",
-        }),
-      ),
+        })
+      )
     ).toEqual({
       type: "left",
       text: "Victoria",
@@ -69,8 +68,8 @@ describe("makeTramAlignment", () => {
           destinationDisplay: "Piccadilly",
           status: "Due",
           due: 5,
-        }),
-      ),
+        })
+      )
     ).toEqual({
       type: "spaceBetween",
       left: "Piccadilly",
@@ -86,8 +85,8 @@ describe("makeTramAlignment", () => {
           status: "Due",
           carriages: "Double",
           due: 7,
-        }),
-      ),
+        })
+      )
     ).toEqual({
       type: "spaceBetween",
       left: "Piccadilly",
@@ -101,8 +100,8 @@ describe("makeTramAlignment", () => {
         makeTram({
           destinationDisplay: "Piccadilly",
           status: "Cancelled",
-        }),
-      ),
+        })
+      )
     ).toEqual({
       type: "spaceBetween",
       left: "Piccadilly",
@@ -118,8 +117,8 @@ describe("makeTramLayout", () => {
         makeTram({
           destinationDisplay: "Piccadilly",
           status: "Approaching",
-        }),
-      ),
+        })
+      )
     ).toEqual({
       type: "alternating",
       message1: {
@@ -140,8 +139,8 @@ describe("makeTramLayout", () => {
           destinationDisplay: "Piccadilly",
           status: "Due",
           due: 3,
-        }),
-      ),
+        })
+      )
     ).toEqual({
       type: "simple",
       message: {
@@ -166,7 +165,7 @@ describe("makeRow1Descriptor", () => {
           status: "Due",
           due: 2,
         }),
-      ]),
+      ])
     ).toEqual({
       mode: "single",
       layout: {
@@ -190,7 +189,7 @@ describe("makeRow2Descriptor", () => {
           status: "Due",
           due: 2,
         }),
-      ]),
+      ])
     ).toEqual({ mode: "off" });
   });
 
@@ -211,7 +210,7 @@ describe("makeRow2Descriptor", () => {
           status: "Due",
           due: 5,
         }),
-      ]),
+      ])
     ).toEqual({
       mode: "single",
       layout: {
@@ -242,7 +241,7 @@ describe("makeRow2Descriptor", () => {
           destinationDisplay: "Bury",
           status: "Approaching",
         }),
-      ]),
+      ])
     ).toEqual({
       mode: "cycle",
       layouts: [

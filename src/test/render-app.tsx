@@ -22,7 +22,7 @@ export const testOptions: Options = {
 };
 
 export const renderApp = (
-  configuration: Configuration | null = testConfiguration,
+  configuration: Configuration | null = testConfiguration
 ) => {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -39,6 +39,6 @@ export const renderApp = (
           <App />
         </OptionsProvider>
       </ConfigurationProvider>
-    </QueryClientProvider>,
+    </QueryClientProvider>
   );
 };

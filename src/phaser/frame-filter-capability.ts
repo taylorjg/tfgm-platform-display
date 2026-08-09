@@ -130,7 +130,7 @@ const interpretProbeSupport = (
   scene: Phaser.Scene,
   baseline: FrameFilterPixel,
   bestAfter: FrameFilterPixel,
-  maxDelta: number,
+  maxDelta: number
 ): Pick<FrameFilterProbeResult, "supported" | "reason"> => {
   const touch = scene.game.device.input.touch;
   const baselineVisible = baseline.a >= 32;
@@ -166,13 +166,13 @@ const probeResultFromSamples = (
   scene: Phaser.Scene,
   baseline: FrameFilterPixel,
   bestAfter: FrameFilterPixel,
-  maxDelta: number,
+  maxDelta: number
 ): FrameFilterProbeResult => {
   const { supported, reason } = interpretProbeSupport(
     scene,
     baseline,
     bestAfter,
-    maxDelta,
+    maxDelta
   );
 
   return {
@@ -189,7 +189,7 @@ const probeResultFromSamples = (
 };
 
 const runProbe = async (
-  scene: Phaser.Scene,
+  scene: Phaser.Scene
 ): Promise<FrameFilterProbeResult> => {
   const { game } = scene;
   const probeX = PROBE_ORIGIN;
@@ -210,7 +210,7 @@ const runProbe = async (
 
     await waitPostRender(game);
     const baseline = toPixel(
-      await snapshotViewportPixel(game, sampleX, sampleY),
+      await snapshotViewportPixel(game, sampleX, sampleY)
     );
 
     rt.enableFilters();
@@ -231,7 +231,7 @@ const runProbe = async (
 
       await waitPostRender(game);
       const sample = toPixel(
-        await snapshotViewportPixel(game, sampleX, sampleY),
+        await snapshotViewportPixel(game, sampleX, sampleY)
       );
       const delta = colorDelta(baseline, sample);
 
@@ -253,7 +253,7 @@ const runProbe = async (
 
 /** Probe RenderTexture filter compositing once; caches result for the session. */
 export const initFrameFilterCapability = async (
-  scene: Phaser.Scene,
+  scene: Phaser.Scene
 ): Promise<boolean> => {
   const debug = isFrameProbeDebug();
   const cached = debug ? null : readCache();
@@ -283,7 +283,7 @@ export const initFrameFilterCapability = async (
   } catch (error) {
     console.warn(
       "[frame-filter-capability] probe failed; using alpha pulse",
-      error,
+      error
     );
     result = {
       supported: !scene.game.device.input.touch,

@@ -21,7 +21,7 @@ export type FontMapKvp = [string, CharacterDescriptor];
 
 export const makeFontMapKvps = (
   characters: string,
-  dotData: string,
+  dotData: string
 ): FontMapKvp[] => {
   const dotLines = dotData.split("\n").filter(Boolean);
   const firstDotLine = first(dotLines);
@@ -37,7 +37,7 @@ export const makeFontMapKvps = (
     const startIndex = breaks[index];
     const endIndex = breaks[index + 1] ?? numDots + 1;
     const characterDotLines = dotLines.map((dotLine) =>
-      dotLine.slice(startIndex, endIndex - 1),
+      dotLine.slice(startIndex, endIndex - 1)
     );
     return [ch, { dotLines: characterDotLines }];
   });
@@ -45,7 +45,7 @@ export const makeFontMapKvps = (
 
 export const makeFont = (
   fontMap: Map<string, CharacterDescriptor>,
-  name: string,
+  name: string
 ): Font => {
   return {
     name,

@@ -13,7 +13,7 @@ export type ConfigurationContextValue = {
 };
 
 const ConfigurationContext = createContext<ConfigurationContextValue | null>(
-  null,
+  null
 );
 
 export type ConfigurationProviderProps = {
@@ -26,7 +26,7 @@ export const ConfigurationProvider = ({
   initialConfiguration,
 }: ConfigurationProviderProps) => {
   const [configuration, setConfiguration] = useState<Configuration | null>(
-    initialConfiguration,
+    initialConfiguration
   );
 
   return (
@@ -40,7 +40,7 @@ export const useConfiguration = () => {
   const context = useContext(ConfigurationContext);
   if (!context) {
     throw new Error(
-      "useConfiguration must be used within ConfigurationProvider",
+      "useConfiguration must be used within ConfigurationProvider"
     );
   }
   return context;

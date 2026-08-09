@@ -64,5 +64,5 @@ const testMode4: LiveTram[] = [
 const testModes = [testMode1, testMode2, testMode3, testMode4];
 
 export const testModesMap = new Map(
-  testModes.map((testMode, index) => [index + 1, testMode]),
+  testModes.map((testMode, index) => [index + 1, testMode])
 );

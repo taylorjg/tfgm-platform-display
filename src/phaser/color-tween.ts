@@ -23,7 +23,7 @@ export const tweenColor = (
   scene: Phaser.Scene,
   from: ColorTweenInput,
   to: ColorTweenInput,
-  config: ColorTweenConfig,
+  config: ColorTweenConfig
 ): Phaser.Tweens.Tween => {
   const fromColor = toColorObject(from);
   const toColor = toColorObject(to);
@@ -44,7 +44,7 @@ export const tweenColor = (
         toColor,
         steps,
         currentStep,
-        true,
+        true
       );
       config.onUpdate(Phaser.Display.Color.GetColor(r, g, b));
     },
@@ -57,5 +57,5 @@ export const tweenColorComplete = (
   scene: Phaser.Scene,
   from: ColorTweenInput,
   to: ColorTweenInput,
-  config: ColorTweenConfig,
+  config: ColorTweenConfig
 ): Promise<void> => tweenComplete(tweenColor(scene, from, to, config));

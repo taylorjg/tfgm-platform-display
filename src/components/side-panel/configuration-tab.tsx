@@ -31,10 +31,10 @@ const makeLocationsDirectionLabel = (
   }: {
     startLocation: string;
     endLocation: string;
-  }) => string,
+  }) => string
 ) => {
   const locations = selectedServices.map((service) =>
-    selector(extractServiceLocations(service)),
+    selector(extractServiceLocations(service))
   );
   return locations.length === 1 ? locations[0] : `${locations[0]} etc.`;
 };
@@ -42,20 +42,20 @@ const makeLocationsDirectionLabel = (
 const makeStartLocationsDirectionLabel = (selectedServices: TramService[]) => {
   return makeLocationsDirectionLabel(
     selectedServices,
-    (locations) => locations.startLocation,
+    (locations) => locations.startLocation
   );
 };
 
 const makeEndLocationsDirectionLabel = (selectedServices: TramService[]) => {
   return makeLocationsDirectionLabel(
     selectedServices,
-    (locations) => locations.endLocation,
+    (locations) => locations.endLocation
   );
 };
 
 const sortSelectedServices = (
   allServices: TramService[],
-  selectedServices: TramService[],
+  selectedServices: TramService[]
 ) => {
   return selectedServices.sort((a, b) => {
     const aIndex = allServices.indexOf(a);
@@ -72,7 +72,7 @@ const nullFormState = {
 
 const getInitialFormState = (
   tramsStops: TramStop[],
-  configuration: Configuration | null,
+  configuration: Configuration | null
 ) => {
   if (!configuration) return nullFormState;
 
@@ -84,7 +84,7 @@ const getInitialFormState = (
   return {
     selectedTramStop: tramStop,
     selectedServices: tramStop.services.filter((s) =>
-      configuration.serviceIds.includes(s.id),
+      configuration.serviceIds.includes(s.id)
     ),
     towards: configuration.towards,
   };
@@ -105,10 +105,10 @@ const ConfigurationForm = ({
 }: ConfigurationFormProps) => {
   const initialFormState = getInitialFormState(tramStops, configuration);
   const [selectedTramStop, setSelectedTramStop] = useState(
-    initialFormState.selectedTramStop,
+    initialFormState.selectedTramStop
   );
   const [selectedServices, setSelectedServices] = useState(
-    initialFormState.selectedServices,
+    initialFormState.selectedServices
   );
   const [towards, setTowards] = useState(initialFormState.towards);
 

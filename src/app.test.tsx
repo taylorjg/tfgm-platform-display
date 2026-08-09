@@ -31,7 +31,7 @@ const getRowDescriptors = (): RowDescriptors => {
   const element = screen.getByTestId("row-descriptors");
 
   return JSON.parse(
-    element.getAttribute("data-row-descriptors")!,
+    element.getAttribute("data-row-descriptors")!
   ) as RowDescriptors;
 };
 
@@ -53,7 +53,7 @@ describe("App", () => {
 
     await waitFor(() => {
       expect(getRowDescriptors()).toEqual(
-        makeRowDescriptors(mockTrams, DISPLAY_ALERT),
+        makeRowDescriptors(mockTrams, DISPLAY_ALERT)
       );
     });
 
@@ -63,19 +63,19 @@ describe("App", () => {
   it("shows an error alert when the tram fetch fails", async () => {
     server.use(
       http.get(`${TFGM_API_URL}/trams`, () =>
-        HttpResponse.json(null, { status: 500 }),
-      ),
+        HttpResponse.json(null, { status: 500 })
+      )
     );
 
     renderApp();
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
-      "Unable to load tram data.",
+      "Unable to load tram data."
     );
 
     await waitFor(() => {
       expect(getRowDescriptors()).toEqual(
-        makeRowDescriptors([], DISPLAY_ALERT),
+        makeRowDescriptors([], DISPLAY_ALERT)
       );
     });
   });

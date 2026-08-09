@@ -23,7 +23,7 @@ export class MatrixState {
   private _contentCols = (): number => {
     return this._data.reduce(
       (maxCols, row) => Math.max(maxCols, row.length),
-      0,
+      0
     );
   };
 
@@ -61,7 +61,7 @@ export class MatrixState {
       this._font,
       this._numCols,
       layout,
-      useFirstMessage,
+      useFirstMessage
     );
   }
 
@@ -70,7 +70,7 @@ export class MatrixState {
       this._font,
       this._numCols,
       layouts,
-      useFirstMessage,
+      useFirstMessage
     );
   }
 
@@ -78,7 +78,7 @@ export class MatrixState {
     this._data = makeRowMatrixWithBlankLine(
       this._font,
       this._numCols,
-      rowDescriptor,
+      rowDescriptor
     );
   }
 }

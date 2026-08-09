@@ -21,12 +21,12 @@ For development and demos, append `?testMode=1`–`4` to the URL to load canned 
 
 Built with:
 
-* React
-* TypeScript
-* Vite
-* Material UI
-* TanStack Query
-* Phaser 4
+- React
+- TypeScript
+- Vite
+- Material UI
+- TanStack Query
+- Phaser 4
 
 Deployed to GitHub Pages [here](https://taylorjg.github.io/tfgm-platform-display).
 
@@ -38,37 +38,37 @@ Deployed to GitHub Pages [here](https://taylorjg.github.io/tfgm-platform-display
 
 # To Do
 
-* [ ] Use the API to determine the most appropriate alert text (currently, it is hardcoded)
-* [x] Network requests: add error handling / surface errors
-* [ ] Show an empty block when no tram stop has been configured yet
-* [ ] Support saving of named configurations
-* [ ] Support quickly selecting a named configuration
-* [ ] Save configurations and options in local storage
-* [ ] Show the currently selected tram stop / configuration
-* [ ] Refactoring / code improvements
-* [x] Add unit tests
-* [x] Add integration tests
-* [x] Add CI/CD GitHub Actions workflow
+- [ ] Use the API to determine the most appropriate alert text (currently, it is hardcoded)
+- [x] Network requests: add error handling / surface errors
+- [ ] Show an empty block when no tram stop has been configured yet
+- [ ] Support saving of named configurations
+- [ ] Support quickly selecting a named configuration
+- [ ] Save configurations and options in local storage
+- [ ] Show the currently selected tram stop / configuration
+- [ ] Refactoring / code improvements
+- [x] Add unit tests
+- [x] Add integration tests
+- [x] Add CI/CD GitHub Actions workflow
 
 # Links
 
-* Test modes - hardcoded data with fictitious names:
-  * [Test mode 1](https://taylorjg.github.io/tfgm-platform-display?testMode=1)
-  * [Test mode 2](https://taylorjg.github.io/tfgm-platform-display?testMode=2)
-  * [Test mode 3](https://taylorjg.github.io/tfgm-platform-display?testMode=3)
-  * [Test mode 4](https://taylorjg.github.io/tfgm-platform-display?testMode=4)
-* Transport for Greater Manchester (TfGM):
-  * [Bee Network | Powered by TfGM](https://tfgm.com/)
-  * [Live departures | Bee Network | Powered by TfGM](https://tfgm.com/travel-updates/live-departures)
-  * https://beenetwork-staging.api-tf.tfgm.com
-* ATCO Codes
-  * [ATCO Area Codes in use](https://beta-naptan.dft.gov.uk/article/atco-codes-in-use)
-    * See `940 - Tram (National) - DfT`
-  * [NaPTAN guide for data managers](https://www.gov.uk/government/publications/national-public-transport-access-node-schema/naptan-guide-for-data-managers)
-  * [NaPTAN API](https://naptan.api.dft.gov.uk/swagger/index.html)
-* Phaser:  
-  * [Phaser](https://phaser.io)
-  * [Phaser Docs](https://docs.phaser.io)
-* Backend repo:
-  * [Repo for AWS Lambda Functions](https://github.com/taylorjg/tfgm-platform-display-serverless)
-  * [Serverless Framework](https://www.serverless.com)
+- Test modes - hardcoded data with fictitious names:
+  - [Test mode 1](https://taylorjg.github.io/tfgm-platform-display?testMode=1)
+  - [Test mode 2](https://taylorjg.github.io/tfgm-platform-display?testMode=2)
+  - [Test mode 3](https://taylorjg.github.io/tfgm-platform-display?testMode=3)
+  - [Test mode 4](https://taylorjg.github.io/tfgm-platform-display?testMode=4)
+- Transport for Greater Manchester (TfGM):
+  - [Bee Network | Powered by TfGM](https://tfgm.com/)
+  - [Live departures | Bee Network | Powered by TfGM](https://tfgm.com/travel-updates/live-departures)
+  - https://beenetwork-staging.api-tf.tfgm.com
+- ATCO Codes
+  - [ATCO Area Codes in use](https://beta-naptan.dft.gov.uk/article/atco-codes-in-use)
+    - See `940 - Tram (National) - DfT`
+  - [NaPTAN guide for data managers](https://www.gov.uk/government/publications/national-public-transport-access-node-schema/naptan-guide-for-data-managers)
+  - [NaPTAN API](https://naptan.api.dft.gov.uk/swagger/index.html)
+- Phaser:
+  - [Phaser](https://phaser.io)
+  - [Phaser Docs](https://docs.phaser.io)
+- Backend repo:
+  - [Repo for AWS Lambda Functions](https://github.com/taylorjg/tfgm-platform-display-serverless)
+  - [Serverless Framework](https://www.serverless.com)

@@ -19,7 +19,7 @@ const makeFallbackGlyph = (font: Font): string[] => {
   const totalWidths = sumBy(values, (value) => value.dotLines[0].length);
   const averageWidth = Math.ceil(totalWidths / values.length);
   return range(font.numVerticalDots).map((rowIndex) =>
-    makeChequeredPattern(averageWidth, rowIndex),
+    makeChequeredPattern(averageWidth, rowIndex)
   );
 };
 
@@ -30,7 +30,7 @@ const lookupCharacter =
 
     if (!value) {
       console.warn(
-        `Character "${ch}" not found in fontMap for font "${font.name}".`,
+        `Character "${ch}" not found in fontMap for font "${font.name}".`
       );
       return makeFallbackGlyph(font);
     }
@@ -46,14 +46,14 @@ const makeMatrixLeft = (font: Font, message: string): string[] => {
   const chs = Array.from(message);
   const dotLinesPerCharacter = chs.map(lookupCharacter(font));
   return range(font.numVerticalDots).map((index) =>
-    dotLinesPerCharacter.map((v) => v[index]).join(GAP),
+    dotLinesPerCharacter.map((v) => v[index]).join(GAP)
   );
 };
 
 export const makeMatrixCentre = (
   font: Font,
   numCols: number,
-  message: string,
+  message: string
 ): string[] => {
   const matrix = makeMatrixLeft(font, message);
   const matrixCols = first(matrix).length;
@@ -62,7 +62,7 @@ export const makeMatrixCentre = (
   const numLeftPaddingCols = Math.floor(remainingCols / 2);
   const leftPadding = " ".repeat(numLeftPaddingCols);
   return range(font.numVerticalDots).map(
-    (index) => leftPadding + matrix[index],
+    (index) => leftPadding + matrix[index]
   );
 };
 
@@ -70,7 +70,7 @@ const makeMatrixSpaceBetween = (
   font: Font,
   numCols: number,
   leftText: string,
-  rightText: string,
+  rightText: string
 ): string[] => {
   const leftMatrix = makeMatrixLeft(font, leftText);
   const rightMatrix = makeMatrixLeft(font, rightText);
@@ -83,7 +83,7 @@ const makeMatrixSpaceBetween = (
   const spaceBetween = " ".repeat(spaceBetweenCols);
 
   const matrix = range(font.numVerticalDots).map(
-    (index) => leftMatrix[index] + spaceBetween + rightMatrix[index],
+    (index) => leftMatrix[index] + spaceBetween + rightMatrix[index]
   );
 
   return matrix;
@@ -92,7 +92,7 @@ const makeMatrixSpaceBetween = (
 export const makeMatrixForAlignment = (
   font: Font,
   numCols: number,
-  alignment: Alignment,
+  alignment: Alignment
 ): string[] => {
   switch (alignment.type) {
     case "left":
@@ -104,7 +104,7 @@ export const makeMatrixForAlignment = (
         font,
         numCols,
         alignment.left,
-        alignment.right,
+        alignment.right
       );
   }
 };
@@ -113,7 +113,7 @@ export const makeMatrixForLayout = (
   font: Font,
   numCols: number,
   layout: Layout,
-  useFirstMessage: boolean = true,
+  useFirstMessage: boolean = true
 ): string[] => {
   switch (layout.type) {
     case "simple":
@@ -122,7 +122,7 @@ export const makeMatrixForLayout = (
       return makeMatrixForAlignment(
         font,
         numCols,
-        useFirstMessage ? layout.message1 : layout.message2,
+        useFirstMessage ? layout.message1 : layout.message2
       );
   }
 };
@@ -131,11 +131,11 @@ export const makeCycleMatrix = (
   font: Font,
   numCols: number,
   layouts: Layout[],
-  useFirstMessage: boolean = true,
+  useFirstMessage: boolean = true
 ): string[] => {
   return layouts
     .map((layout) =>
-      makeMatrixForLayout(font, numCols, layout, useFirstMessage),
+      makeMatrixForLayout(font, numCols, layout, useFirstMessage)
     )
     .flat();
 };
@@ -143,7 +143,7 @@ export const makeCycleMatrix = (
 const makeRowMatrix = (
   font: Font,
   numCols: number,
-  rowDescriptor: RowDescriptor,
+  rowDescriptor: RowDescriptor
 ): string[] => {
   if (rowDescriptor.mode === "single") {
     return makeMatrixForLayout(font, numCols, rowDescriptor.layout, true);
@@ -159,7 +159,7 @@ const makeRowMatrix = (
 export const makeRowMatrixWithBlankLine = (
   font: Font,
   numCols: number,
-  rowDescriptor: RowDescriptor,
+  rowDescriptor: RowDescriptor
 ): string[] => {
   const blankMatrix = makeMatrixBlank(font, numCols);
   const rowMatrix = makeRowMatrix(font, numCols, rowDescriptor);

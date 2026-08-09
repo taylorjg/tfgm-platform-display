@@ -50,7 +50,7 @@ export class MatrixRow {
     font: Font,
     dimensions: Dimensions,
     numRows: number,
-    numCols: number,
+    numCols: number
   ) {
     this._scene = scene;
     this._numRows = numRows;
@@ -189,7 +189,7 @@ export class MatrixRow {
 
     this._matrixState.makeMatrixForLayout(
       rowDescriptor.layout,
-      this._useFirstMessage,
+      this._useFirstMessage
     );
 
     if (this._matrixState.needsScrollLeft()) {
@@ -206,7 +206,7 @@ export class MatrixRow {
 
     this._matrixState.makeCycleMatrix(
       rowDescriptor.layouts,
-      this._useFirstMessage,
+      this._useFirstMessage
     );
 
     this._addCycleTimer();
@@ -305,14 +305,14 @@ export class MatrixRow {
         if (isSingle) {
           this._matrixState.makeMatrixForLayout(
             rowDescriptor.layout,
-            this._useFirstMessage,
+            this._useFirstMessage
           );
         }
 
         if (isCycle) {
           this._matrixState.makeCycleMatrix(
             rowDescriptor.layouts,
-            this._useFirstMessage,
+            this._useFirstMessage
           );
         }
 
@@ -333,7 +333,7 @@ export class MatrixRow {
       this._matrixState,
       Math.round(this._scrollTweenState.rowOffset),
       Math.round(this._scrollTweenState.colOffset),
-      fillColour,
+      fillColour
     );
   };
 }
